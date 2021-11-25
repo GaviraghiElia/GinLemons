@@ -52,8 +52,6 @@ public class ListeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_liste, container, false);
 
 
-
-
         // controllo fragment figli
         tabLayout = (TabLayout) view.findViewById(R.id.tabs_liste);
         viewPager2 = (ViewPager2) view.findViewById(R.id.view_pager2_liste);
@@ -62,7 +60,7 @@ public class ListeFragment extends Fragment {
         adapter = new FragmentListeAdapter(fm, getLifecycle());
         viewPager2.setAdapter(adapter);
 
-
+        // listener Tab
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -80,13 +78,15 @@ public class ListeFragment extends Fragment {
             }
         });
 
-        // serve per lo swipe senza cliccare sulle tab
+        // Quando voglio cambiare tab devo catturare l'evento
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 tabLayout.selectTab(tabLayout.getTabAt(position));
-                // come ottenere il riferimento al fragment in base alla posizione del tab?
-                // serve per settare la toolbar
+                /* PROBLEMA
+                 come ottenere il riferimento al fragment in base alla posizione (position) del tab?
+                 mi servirebbe per settare la toolbar in base a dove sono, perché se clicco e torno
+                  indietro non cambia più*/
             }
         });
 

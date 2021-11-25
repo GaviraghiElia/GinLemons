@@ -44,6 +44,12 @@ public class RicetteFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ricette, container, false);
 
+        /* ho tenuto la sezione ricette con una toolbar unica, in attesa di risolvere
+         i problemi di là
+         Comunque in sostanza prendo il riferimento alla toolbar definita nell'activity e
+         le setto il titolo */
+
+        // Controllo toolbar
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
         ((MainActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle("Ricette");

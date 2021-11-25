@@ -39,6 +39,8 @@ public class RicetteDiscoverFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    // ATTENZIONE
+    // Codice preso su internet e copiato un po' a caso, funziona ma non lo capisco bene
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.toolbar_menu, menu);
@@ -70,6 +72,8 @@ public class RicetteDiscoverFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    // ATTENZIONE
+    // Codice preso su internet e copiato un po' a caso, funziona ma non lo capisco bene
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
