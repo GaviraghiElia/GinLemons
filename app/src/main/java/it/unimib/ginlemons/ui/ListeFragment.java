@@ -27,8 +27,6 @@ public class ListeFragment extends Fragment {
     private ViewPager2 viewPager2;
     private FragmentListeAdapter adapter;
     private FragmentManager fm;
-    private MainActivity mainActivity;
-    private Toolbar listeToolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

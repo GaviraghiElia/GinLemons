@@ -28,6 +28,12 @@ public class ListeCompleteFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        setTitleToolbar();
+        super.onResume();
+    }
+
     public void setTitleToolbar(){
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
         ((MainActivity) getActivity()).setSupportActionBar(toolbar);
