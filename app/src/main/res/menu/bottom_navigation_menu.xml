@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/listeFragment"
+        android:icon="@drawable/ic_baseline_event_note_24"
+        android:title="@string/liste" />
+    <item
+        android:id="@+id/ricetteFragment"
+        android:icon="@drawable/cocktail_bottom_navbar"
+        android:title="@string/ricette" />
+</menu>
