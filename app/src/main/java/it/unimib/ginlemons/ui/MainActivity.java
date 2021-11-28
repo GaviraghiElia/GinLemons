@@ -39,11 +39,12 @@ public class MainActivity extends AppCompatActivity {
         myToolbar = findViewById(R.id.activity_toolbar);
         setSupportActionBar(myToolbar);
 
-        // controllo bottom bar attraverso il fragment manager
+        // Navigation Component
         navHostFragment = (NavHostFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragmentListeRicetteContainerView);
-
         navController = navHostFragment.getNavController();
+
+        // controllo bottom bar attraverso il fragment manager
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
 
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
@@ -54,4 +55,5 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
     }
+
 }

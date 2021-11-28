@@ -2,6 +2,7 @@ package it.unimib.ginlemons.ui;
 
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -21,6 +22,27 @@ public class RicettePreferitiFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ricette_preferiti, container, false);
+        View view = inflater.inflate(R.layout.fragment_ricette_preferiti, container, false);
+
+        // Set Toolbar
+        setTitleToolbar();
+
+        return view;
+
     }
+
+    @Override
+    public void onResume() {
+        setTitleToolbar();
+        super.onResume();
+    }
+
+
+
+    public void setTitleToolbar() {
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setTitle("Preferiti");
+    }
+
 }

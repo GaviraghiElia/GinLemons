@@ -8,10 +8,44 @@
         android:id="@+id/listeFragment"
         android:name="it.unimib.ginlemons.ui.ListeFragment"
         android:label="fragment_liste"
-        tools:layout="@layout/fragment_liste" />
+        tools:layout="@layout/fragment_liste" >
+        <action
+            android:id="@+id/action_listeFragment_to_listeHomeFragment"
+            app:destination="@id/listeHomeFragment" />
+        <action
+            android:id="@+id/action_listeFragment_to_listeCompleteFragment"
+            app:destination="@id/listeCompleteFragment" />
+    </fragment>
     <fragment
         android:id="@+id/ricetteFragment"
         android:name="it.unimib.ginlemons.ui.RicetteFragment"
         android:label="fragment_ricette"
-        tools:layout="@layout/fragment_ricette" />
+        tools:layout="@layout/fragment_ricette" >
+        <action
+            android:id="@+id/action_ricetteFragment_to_ricetteDiscoverFragment"
+            app:destination="@id/ricetteDiscoverFragment" />
+        <action
+            android:id="@+id/action_ricetteFragment_to_ricettePreferitiFragment"
+            app:destination="@id/ricettePreferitiFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listeCompleteFragment"
+        android:name="it.unimib.ginlemons.ui.ListeCompleteFragment"
+        android:label="fragment_liste_complete"
+        tools:layout="@layout/fragment_liste_complete" />
+    <fragment
+        android:id="@+id/listeHomeFragment"
+        android:name="it.unimib.ginlemons.ui.ListeHomeFragment"
+        android:label="fragment_liste_home"
+        tools:layout="@layout/fragment_liste_home" />
+    <fragment
+        android:id="@+id/ricetteDiscoverFragment"
+        android:name="it.unimib.ginlemons.ui.RicetteDiscoverFragment"
+        android:label="fragment_ricette_discover"
+        tools:layout="@layout/fragment_ricette_discover" />
+    <fragment
+        android:id="@+id/ricettePreferitiFragment"
+        android:name="it.unimib.ginlemons.ui.RicettePreferitiFragment"
+        android:label="fragment_ricette_preferiti"
+        tools:layout="@layout/fragment_ricette_preferiti" />
 </navigation>

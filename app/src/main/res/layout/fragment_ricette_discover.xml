@@ -6,13 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.RicetteDiscoverFragment">
 
-    <ListView
-        android:id="@+id/list_view"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/discover_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="2dp"
-        android:divider="@color/white"
-        android:elevation="4dp"
-        tools:listitem="@android:layout/simple_list_item_1"/>
-
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"/>
 </FrameLayout>

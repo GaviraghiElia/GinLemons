@@ -44,16 +44,6 @@ public class RicetteFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ricette, container, false);
 
-        /* ho tenuto la sezione ricette con una toolbar unica, in attesa di risolvere
-         i problemi di là
-         Comunque in sostanza prendo il riferimento alla toolbar definita nell'activity e
-         le setto il titolo */
-
-        // Controllo toolbar
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
-        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setTitle("Ricette");
-
         // controllo fragment figli
         tabLayout = (TabLayout) view.findViewById(R.id.tabs_ricette);
         viewPager2 = (ViewPager2) view.findViewById(R.id.view_pager2_ricette);
@@ -62,7 +52,7 @@ public class RicetteFragment extends Fragment {
         adapter = new FragmentRicetteAdapter(fm, getLifecycle());
         viewPager2.setAdapter(adapter);
 
-
+        // Listener tab
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -80,6 +70,7 @@ public class RicetteFragment extends Fragment {
             }
         });
 
+        // swipe left/right tra tab
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
