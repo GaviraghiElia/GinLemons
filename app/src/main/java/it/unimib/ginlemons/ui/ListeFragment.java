@@ -81,15 +81,13 @@ public class ListeFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 tabLayout.selectTab(tabLayout.getTabAt(position));
-                /* PROBLEMA
-                 come ottenere il riferimento al fragment in base alla posizione (position) del tab?
-                 mi servirebbe per settare la toolbar in base a dove sono, perché se clicco e torno
-                  indietro non cambia più*/
+
             }
         });
 
 
         /* EVENTUALI ANIMAZIONI
+           Personalmente non mi fanno impazzire
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {

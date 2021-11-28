@@ -38,7 +38,6 @@ public class ListeHomeFragment extends Fragment {
 
     public void setTitleToolbar() {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
-        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle("Liste Home");
     }
 }
