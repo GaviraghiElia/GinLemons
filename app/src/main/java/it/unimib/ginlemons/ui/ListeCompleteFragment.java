@@ -21,7 +21,7 @@ public class ListeCompleteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragment (Layout fragment liste completate)
         View view =  inflater.inflate(R.layout.fragment_liste_complete, container, false);
         setTitleToolbar();
 
@@ -34,10 +34,9 @@ public class ListeCompleteFragment extends Fragment {
         super.onResume();
     }
 
-    public void setTitleToolbar(){
+    public void setTitleToolbar() {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
-        toolbar.setTitle("Liste Completate");
-
+        toolbar.setTitle(R.string.liste_completate_toolbar_title);
     }
 
 }

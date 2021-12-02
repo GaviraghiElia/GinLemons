@@ -17,45 +17,44 @@ import it.unimib.ginlemons.adapter.ListeRecyclerViewAdapter;
 
 public class RicetteDiscoverFragment extends Fragment {
 
-    private static final String TAG = "BOH";
+    private static final String TAG = "Discover_Recipes";
 
+    // Dati per test della RecycleView
     private String [] names = {"Leporati", "Zandron", "Dennunzio", "Caravenna", "Stella", "Schettini",
             "Leporati", "Zandron", "Dennunzio", "Caravenna", "Stella", "Schettini",
             "Leporati", "Zandron", "Dennunzio", "Caravenna", "Stella", "Schettini",
             "Leporati", "Zandron", "Dennunzio", "Caravenna", "Stella", "Schettini",};
+    //
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment (Layout fragment per il discover recipes)
         View view =  inflater.inflate(R.layout.fragment_ricette_discover, container, false);
 
         // Set Toolbar
         setTitleToolbar();
 
-        //recyclerview
+        // Recyclerview
         RecyclerView recyclerView = view.findViewById(R.id.discover_recycler_view);
         ListeRecyclerViewAdapter listeRecyclerViewAdapter = new ListeRecyclerViewAdapter(names, new ListeRecyclerViewAdapter.OnItemClickListener() {
+            // Listener per il click su un elemento della RecyclerView
             @Override
             public void onIntemClick(String s) {
-                Log.d(TAG, "onItemClickListener" + s);
+                Log.d(TAG, "onItemClickListener " + s);
             }
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setAdapter(listeRecyclerViewAdapter);
 
-        // aggiungiamo dei bordi che se no fa schifo
-        DividerItemDecoration dividerItemDecoration =
-                new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        // Bordi per gli item della RecycleView
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         return view;
@@ -69,7 +68,7 @@ public class RicetteDiscoverFragment extends Fragment {
 
     public void setTitleToolbar() {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
-        toolbar.setTitle("Discover");
+        toolbar.setTitle(R.string.discover_toolbar_title);
     }
 
 }

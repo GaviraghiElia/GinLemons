@@ -2,10 +2,14 @@
     <string name="app_name">GinLemons</string>
     <string name="ricette">Ricette</string>
     <string name="liste">Liste</string>
+    <string name="liste_completate_toolbar_title">Liste Completate</string>
+    <string name="liste_home_toolbar_title">Le mie Liste</string>
+    <string name="discover_toolbar_title">Esplora</string>
+    <string name="preferiti_toolbar_title">Preferiti</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ricerca_ricette">Ricerca Ricette</string>
-    <string name="discover">Discover</string>
+    <string name="discover">Esplora</string>
     <string name="preferiti">Preferiti</string>
     <string name="mieListe">Mie Liste</string>
     <string name="completati">Completati</string>

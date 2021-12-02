@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // toolbar
+        // Toolbar
         myToolbar = findViewById(R.id.activity_toolbar);
         setSupportActionBar(myToolbar);
 
@@ -38,13 +38,12 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().findFragmentById(R.id.fragmentListeRicetteContainerView);
         navController = navHostFragment.getNavController();
 
-        // controllo bottom bar attraverso il fragment manager
+        // Controllo della bottom bar attraverso il fragment manager
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
 
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
-        appBarConfiguration =
-                new AppBarConfiguration.Builder(R.id.listeFragment, R.id.ricetteFragment).build();
+        appBarConfiguration = new AppBarConfiguration.Builder(R.id.listeFragment, R.id.ricetteFragment).build();
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 

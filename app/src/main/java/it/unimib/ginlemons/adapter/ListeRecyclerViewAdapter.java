@@ -12,21 +12,21 @@ import it.unimib.ginlemons.R;
 
 public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecyclerViewAdapter.ListeViewHolder> {
 
-
     public interface OnItemClickListener{
         void onIntemClick(String s);
     }
 
+    // Lista degli item da inserire nella RecyclerView
     private String [] list;
+    // Interfaccia per definire la reazione al click su un elemento della RecyclerView
     private OnItemClickListener onItemClickListener;
-
 
     public ListeRecyclerViewAdapter(String[] list, OnItemClickListener onItemClickListener){
         this.list = list;
         this.onItemClickListener = onItemClickListener;
     }
 
-    //istanziamo il ViewHolder
+    // Istanzio il ViewHolder
     @NonNull
     @Override
     public ListeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -34,6 +34,7 @@ public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecycler
         return new ListeViewHolder(view);
     }
 
+    // Bind tra item e dati
     @Override
     public void onBindViewHolder(@NonNull ListeViewHolder holder, int position) {
         holder.bind(list[position]);

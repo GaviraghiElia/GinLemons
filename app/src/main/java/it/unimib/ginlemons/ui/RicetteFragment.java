@@ -22,21 +22,15 @@ public class RicetteFragment extends Fragment {
     private FragmentRicetteAdapter adapter;
     private FragmentManager fm;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
-
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment (layout fragment toolbar Discover - Preferiti)
         View view = inflater.inflate(R.layout.fragment_ricette, container, false);
 
         // controllo fragment figli
@@ -47,7 +41,7 @@ public class RicetteFragment extends Fragment {
         adapter = new FragmentRicetteAdapter(fm, getLifecycle());
         viewPager2.setAdapter(adapter);
 
-        // Listener tab
+        // Listener per le interazioni con la tab
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -55,17 +49,13 @@ public class RicetteFragment extends Fragment {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
 
-        // swipe left/right tra tab
+        // Cattura l'evento generato dallo swipe left/right tra tab
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {

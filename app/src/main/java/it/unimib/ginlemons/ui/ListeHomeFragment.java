@@ -13,7 +13,6 @@ import it.unimib.ginlemons.R;
 
 public class ListeHomeFragment extends Fragment {
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +21,7 @@ public class ListeHomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragment (Layout fragment della sezione Mie Liste)
         View view = inflater.inflate(R.layout.fragment_liste_home, container, false);
 
         setTitleToolbar();
@@ -38,6 +37,6 @@ public class ListeHomeFragment extends Fragment {
 
     public void setTitleToolbar() {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
-        toolbar.setTitle("Liste Home");
+        toolbar.setTitle(R.string.liste_home_toolbar_title);
     }
 }

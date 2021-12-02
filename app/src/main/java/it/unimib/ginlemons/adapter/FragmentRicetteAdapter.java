@@ -15,6 +15,7 @@ public class FragmentRicetteAdapter extends FragmentStateAdapter {
         super(fragmentManager, lifecycle);
     }
 
+    // Associa il fragment da inserire nel viewholder in base alla sezione selezionata nella tab (Esplora - Preferiti)
     @NonNull
     @Override
     public Fragment createFragment(int position) {
@@ -26,7 +27,6 @@ public class FragmentRicetteAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-
         return 2;
     }
 }

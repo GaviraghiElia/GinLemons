@@ -15,12 +15,13 @@ public class FragmentListeAdapter extends FragmentStateAdapter {
         super(fragmentManager, lifecycle);
     }
 
+    // Associa il fragment da inserire nel viewholder in base alla sezione selezionata nella tab (Mie Liste - Completate)
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        if (position == 1) {
+        if (position == 1)
             return new ListeCompleteFragment();
-        }
+
         return new ListeHomeFragment();
     }
 
