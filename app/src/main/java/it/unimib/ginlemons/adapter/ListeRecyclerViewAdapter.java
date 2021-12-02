@@ -26,6 +26,15 @@ public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecycler
         this.onItemClickListener = onItemClickListener;
     }
 
+    public void filterList(String[] filterList) {
+        // below line is to add our filtered
+        // list in our course array list.
+        list = filterList;
+        // below line is to notify our adapter
+        // as change in recycler view data.
+        notifyDataSetChanged();
+    }
+
     // Istanzio il ViewHolder
     @NonNull
     @Override
