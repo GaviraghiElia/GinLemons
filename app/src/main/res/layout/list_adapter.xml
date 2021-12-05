@@ -1,17 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-
-    <androidx.cardview.widget.CardView
+    
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/textViewRecyclerView"
-            android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <RelativeLayout
+            android:layout_width="50dp"
             android:layout_height="50dp"
-            android:paddingTop="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless"/>
-    </androidx.cardview.widget.CardView>
+            android:background="@color/purple_personal_dark">
+
+            <TextView
+                android:id="@+id/quadrato"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="T"
+                android:textColor="@color/white"
+                android:textSize="16dp" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/nomeRicetta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:text="@string/ricette"
+            android:textColor="@color/black"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="70dp" />
+
+    </RelativeLayout>
+
  </LinearLayout>

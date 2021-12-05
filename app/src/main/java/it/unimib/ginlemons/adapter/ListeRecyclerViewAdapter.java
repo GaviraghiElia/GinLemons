@@ -1,38 +1,39 @@
 package it.unimib.ginlemons.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import it.unimib.ginlemons.R;
+import it.unimib.ginlemons.utils.Ricetta;
 
-public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecyclerViewAdapter.ListeViewHolder> {
+public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecyclerViewAdapter.ListeViewHolder> implements Filterable {
 
-    public interface OnItemClickListener{
-        void onIntemClick(String s);
-    }
-
-    // Lista degli item da inserire nella RecyclerView
-    private String [] list;
+    private List<Ricetta> ricettaList;
+    private List<Ricetta> getRicettaListFiltered;
     // Interfaccia per definire la reazione al click su un elemento della RecyclerView
     private OnItemClickListener onItemClickListener;
 
-    public ListeRecyclerViewAdapter(String[] list, OnItemClickListener onItemClickListener){
-        this.list = list;
-        this.onItemClickListener = onItemClickListener;
+    public interface OnItemClickListener{
+        void onIntemClick(Ricetta ricetta);
     }
 
-    public void filterList(String[] filterList) {
-        // below line is to add our filtered
-        // list in our course array list.
-        list = filterList;
-        // below line is to notify our adapter
-        // as change in recycler view data.
-        notifyDataSetChanged();
+    // costruttore
+    public ListeRecyclerViewAdapter(List<Ricetta> ricettaList, OnItemClickListener onItemClickListener){
+        this.ricettaList = ricettaList;
+        this.getRicettaListFiltered = ricettaList;
+        this.onItemClickListener = onItemClickListener;
     }
 
     // Istanzio il ViewHolder
@@ -46,33 +47,75 @@ public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecycler
     // Bind tra item e dati
     @Override
     public void onBindViewHolder(@NonNull ListeViewHolder holder, int position) {
-        holder.bind(list[position]);
-        //holder.textView.setText(list[position]);
+        Ricetta ricetta = ricettaList.get(position);
+        holder.bind(ricetta.getName());
     }
 
     @Override
     public int getItemCount() {
-        return list.length;
+        return ricettaList.size();
     }
 
 
+    @Override
+    public Filter getFilter() {
+        Filter filter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults filterResults = new FilterResults();
+
+                if(constraint == null | constraint.length() == 0){
+                    filterResults.count = getRicettaListFiltered.size();
+                    filterResults.values = getRicettaListFiltered;
+
+                }else{
+                    // NON è case sensitive
+                    String searchChr = constraint.toString().toLowerCase();
+                    List<Ricetta> resultData = new ArrayList<>();
+
+                    for(Ricetta r: getRicettaListFiltered){
+                        if(r.getName().toLowerCase().contains(searchChr)){
+                            resultData.add(r);
+                        }
+                    }
+
+                    filterResults.count = resultData.size();
+                    filterResults.values = resultData;
+                }
+
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                ricettaList = (List<Ricetta>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+        return filter;
+    }
+
+
+    // nuova classe
     class ListeViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textView;
+        TextView name;
 
         public ListeViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.textViewRecyclerView);
+            name = itemView.findViewById(R.id.nomeRicetta);
         }
 
+        // set item RecyclerView
         public void bind(String s){
-            textView.setText(s);
+            name.setText(s);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onItemClickListener.onIntemClick(s);
+                    onItemClickListener.onIntemClick(ricettaList.get(getAdapterPosition()));
                 }
             });
         }
     }
+
 }

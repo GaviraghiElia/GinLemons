@@ -8,21 +8,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Array;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.ListeRecyclerViewAdapter;
+import it.unimib.ginlemons.utils.Ricetta;
 
 public class RicetteDiscoverFragment extends Fragment {
 
@@ -30,17 +31,18 @@ public class RicetteDiscoverFragment extends Fragment {
     private ListeRecyclerViewAdapter listeRecyclerViewAdapter;
 
     // Dati per test della RecycleView
-    private String [] names = {"Leporati", "Zandron", "Dennunzio", "Caravenna", "Stella", "Schettini",
-            "Leporati", "Zandron", "Dennunzio", "Caravenna", "Stella", "Schettini",
-            "Leporati", "Zandron", "Dennunzio", "Caravenna", "Stella", "Schettini",
-            "Leporati", "Zandron", "Dennunzio", "Caravenna", "Stella", "Schettini",};
-    //
+    List<Ricetta> ricettaList = new ArrayList<>();
+    private String [] names = {"Campari Spritz", "Aperol Spritz", "Hugo", "Mojito", "Mai Tai",
+            "Martini Spritz", "Martini", "Black Russian", "White Russian", "Vodka Lemon",
+            "Gin Tonic", "Gin Lemon", "Vodka Tonic", "Negroni", "Daiquiri", "Cosmopolitan",
+            "Leporati", "Zandron", "Dennunzio", "Caravenna", "Stella", "Schettini"};
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -53,11 +55,10 @@ public class RicetteDiscoverFragment extends Fragment {
 
         // Recyclerview
         RecyclerView recyclerView = view.findViewById(R.id.discover_recycler_view);
-        listeRecyclerViewAdapter = new ListeRecyclerViewAdapter(names, new ListeRecyclerViewAdapter.OnItemClickListener() {
-            // Listener per il click su un elemento della RecyclerView
+        listeRecyclerViewAdapter = new ListeRecyclerViewAdapter(ricettaList, new ListeRecyclerViewAdapter.OnItemClickListener() {
             @Override
-            public void onIntemClick(String s) {
-                Log.d(TAG, "onItemClickListener " + s);
+            public void onIntemClick(Ricetta ricetta) {
+                Log.d(TAG, "onItemClickListener " + ricetta.getName());
             }
         });
 
@@ -68,8 +69,14 @@ public class RicetteDiscoverFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
+        for(String s: names){
+            Ricetta ricetta = new Ricetta(s, 15, "2");
+            ricettaList.add(ricetta);
+        }
+
         return view;
     }
+
 
     @Override
     public void onResume() {
@@ -77,14 +84,15 @@ public class RicetteDiscoverFragment extends Fragment {
         super.onResume();
     }
 
+
     public void setTitleToolbar() {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
         toolbar.setTitle(R.string.discover_toolbar_title);
     }
 
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-
         // Inflate del Layout per la toolbar con la searchbar
         inflater.inflate(R.menu.searchbar_discover_menu, menu);
 
@@ -102,7 +110,8 @@ public class RicetteDiscoverFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                filter(newText);
+                listeRecyclerViewAdapter.getFilter().filter(newText);
+                //filter(newText);
                 return false;
             }
         });
@@ -110,27 +119,13 @@ public class RicetteDiscoverFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void filter (String text) {
-        String[] filteredList = new String[names.length];
-        int position = 0;
-
-        for (int i = 0; i < names.length; i++)
-            if (names[i].toLowerCase().contains(text.toLowerCase())) {
-                filteredList[position] = names[i];
-                position++;
-            }
-
-        // Se è vuota
-        /*
-        if(filteredList.isempty()){
-             // if no item is added in filtered list we are
-            // displaying a toast message as no data found.
-            Toast.makeText(this, "No Data Found..", Toast.LENGTH_SHORT).show();
-        } else {
-        */
-            // at last we are passing that filtered
-            // list to our adapter class.
-        listeRecyclerViewAdapter.filterList(filteredList);
-        //}
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_search_discover){
+           return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
+
 }
