@@ -8,6 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -19,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import it.unimib.ginlemons.R;
@@ -100,6 +104,7 @@ public class RicetteDiscoverFragment extends Fragment {
         MenuItem item = menu.findItem(R.id.action_search_discover);
         //SearchView searchView = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
         SearchView searchView = (SearchView) item.getActionView();
+        searchView.setQueryHint(getString(R.string.search_discover_title));
 
         // Cattura l'evento generato dalla scrittura del testo nella searchbar e dal submit della ricerca
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -121,10 +126,27 @@ public class RicetteDiscoverFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if(id == R.id.action_search_discover){
-           return true;
+        switch(item.getItemId()) {
+            case R.id.action_search_discover:
+                return true;
+            case R.id.ordine_alfabetico_crescente:
+                Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
+                listeRecyclerViewAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.ordine_alfabetico_decrescente:
+                Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoZA);
+                listeRecyclerViewAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.ordine_alcool_crescente:
+                Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlcoolCrescente);
+                listeRecyclerViewAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.ordine_alcool_decrescente:
+                Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlcoolDecrescente);
+                listeRecyclerViewAdapter.notifyDataSetChanged();
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

@@ -2,4 +2,8 @@
 <resources>
     <string name="discover">Discover</string>
     <string name="preferiti">Preferiti</string>
+    <string name="ordine_alfabetico_crescente_title"><![CDATA[A -> Z]]></string>
+    <string name="ordine_alfabetico_decrescente"><![CDATA[Z -> A]]></string>
+    <string name="ordine_alcool_decrescente_title">Crescente</string>
+    <string name="ordine_alcool_crescente_title">Crescnte</string>
 </resources>

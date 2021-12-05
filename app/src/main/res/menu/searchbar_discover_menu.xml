@@ -3,7 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_search_discover"
+        android:title=""
         android:icon="@android:drawable/ic_menu_search"
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
+    <item
+        android:id="@+id/sort_discover"
+        android:title=""
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        app:showAsAction="ifRoom|collapseActionView">
+        <menu>
+            <item
+                android:id="@+id/ordine_alfabetico_crescente"
+                android:icon="@android:drawable/ic_menu_sort_alphabetically"
+                android:title="@string/ordine_alfabetico_crescente_title"
+                app:showAsAction="ifRoom|collapseActionView" />
+            <item
+                android:id="@+id/ordine_alfabetico_decrescente"
+                android:icon="@android:drawable/ic_menu_sort_alphabetically"
+                android:title="@string/ordine_alfabetico_decrescente_title"
+                app:showAsAction="ifRoom|collapseActionView" />
+            <item
+                android:id="@+id/ordine_alcool_crescente"
+                android:title="@string/ordine_alcool_crescente_title"
+                app:showAsAction="ifRoom|collapseActionView" />
+            <item
+                android:id="@+id/ordine_alcool_decrescente"
+                android:title="@string/ordine_alcool_decrescente_title"
+                app:showAsAction="ifRoom|collapseActionView" />
+        </menu>
+    </item>
 </menu>
