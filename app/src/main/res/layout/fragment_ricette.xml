@@ -34,12 +34,3 @@
             android:layout_height="match_parent"
             android:layout_below="@id/tabs_ricette" />
 </RelativeLayout>
-
-    <!-- <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_ricette"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            app:title="Le mie ricette"/> -->

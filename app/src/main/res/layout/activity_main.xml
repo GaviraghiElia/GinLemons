@@ -47,11 +47,3 @@
         app:menu="@menu/bottom_navigation_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- add this
-    android:background="@drawable/myshadow"
-    to BottomNavBar for add shadow to navbar and
-     set this circular -->
-
-    <!-- background Google App Navbar
-     android:background="#f1f3f4 -->

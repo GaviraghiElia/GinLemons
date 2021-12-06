@@ -13,16 +13,15 @@
         <RelativeLayout
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@color/purple_personal_dark">
+            android:background="@drawable/row_discover_ricette">
 
-            <TextView
-                android:id="@+id/quadrato"
+            <ImageView
+                android:id="@+id/iconaRicetta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:srcCompat="@drawable/cocktail_bottom_navbar"
                 android:layout_centerInParent="true"
-                android:text="T"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
+                android:padding="10dp" />
 
         </RelativeLayout>
 
@@ -30,11 +29,29 @@
             android:id="@+id/nomeRicetta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:text="@string/ricette"
             android:textColor="@color/black"
             android:layout_centerVertical="true"
             android:layout_marginStart="70dp" />
+
+        <TextView
+            android:id="@+id/costoRicetta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="270dp"
+            android:text="€"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/alcoolRicetta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/costoRicetta"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="270dp"
+            android:text="15%"
+            android:textColor="@color/black" />
 
     </RelativeLayout>
 

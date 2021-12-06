@@ -6,10 +6,10 @@ public class Ricetta {
 
     private String name;
     private int alcool;
-    private String level;
+    private int level;
     private boolean preferito;
 
-    public Ricetta(String name, int alcool, String level){
+    public Ricetta(String name, int alcool, int level){
         this.name = name;
         this.alcool = alcool;
         this.level = level;
@@ -30,6 +30,14 @@ public class Ricetta {
 
     public void setAlcool(int alcool){
         this.alcool = alcool;
+    }
+
+    public int getLevel(){
+        return level;
+    }
+
+    public void setLevel(int level){
+        this.level = level;
     }
 
     public void addPreferito(){

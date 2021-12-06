@@ -36,10 +36,17 @@ public class RicetteDiscoverFragment extends Fragment {
 
     // Dati per test della RecycleView
     List<Ricetta> ricettaList = new ArrayList<>();
-    private String [] names = {"Campari Spritz", "Aperol Spritz", "Hugo", "Mojito", "Mai Tai",
-            "Martini Spritz", "Martini", "Black Russian", "White Russian", "Vodka Lemon",
-            "Gin Tonic", "Gin Lemon", "Vodka Tonic", "Negroni", "Daiquiri", "Cosmopolitan",
-            "Leporati", "Zandron", "Dennunzio", "Caravenna", "Stella", "Schettini"};
+    private Ricetta [] names = {new Ricetta("Campari Spritz", 10, 1),
+            new Ricetta("Aperol Spritz", 15, 2), new Ricetta("Micucci Spritz", 18, 3),
+            new Ricetta("Hugo", 8, 1), new Ricetta("Mojito", 14, 2),
+            new Ricetta("Mai Tai", 12, 2), new Ricetta("Martini Spritz", 13, 3),
+            new Ricetta("Martini", 20, 3), new Ricetta("Black Russian", 25, 2),
+            new Ricetta("White Russian", 26, 2), new Ricetta("Vodka Lemon", 19, 1),
+            new Ricetta("Gin Tonic", 17, 2), new Ricetta("Gin Lemon", 17, 2),
+            new Ricetta("Negroni", 22, 2), new Ricetta("Daiquiri", 14, 3),
+            new Ricetta("Cosmopolitan", 24, 3), new Ricetta("Leporati", 100, 3),
+            new Ricetta("Zandron", 100, 3), new Ricetta("Dennunzio", 100, 3)
+    };
 
 
     @Override
@@ -73,9 +80,8 @@ public class RicetteDiscoverFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        for(String s: names){
-            Ricetta ricetta = new Ricetta(s, 15, "2");
-            ricettaList.add(ricetta);
+        for(int i = 0; i < names.length; i++){
+            ricettaList.add(names[i]);
         }
 
         return view;
