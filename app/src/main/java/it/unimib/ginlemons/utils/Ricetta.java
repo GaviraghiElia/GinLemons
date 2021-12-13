@@ -40,6 +40,10 @@ public class Ricetta {
         this.level = level;
     }
 
+    public boolean isPreferito(){
+        return preferito;
+    }
+
     public void addPreferito(){
         preferito = true;
     }

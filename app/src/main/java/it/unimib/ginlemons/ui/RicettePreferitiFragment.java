@@ -9,9 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.unimib.ginlemons.R;
+import it.unimib.ginlemons.adapter.ListeRecyclerViewAdapter;
+import it.unimib.ginlemons.utils.Ricetta;
 
 public class RicettePreferitiFragment extends Fragment {
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

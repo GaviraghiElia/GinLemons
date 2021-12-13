@@ -1,5 +1,8 @@
 package it.unimib.ginlemons.ui;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +19,12 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,10 +72,71 @@ public class RicetteDiscoverFragment extends Fragment {
 
         // Recyclerview
         RecyclerView recyclerView = view.findViewById(R.id.discover_recycler_view);
+
+        // Swipe right do Add preferite
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            // backgound swipe
+            private ColorDrawable background = new ColorDrawable(getResources().getColor(R.color.purple_personal));
+
+            // controllo lo swipe RIGHT
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                View itemView = viewHolder.itemView;
+                int backgroundCornerOffset = 50;
+
+                // setto il background
+                if (dX > 0) {
+                    background.setBounds(itemView.getLeft(), itemView.getTop(),
+                            itemView.getLeft() + ((int) dX) + backgroundCornerOffset,
+                            itemView.getBottom());
+
+                } else { // view is unSwiped
+                    background.setBounds(0, 0, 0, 0);
+                }
+                background.draw(c);
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                final int position = viewHolder.getAdapterPosition();
+                Ricetta ricetta = ricettaList.get(position);
+                String snack;
+                if(ricettaList.get(position).isPreferito() == false){
+                    ricettaList.get(position).addPreferito();
+                    snack = " aggiunto ai preferiti";
+                }else{
+                    ricettaList.get(position).removePreferito();
+                    snack = " rimosso dai preferiti";
+                }
+                listeRecyclerViewAdapter.notifyItemChanged(position);
+
+                Snackbar.make(recyclerView, ricetta.getName() + snack, Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(ricettaList.get(position).isPreferito() == false){
+                            ricettaList.get(position).addPreferito();
+                        }else{
+                            ricettaList.get(position).removePreferito();
+                        }
+                        listeRecyclerViewAdapter.notifyItemChanged(position);
+                    }
+                }).show();
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+
         listeRecyclerViewAdapter = new ListeRecyclerViewAdapter(ricettaList, new ListeRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onIntemClick(Ricetta ricetta) {
-                Log.d(TAG, "onItemClickListener " + ricetta.getName());
+                Log.d(TAG, "onItemClickListener " + ricetta.getName() + " preferito : " + ricetta.isPreferito());
             }
         });
 
@@ -86,6 +153,7 @@ public class RicetteDiscoverFragment extends Fragment {
 
         return view;
     }
+
 
 
     @Override
