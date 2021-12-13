@@ -34,6 +34,7 @@ import java.util.List;
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.ListeRecyclerViewAdapter;
 import it.unimib.ginlemons.utils.Ricetta;
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class RicetteDiscoverFragment extends Fragment {
 
@@ -86,20 +87,22 @@ public class RicetteDiscoverFragment extends Fragment {
             // controllo lo swipe RIGHT
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                View itemView = viewHolder.itemView;
-                int backgroundCornerOffset = 50;
-
-                // setto il background
-                if (dX > 0) {
-                    background.setBounds(itemView.getLeft(), itemView.getTop(),
-                            itemView.getLeft() + ((int) dX) + backgroundCornerOffset,
-                            itemView.getBottom());
-
-                } else { // view is unSwiped
-                    background.setBounds(0, 0, 0, 0);
+                final int position = viewHolder.getAdapterPosition();
+                Ricetta ricetta = ricettaList.get(position);
+                int background = 0;
+                if (ricetta.isPreferito() == false){
+                    background = getResources().getColor(R.color.green_add_light);
+                }else{
+                    background = getResources().getColor(R.color.red_delete_light);
                 }
-                background.draw(c);
+                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        .addSwipeRightBackgroundColor(getResources().getColor(R.color.green_add_light))
+                        .addSwipeRightActionIcon(R.drawable.ic_baseline_star_24)
+                        .create()
+                        .decorate();
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
             }
 
             @Override

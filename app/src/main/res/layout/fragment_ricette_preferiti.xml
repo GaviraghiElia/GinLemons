@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.RicettePreferitiFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/preferiti_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:text="@string/preferiti" />
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"/>
 
 </FrameLayout>
