@@ -31,10 +31,19 @@ public class RicetteInfoActivity extends AppCompatActivity {
         int alcool = intent.getIntExtra(RicetteDiscoverFragment.ITEM_ALCOOL_PRESSED_KEY, 0);
         int costo = intent.getIntExtra(RicetteDiscoverFragment.ITEM_LEVEL_PRESSED_KEY, 0);
 
+        // set transition
+        Fade fade = new Fade();
+        View decor = getWindow().getDecorView();
+        fade.excludeTarget(decor.findViewById(R.id.activity_info_toolbar), true);
+        getWindow().setEnterTransition(fade);
+        getWindow().setExitTransition(fade);
+
 
         ScrollView scrollView = findViewById(R.id.scrollViewInfo);
         ExtendedFloatingActionButton fbutton = findViewById(R.id.add_to_list_extended_floating_action_button);
 
+        // serve almeno la versione 23, noi lavoriamo con la 21
+        // non c'è un gran divario
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override

@@ -12,6 +12,9 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+        // transition effect
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="Theme.GinLemons.NoActionBar">
