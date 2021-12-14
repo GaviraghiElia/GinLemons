@@ -2,6 +2,7 @@ package it.unimib.ginlemons.ui;
 
 
 import android.os.Bundle;
+import android.transition.Slide;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;

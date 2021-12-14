@@ -1,9 +1,9 @@
 package it.unimib.ginlemons.ui;
 
+import android.content.Intent;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.transition.Slide;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,8 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -27,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,6 +37,10 @@ public class RicetteDiscoverFragment extends Fragment {
 
     private static final String TAG = "Discover_Recipes";
     private ListeRecyclerViewAdapter listeRecyclerViewAdapter;
+    public static final String ITEM_ALCOOL_PRESSED_KEY = "ItemAlcoolPressedKey";
+    public static final String ITEM_NAME_PRESSED_KEY = "ItemNamePressedKey";
+    public static final String ITEM_LEVEL_PRESSED_KEY = "ItemLevelPressedKey";
+
 
     // Dati per test della RecycleView
     List<Ricetta> ricettaList = new ArrayList<>();
@@ -60,7 +61,6 @@ public class RicetteDiscoverFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
     }
 
     @Override
@@ -81,20 +81,20 @@ public class RicetteDiscoverFragment extends Fragment {
                 return false;
             }
 
-            // backgound swipe
-            private ColorDrawable background = new ColorDrawable(getResources().getColor(R.color.purple_personal));
-
             // controllo lo swipe RIGHT
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                final int position = viewHolder.getAdapterPosition();
+
+                /* Logica: se apprtiene ai preferiti bar rossa, altrimenti bar verde in modo dimnamico...
+
                 Ricetta ricetta = ricettaList.get(position);
                 int background = 0;
-                if (ricetta.isPreferito() == false){
+                if (!ricetta.isPreferito()){
                     background = getResources().getColor(R.color.green_add_light);
                 }else{
                     background = getResources().getColor(R.color.red_delete_light);
-                }
+                }*/
+
                 new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                         .addSwipeRightBackgroundColor(getResources().getColor(R.color.green_add_light))
                         .addSwipeRightActionIcon(R.drawable.ic_baseline_star_24)
@@ -107,10 +107,10 @@ public class RicetteDiscoverFragment extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                final int position = viewHolder.getAdapterPosition();
+                int position = viewHolder.getAdapterPosition();
                 Ricetta ricetta = ricettaList.get(position);
                 String snack;
-                if(ricettaList.get(position).isPreferito() == false){
+                if(! ricettaList.get(position).isPreferito()){
                     ricettaList.get(position).addPreferito();
                     snack = " aggiunto ai preferiti";
                 }else{
@@ -122,7 +122,7 @@ public class RicetteDiscoverFragment extends Fragment {
                 Snackbar.make(recyclerView, ricetta.getName() + snack, Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(ricettaList.get(position).isPreferito() == false){
+                        if(!ricettaList.get(position).isPreferito()){
                             ricettaList.get(position).addPreferito();
                         }else{
                             ricettaList.get(position).removePreferito();
@@ -140,6 +140,14 @@ public class RicetteDiscoverFragment extends Fragment {
             @Override
             public void onIntemClick(Ricetta ricetta) {
                 Log.d(TAG, "onItemClickListener " + ricetta.getName() + " preferito : " + ricetta.isPreferito());
+                Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
+                intent.putExtra(ITEM_NAME_PRESSED_KEY, ricetta.getName());
+                intent.putExtra(ITEM_ALCOOL_PRESSED_KEY, ricetta.getAlcool());
+                intent.putExtra(ITEM_LEVEL_PRESSED_KEY, ricetta.getLevel());
+                startActivity(intent);
+                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+
             }
         });
 
@@ -150,9 +158,7 @@ public class RicetteDiscoverFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        for(int i = 0; i < names.length; i++){
-            ricettaList.add(names[i]);
-        }
+        Collections.addAll(ricettaList, names);
 
         return view;
     }
@@ -193,7 +199,6 @@ public class RicetteDiscoverFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 listeRecyclerViewAdapter.getFilter().filter(newText);
-                //filter(newText);
                 return false;
             }
         });

@@ -16,6 +16,9 @@
         <entry key="..\:/Scuola/Progetto/app/src/main/res/drawable/row_discover_ricette.xml" value="0.3768518518518518" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/drawable/shadow.xml" value="0.24537037037037038" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_ricette_info.xml" value="0.22" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/content_ricette_info.xml" value="0.2793819655521783" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_first.xml" value="0.2793819655521783" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_liste.xml" value="0.33" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_liste_complete.xml" value="0.1" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_liste_home.xml" value="0.27760891590678827" />
@@ -23,7 +26,8 @@
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_ricette_discover.xml" value="0.18" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_ricette_preferite.xml" value="0.33" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_ricette_preferiti.xml" value="0.27760891590678827" />
-        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/list_adapter.xml" value="0.33" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_second.xml" value="0.2793819655521783" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/list_adapter.xml" value="0.1" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.30185185185185187" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/menu/searchbar_discover_menu.xml" value="0.325" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/menu/toolbar_menu.xml" value="0.33" />
