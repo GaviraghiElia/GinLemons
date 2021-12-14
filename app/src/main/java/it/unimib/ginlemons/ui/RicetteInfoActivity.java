@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.transition.TransitionInflater;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import it.unimib.ginlemons.R;
