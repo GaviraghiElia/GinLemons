@@ -56,7 +56,7 @@ public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecycler
         return ricettaList.size();
     }
 
-
+    // Metodo per filtrare la lista delle ricette
     @Override
     public Filter getFilter() {
         Filter filter = new Filter() {
@@ -86,6 +86,7 @@ public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecycler
                 return filterResults;
             }
 
+            // Metodo che sostituisce la lista delle ricette con quella filtrata
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 ricettaList = (List<Ricetta>) results.values;

@@ -217,6 +217,7 @@ public class RicetteDiscoverFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    // Selezione la lista da inserire nella RecyclerView a seconda dell'elemento del menu selezionato
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()) {

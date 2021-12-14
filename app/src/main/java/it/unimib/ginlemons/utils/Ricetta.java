@@ -52,6 +52,9 @@ public class Ricetta {
         preferito = false;
     }
 
+    // Metodi per il sort delle ricette nelle sezioni Esplora e Preferiti
+
+    // Ordine alfabetico crescente
     public static Comparator<Ricetta> OrdinaRicetteAlfabeticoAZ = new Comparator<Ricetta>() {
         @Override
         public int compare(Ricetta r1, Ricetta r2) {
@@ -59,6 +62,7 @@ public class Ricetta {
         }
     };
 
+    // Ordine alfabetico decrescente
     public static Comparator<Ricetta> OrdinaRicetteAlfabeticoZA = new Comparator<Ricetta>() {
         @Override
         public int compare(Ricetta r1, Ricetta r2) {
@@ -66,6 +70,7 @@ public class Ricetta {
         }
     };
 
+    // Ordine di gradazione alcolica crescente
     public static Comparator<Ricetta> OrdinaRicetteAlcoolCrescente = new Comparator<Ricetta>() {
         @Override
         public int compare(Ricetta r1, Ricetta r2) {
@@ -73,6 +78,7 @@ public class Ricetta {
         }
     };
 
+    // Ordine di gradazione alcolica decrescente
     public static Comparator<Ricetta> OrdinaRicetteAlcoolDecrescente = new Comparator<Ricetta>() {
         @Override
         public int compare(Ricetta r1, Ricetta r2) {
