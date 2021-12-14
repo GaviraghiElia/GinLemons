@@ -1,14 +1,19 @@
 package it.unimib.ginlemons.ui;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.transition.TransitionInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import it.unimib.ginlemons.R;
 
@@ -25,6 +30,32 @@ public class RicetteInfoActivity extends AppCompatActivity {
         String name = intent.getStringExtra(RicetteDiscoverFragment.ITEM_NAME_PRESSED_KEY);
         int alcool = intent.getIntExtra(RicetteDiscoverFragment.ITEM_ALCOOL_PRESSED_KEY, 0);
         int costo = intent.getIntExtra(RicetteDiscoverFragment.ITEM_LEVEL_PRESSED_KEY, 0);
+
+
+        ScrollView scrollView = findViewById(R.id.scrollViewInfo);
+        ExtendedFloatingActionButton fbutton = findViewById(R.id.add_to_list_extended_floating_action_button);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    if (scrollY > oldScrollY + 5 && fbutton.isShown()) {
+                        fbutton.shrink();
+                    }
+
+                    // the delay of the extension of the FAB is set for 12 items
+                    if (scrollY < oldScrollY - 5 && !fbutton.isShown()) {
+                        fbutton.extend();
+                    }
+
+                    // if the nestedScrollView is at the first item of the list then the
+                    // floating action should be in show state
+                    if (scrollY == 0) {
+                        fbutton.extend();
+                    }
+                }
+            });
+        }
 
         TextView textViewName = findViewById(R.id.nomeRicettaInfo);
         TextView textViewAlcool = findViewById(R.id.alcoolRicettaInfo);

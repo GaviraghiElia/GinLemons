@@ -40,6 +40,7 @@
       app:layout_constraintTop_toBottomOf="@+id/activity_info_toolbar" />
 
   <ScrollView
+      android:id="@+id/scrollViewInfo"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_marginTop="?attr/actionBarSize"
