@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.transition.Fade;
-import android.transition.Slide;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,7 +19,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +33,7 @@ import java.util.List;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.ListeRecyclerViewAdapter;
+import it.unimib.ginlemons.data.FetchData;
 import it.unimib.ginlemons.utils.Ricetta;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
@@ -67,7 +66,6 @@ public class RicetteDiscoverFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setTitleToolbar();
-
     }
 
     @Override
@@ -75,6 +73,8 @@ public class RicetteDiscoverFragment extends Fragment {
         // Inflate the layout for this fragment (Layout fragment per il discover recipes)
         View view =  inflater.inflate(R.layout.fragment_ricette_discover, container, false);
 
+        // TEST API
+        new FetchData().start();
 
         // Riferimento Recyclerview
         RecyclerView recyclerView = view.findViewById(R.id.discover_recycler_view);

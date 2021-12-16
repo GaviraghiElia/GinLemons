@@ -1,18 +1,32 @@
 package it.unimib.ginlemons.utils;
 
 import java.util.Comparator;
+import java.util.List;
 
 public class Ricetta {
 
     private String name;
     private int alcool;
     private int level;
+    private String istruzioni;
+    private String[] ingredienti;
+    private String[] dosi;
     private boolean preferito;
 
     public Ricetta(String name, int alcool, int level){
         this.name = name;
         this.alcool = alcool;
         this.level = level;
+        preferito = false;
+    }
+
+    public Ricetta(String name, int alcool, int level, String descrizione, String[] ingredienti, String[] dosi){
+        this.name = name;
+        this.alcool = alcool;
+        this.level = level;
+        this.istruzioni = istruzioni;
+        this.ingredienti = ingredienti;
+        this.dosi = dosi;
         preferito = false;
     }
 

@@ -38,6 +38,7 @@ public class RicettePreferitiFragment extends Fragment {
 
     // Dati per test della RecycleView
     List<Ricetta> ricettePreferitiList = new ArrayList<>();
+    String[] appo = {""};
     private Ricetta [] names = {new Ricetta("Campari Spritz", 10, 1),
             new Ricetta("Aperol Spritz", 15, 2), new Ricetta("Micucci Spritz", 18, 3),
             new Ricetta("Hugo", 8, 1), new Ricetta("Mojito", 14, 2),
