@@ -1,5 +1,6 @@
 package it.unimib.ginlemons.ui;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,9 +8,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Fade;
-import android.transition.TransitionInflater;
+import androidx.appcompat.widget.Toolbar;
+
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -39,6 +41,7 @@ public class RicetteInfoActivity extends AppCompatActivity {
         getWindow().setExitTransition(fade);
 
 
+        // Bottone add to list
         ScrollView scrollView = findViewById(R.id.scrollViewInfo);
         ExtendedFloatingActionButton fbutton = findViewById(R.id.add_to_list_extended_floating_action_button);
 
@@ -66,6 +69,15 @@ public class RicetteInfoActivity extends AppCompatActivity {
             });
         }
 
+        // Codice Toolbar -- ultima push
+        Toolbar myToolbar = findViewById(R.id.activity_info_toolbar);
+        myToolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24);
+        myToolbar.setTitle(name);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        // Set campi intent
         TextView textViewName = findViewById(R.id.nomeRicettaInfo);
         TextView textViewAlcool = findViewById(R.id.alcoolRicettaInfo);
         TextView textViewCosto = findViewById(R.id.costoRicettaInfo);
@@ -100,6 +112,31 @@ public class RicetteInfoActivity extends AppCompatActivity {
                 "ALTRI COCKTAIL DA PROVARE: Mojito, Negroni, Bloody Mary, Moscow Mule, Margarita, Daiquiri, Dry martini, Manhattan, Cuba Libre\n" +
                 "\n" +
                 "Ecco quali sono i 10 attrezzi imperdibili per preparare ottimi cocktail a casa vostra.");
+    }
+    /*
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
 
     }
+    */
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 }

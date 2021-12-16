@@ -20,6 +20,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -149,6 +150,7 @@ public class RicetteDiscoverFragment extends Fragment {
             @Override
             public void onIntemClick(Ricetta ricetta) {
                 Log.d(TAG, "onItemClickListener " + ricetta.getName() + " preferito : " + ricetta.isPreferito());
+
                 Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
                 intent.putExtra(ITEM_NAME_PRESSED_KEY, ricetta.getName());
                 intent.putExtra(ITEM_ALCOOL_PRESSED_KEY, ricetta.getAlcool());

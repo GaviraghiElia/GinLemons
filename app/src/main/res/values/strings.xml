@@ -7,8 +7,9 @@
     <string name="discover_toolbar_title">Esplora</string>
     <string name="preferiti_toolbar_title">Preferiti</string>
     <string name="search_discover_title">Cerca qui...</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="ricerca_ricette">Ricerca Ricette</string>
     <string name="discover">Esplora</string>
     <string name="preferiti">Preferiti</string>
@@ -20,6 +21,7 @@
     <string name="ordine_alcool_decrescente_title">Decrescente</string>
     <string name="ordine_alcool_crescente_title">Crescente</string>
     <string name="title_activity_ricette_info">RicetteInfoActivity</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
