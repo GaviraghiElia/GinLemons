@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "555813879324",
+    "project_id": "ginlemons-6adb3",
+    "storage_bucket": "ginlemons-6adb3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555813879324:android:7376f486cf6b6e691da9d9",
+        "android_client_info": {
+          "package_name": "it.unimib.ginlemons"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "555813879324-c6igu4att37g0bscc2bpes43ooa8ecn7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxQd2nKuLL5ky8NtBnJP5S3wXAvbhylHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "555813879324-c6igu4att37g0bscc2bpes43ooa8ecn7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

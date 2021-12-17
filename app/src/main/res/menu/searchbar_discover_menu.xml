@@ -6,10 +6,12 @@
         android:title=""
         android:icon="@android:drawable/ic_menu_search"
         app:showAsAction="ifRoom|collapseActionView"
+        android:iconTint="@color/white"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
     <item
         android:id="@+id/sort_discover"
         android:title=""
+        android:iconTint="@color/white"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         app:showAsAction="ifRoom|collapseActionView">
         <menu>

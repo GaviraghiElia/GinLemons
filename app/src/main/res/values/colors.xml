@@ -13,8 +13,7 @@
     <color name="purple_personal_light">#9c4dcc</color>
     <color name="red_delete_light">#ff6659</color>
     <color name="green_add_light">#4c8c4a</color>
+    <color name="grey_light_google">#efefef</color>
+    <color name="black_secondary">#484848</color>
 
-    <style name="Toolbar">
-        <item name="android:editTextColor">@color/white</item>
-    </style>
 </resources>
