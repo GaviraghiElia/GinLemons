@@ -129,8 +129,8 @@ public class RicetteInfoActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         finish();
+        super.onBackPressed();
     }
 
     @Override

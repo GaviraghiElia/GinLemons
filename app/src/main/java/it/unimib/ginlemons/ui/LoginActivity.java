@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
 
         signUp.setOnClickListener(view -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            this.finish();
          });
     }
 
@@ -77,10 +78,10 @@ public class LoginActivity extends AppCompatActivity {
                     if(task.isSuccessful()){
                         Toast.makeText(LoginActivity.this, "User login is successfully", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
                     }else{
                         String errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
                         Toast.makeText(LoginActivity.this, "Login Error :" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
                         /*if (errorCode.equals("ERROR_WRONG_PASSWORD") | errorCode.equals("ERROR_WEAK_PASSWORD")) {
                             /*Snackbar.make(findViewById(android.R.id.content), task.getException().getMessage(), Snackbar.LENGTH_LONG).setAction("Reset Password", new View.OnClickListener() {
                                 @Override
