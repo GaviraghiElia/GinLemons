@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button login;
     private Button signUp;
     private FirebaseAuth mAuth;
-    private ProgressBar progressBar;
+    private Button forgetPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.loginPassword);
         login = findViewById(R.id.buttonLogin);
         signUp = findViewById(R.id.buttonSignUp);
+        forgetPassword = findViewById(R.id.forgetPassword);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -56,6 +57,52 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             finish();
          });
+
+        // button forget passowrd
+        forgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText resetMail = new EditText(v.getContext());
+                AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
+                passwordResetDialog.setTitle("Reset Password?");
+                passwordResetDialog.setMessage("Enter your email to reset password");
+                passwordResetDialog.setView(resetMail);
+                // è convinto di cambiare email
+                passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String mail = resetMail.getText().toString();
+                        if (mail.isEmpty()){
+                            Toast.makeText(LoginActivity.this, "New password cannot be empty", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }else {
+                            mAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(LoginActivity.this, "Reset link sent to your mail", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(LoginActivity.this, "Error ! Reset Link is not sent"
+                                            + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                });
+
+                // vuole tornare indietro (ha sbagliato o ci ha ripensato)
+                passwordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                passwordResetDialog.create().show();
+            }
+        });
     }
 
     @Override
