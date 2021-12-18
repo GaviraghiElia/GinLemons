@@ -41,8 +41,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        email = findViewById(R.id.emailLogin);
-        password = findViewById(R.id.passwordLogin);
+        email = findViewById(R.id.loginEmail);
+        password = findViewById(R.id.loginPassword);
         login = findViewById(R.id.buttonLogin);
         signUp = findViewById(R.id.buttonSignUp);
 
@@ -61,26 +61,18 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        checkSession();
+        if(checkSession()){
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        finish();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        checkSession();
-    }
-
-    private void checkSession(){
+    private boolean checkSession(){
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            return true;
         }
+        return false;
     }
 
     private void loginUser() {

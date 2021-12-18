@@ -73,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_activity_menu, menu);
@@ -84,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId() == R.id.action_logout){
             mAuth.signOut();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

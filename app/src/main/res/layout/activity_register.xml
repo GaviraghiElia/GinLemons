@@ -11,7 +11,7 @@
     <ImageView
         android:id="@+id/imageRegister"
         android:layout_width="wrap_content"
-        android:layout_height="250dp"
+        android:layout_height="280dp"
         android:layout_gravity="center"
         android:layout_marginHorizontal="15dp"
         android:layout_marginTop="5dp"
@@ -22,7 +22,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="center"
+        android:layout_marginTop="5dp"
         android:layout_marginHorizontal="15dp">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,39 +32,51 @@
             android:gravity="center_horizontal"
             android:textSize="40sp"
             android:fontFamily="sans-serif-condensed-medium"/>
-        <EditText
-            android:id="@+id/nameRegister"
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"
-            android:layout_marginTop="14dp"
-            android:ems="10"
-            android:hint="your name"
-            android:inputType="text"
-            android:backgroundTint="@color/purple_personal_dark"
-            android:minHeight="48dp" />
-        <EditText
-            android:id="@+id/emailRegister"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="15dp"
-            android:layout_marginTop="14dp"
-            android:ems="10"
+            android:layout_marginTop="5dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:hint="@string/your_mail"
-            android:inputType="textEmailAddress"
-            android:backgroundTint="@color/purple_personal_dark"
-            android:minHeight="48dp"/>
-        <EditText
-            android:id="@+id/passwordRegister"
+            app:hintTextColor="@color/black_secondary"
+            app:boxStrokeWidthFocused="2dp"
+            app:startIconDrawable="@drawable/ic_baseline_mail_24"
+            app:startIconTint="@color/purple_personal_dark"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/black">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:id="@+id/registerEmail"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:inputType="textEmailAddress"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"
-            android:layout_marginTop="14dp"
-            android:ems="10"
+            android:layout_marginTop="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:hint="@string/password"
-            android:inputType="textPassword"
-            android:backgroundTint="@color/purple_personal_dark"
-            android:minHeight="48dp" />
+            app:hintTextColor="@color/black_secondary"
+            app:boxStrokeWidthFocused="2dp"
+            app:startIconDrawable="@drawable/ic_baseline_lock_24"
+            app:startIconTint="@color/purple_personal_dark"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/black">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:id="@+id/registerPassword"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/buttonRegister"
