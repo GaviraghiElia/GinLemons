@@ -4,15 +4,20 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
@@ -29,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button login;
     private Button signUp;
     private FirebaseAuth mAuth;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,28 +54,47 @@ public class LoginActivity extends AppCompatActivity {
 
         signUp.setOnClickListener(view -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-            this.finish();
+            finish();
          });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        checkSession();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        checkSession();
+    }
+
+    private void checkSession(){
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
         }
     }
 
-    private void loginUser(){
+    private void loginUser() {
         String e = email.getText().toString();
         String pwd = password.getText().toString();
 
-        if(TextUtils.isEmpty(e)){
+        if (TextUtils.isEmpty(e)) {
             email.setError("Email cannot be empty");
             email.requestFocus();
-        }else if (TextUtils.isEmpty(pwd)){
+        } else if (TextUtils.isEmpty(pwd)) {
             password.setError("Passowrd cannot be empty");
+            password.requestFocus();
+        }else if (pwd.isEmpty()){
+            password.setError("Password must be >= 6 characters");
             password.requestFocus();
         }else{
             mAuth.signInWithEmailAndPassword(e, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -80,19 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         finish();
                     }else{
-                        String errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
                         Toast.makeText(LoginActivity.this, "Login Error :" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        /*if (errorCode.equals("ERROR_WRONG_PASSWORD") | errorCode.equals("ERROR_WEAK_PASSWORD")) {
-                            /*Snackbar.make(findViewById(android.R.id.content), task.getException().getMessage(), Snackbar.LENGTH_LONG).setAction("Reset Password", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    //EditText resetMail = new EditText(v.getContext());
-                                    //AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
-                                    //passwordResetDialog.setTitle("Reset your password");
-
-                                }
-                            }).show();
-                        }*/
                     }
                 }
             });

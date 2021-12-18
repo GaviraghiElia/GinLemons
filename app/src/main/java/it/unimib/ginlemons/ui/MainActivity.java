@@ -3,6 +3,7 @@ package it.unimib.ginlemons.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser == null){
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
         }
     }
 
@@ -82,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId() == R.id.action_logout){
             mAuth.signOut();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

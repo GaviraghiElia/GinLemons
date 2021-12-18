@@ -45,6 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         signIn.setOnClickListener(view ->{
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            finish();
         });
     }
 
@@ -57,6 +58,9 @@ public class RegisterActivity extends AppCompatActivity {
             email.requestFocus();
         }else if (TextUtils.isEmpty(pwd)){
             password.setError("Passowrd cannot be empty");
+            password.requestFocus();
+        }else if(pwd.length() < 7){
+            password.setError("Passowrd must be more than 6 characters long");
             password.requestFocus();
         }else{
             firebaseAuth.createUserWithEmailAndPassword(e, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -75,9 +79,4 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStop() {
-        finish();
-        super.onStop();
-    }
 }
