@@ -23,19 +23,16 @@
       android:id="@+id/add_to_list_extended_floating_action_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="230dp"
-      android:layout_marginTop="600dp"
-      android:layout_marginEnd="10dp"
+      android:layout_gravity="end"
+      android:layout_marginEnd="20dp"
       android:layout_marginBottom="20dp"
       android:backgroundTint="@color/purple_personal_light"
       android:text="@string/add_to_list"
       android:textColor="@color/white"
       app:icon="@drawable/ic_baseline_add_24"
       app:iconTint="@color/white"
-      app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/activity_info_toolbar" />
+      app:layout_constraintBottom_toBottomOf="parent"/>
 
   <ScrollView
       android:id="@+id/scrollViewInfo"

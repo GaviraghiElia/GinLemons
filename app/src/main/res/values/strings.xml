@@ -40,4 +40,7 @@
     <string name="logout">Logout</string>
     <string name="remember_me">Remember Me</string>
     <string name="forget_password">Forget Password?</string>
+    <string name="forget_your_password">Forget your \n Password?</string>
+    <string name="reset">Reset</string>
+    <string name="enter_your_email">Enter your Email</string>
 </resources>

@@ -53,16 +53,9 @@ public class RicetteInfoActivity extends AppCompatActivity {
                 public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                     if (scrollY > oldScrollY + 5 && fbutton.isShown()) {
                         fbutton.shrink();
-                    }
-
-                    // the delay of the extension of the FAB is set for 12 items
-                    if (scrollY < oldScrollY - 5 && !fbutton.isShown()) {
+                    }else if (scrollY < oldScrollY - 20) {
                         fbutton.extend();
-                    }
-
-                    // if the nestedScrollView is at the first item of the list then the
-                    // floating action should be in show state
-                    if (scrollY == 0) {
+                    } else if (scrollY == 0) {
                         fbutton.extend();
                     }
                 }
@@ -77,7 +70,7 @@ public class RicetteInfoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        // Set campi intent
+        // Set campi textView
         TextView textViewName = findViewById(R.id.nomeRicettaInfo);
         TextView textViewAlcool = findViewById(R.id.alcoolRicettaInfo);
         TextView textViewCosto = findViewById(R.id.costoRicettaInfo);

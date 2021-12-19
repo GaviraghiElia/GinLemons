@@ -65,16 +65,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null){
+        if(!checkSession()){
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private boolean checkSession(){
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null){
+            return false;
+        }
+        return true;
     }
 
     @Override
