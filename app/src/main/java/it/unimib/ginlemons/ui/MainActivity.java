@@ -3,7 +3,6 @@ package it.unimib.ginlemons.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
-        appBarConfiguration = new AppBarConfiguration.Builder(R.id.listeFragment, R.id.ricetteFragment).build();
+        appBarConfiguration = new AppBarConfiguration.Builder(R.id.listeFragment, R.id.ricetteFragment, R.id.userProfileFragment).build();
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
@@ -66,8 +65,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if(!checkSession()){
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
     }
 
@@ -90,8 +91,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.action_logout){
             mAuth.signOut();
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

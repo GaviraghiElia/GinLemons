@@ -11,7 +11,7 @@
     <ImageView
         android:id="@+id/imageRegister"
         android:layout_width="wrap_content"
-        android:layout_height="280dp"
+        android:layout_height="260dp"
         android:layout_gravity="center"
         android:layout_marginHorizontal="15dp"
         android:layout_marginTop="5dp"
@@ -19,7 +19,7 @@
         android:contentDescription="Register Image" />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
@@ -32,6 +32,29 @@
             android:gravity="center_horizontal"
             android:textSize="40sp"
             android:fontFamily="sans-serif-condensed-medium"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="5dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:hint="@string/name"
+            app:hintTextColor="@color/black_secondary"
+            app:boxStrokeWidthFocused="2dp"
+            app:startIconDrawable="@drawable/ic_baseline_supervised_user_circle_24"
+            app:startIconTint="@color/purple_personal_dark"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/black">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:id="@+id/registerName"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:inputType="text"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -92,7 +115,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:textSize="13sp"
             android:gravity="center_horizontal"
             android:text="Already Register?"

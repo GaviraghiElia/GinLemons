@@ -43,4 +43,6 @@
     <string name="forget_your_password">Forget your \n Password?</string>
     <string name="reset">Reset</string>
     <string name="enter_your_email">Enter your Email</string>
+    <string name="name">Name</string>
+    <string name="profile">Profile</string>
 </resources>
