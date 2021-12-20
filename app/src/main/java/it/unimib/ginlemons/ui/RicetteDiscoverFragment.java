@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -34,16 +35,20 @@ import java.util.List;
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.ListeRecyclerViewAdapter;
 import it.unimib.ginlemons.data.FetchData;
+import it.unimib.ginlemons.repository.IRecipeRepository;
+import it.unimib.ginlemons.repository.RecipeRepository;
+import it.unimib.ginlemons.utils.ResponseCallback;
 import it.unimib.ginlemons.utils.Ricetta;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-public class RicetteDiscoverFragment extends Fragment {
+public class RicetteDiscoverFragment extends Fragment implements ResponseCallback{
 
     private static final String TAG = "Discover_Recipes";
-    private ListeRecyclerViewAdapter listeRecyclerViewAdapter;
     public static final String ITEM_ALCOOL_PRESSED_KEY = "ItemAlcoolPressedKey";
     public static final String ITEM_NAME_PRESSED_KEY = "ItemNamePressedKey";
     public static final String ITEM_LEVEL_PRESSED_KEY = "ItemLevelPressedKey";
+    private ListeRecyclerViewAdapter listeRecyclerViewAdapter;
+    private IRecipeRepository iRecipeRepository;
 
 
     // Dati test RecycleView
@@ -66,15 +71,14 @@ public class RicetteDiscoverFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setTitleToolbar();
+
+        iRecipeRepository = new RecipeRepository(requireActivity().getApplication(), this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment (Layout fragment per il discover recipes)
         View view =  inflater.inflate(R.layout.fragment_ricette_discover, container, false);
-
-        // TEST API
-        new FetchData().start();
 
         // Riferimento Recyclerview
         RecyclerView recyclerView = view.findViewById(R.id.discover_recycler_view);
@@ -176,7 +180,8 @@ public class RicetteDiscoverFragment extends Fragment {
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         // si popola l'ArrayList
-        Collections.addAll(ricettaList, names);
+        //Collections.addAll(ricettaList, names);
+        iRecipeRepository.fetchRecipes();
 
         return view;
     }
@@ -247,5 +252,25 @@ public class RicetteDiscoverFragment extends Fragment {
     public void setTitleToolbar() {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
         toolbar.setTitle(R.string.discover_toolbar_title);
+    }
+
+    // TEST API
+    @Override
+    public void onResponse(List<Ricetta> ricette) {
+
+        if(ricette != null)
+            ricettaList.addAll(ricette);
+
+        requireActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listeRecyclerViewAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    @Override
+    public void onFailure(String errorString) {
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), errorString, Snackbar.LENGTH_LONG).show();
     }
 }
