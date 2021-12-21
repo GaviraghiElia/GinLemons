@@ -52,18 +52,6 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
 
     // Dati test RecycleView
     List<Ricetta> ricettaList = new ArrayList<>();
-    private Ricetta [] names = {new Ricetta("Campari Spritz", 10, 1),
-            new Ricetta("Aperol Spritz", 15, 2), new Ricetta("Micucci Spritz", 18, 3),
-            new Ricetta("Hugo", 8, 1), new Ricetta("Mojito", 14, 2),
-            new Ricetta("Mai Tai", 12, 2), new Ricetta("Martini Spritz", 13, 3),
-            new Ricetta("Martini", 20, 3), new Ricetta("Black Russian", 25, 2),
-            new Ricetta("White Russian", 26, 2), new Ricetta("Vodka Lemon", 19, 1),
-            new Ricetta("Gin Tonic", 17, 2), new Ricetta("Gin Lemon", 17, 2),
-            new Ricetta("Negroni", 22, 2), new Ricetta("Daiquiri", 14, 3),
-            new Ricetta("Cosmopolitan", 24, 3), new Ricetta("Leporati", 100, 3),
-            new Ricetta("Zandron", 100, 3), new Ricetta("Dennunzio", 100, 3)
-    };
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -179,8 +167,7 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         // si popola l'ArrayList
-        //Collections.addAll(ricettaList, names);
-        iRecipeRepository.fetchRecipes();
+        iRecipeRepository.fetchRecipes("Alcoholic");
 
         return view;
     }
@@ -255,10 +242,10 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
 
     // TEST API
     @Override
-    public void onResponse(List<Ricetta> ricette) {
+    public void onResponse(Ricetta ricetta) {
 
-        if(ricette != null)
-            ricettaList.addAll(ricette);
+        if(ricetta != null)
+            ricettaList.add(ricetta);
 
         requireActivity().runOnUiThread(new Runnable() {
             @Override
@@ -269,13 +256,23 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
     }
 
     @Override
+    public void onResponse(String[] ids) {
+        if(ids != null) {
+            Log.d("Print", "Lunga" + ids.length);
+            for (int i = 0; i < ids.length; i++)
+                iRecipeRepository.getRecipeById(ids[i]);
+
+        }
+    }
+
+    @Override
     public void onFailure(String errorString) {
         Snackbar msg = Snackbar.make(requireActivity().findViewById(android.R.id.content), errorString, Snackbar.LENGTH_LONG);
 
         msg.setAction("Riprova", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iRecipeRepository.fetchRecipes();
+                //IRecipeRepository.fetchRecipes("Alcoholic");
             }
         });
 

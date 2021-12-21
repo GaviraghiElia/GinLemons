@@ -6,7 +6,7 @@ import android.util.Log;
 import java.util.List;
 
 import it.unimib.ginlemons.service.RecipeApiService;
-import it.unimib.ginlemons.utils.ListaRicette;
+import it.unimib.ginlemons.utils.IdList;
 import it.unimib.ginlemons.utils.ResponseCallback;
 import it.unimib.ginlemons.utils.Ricetta;
 import it.unimib.ginlemons.utils.ServiceLocator;
@@ -18,33 +18,59 @@ public class RecipeRepository implements IRecipeRepository{
 
     private static final String TAG = "NewsRepository";
     private final RecipeApiService recipeApiService;
+    private final RecipeApiService fetchApiService;
     private final ResponseCallback responseCallback;
 
     public RecipeRepository(Application application, ResponseCallback responseCallback) {
         this.recipeApiService = ServiceLocator.getInstance().getRecipeApiService();
+        this.fetchApiService = ServiceLocator.getInstance().fetchRecipesApiService();
         this.responseCallback = responseCallback;
     }
 
     @Override
-    public void fetchRecipes() {
+    public void getRecipeById(String id) {
+        Log.d("Test", "2");
+        Call<Ricetta> getRecipesCall = recipeApiService.getRecipeById(id);
 
-        Call<ListaRicette> getRecipesCall = recipeApiService.getRecipes("margarita");
-
-
-        getRecipesCall.enqueue(new Callback<ListaRicette>() {
+        getRecipesCall.enqueue(new Callback<Ricetta>() {
             @Override
-            public void onResponse(Call<ListaRicette> call, Response<ListaRicette> response) {
+            public void onResponse(Call<Ricetta> call, Response<Ricetta> response) {
                 if (response.body() != null && response.isSuccessful()) {
-                    List<Ricetta> recipes = response.body().getRecipes();
+                    Ricetta recipe = response.body();
 
-                    responseCallback.onResponse(recipes);
+                    responseCallback.onResponse(recipe);
                 } else {
                     responseCallback.onFailure("Caricamento Fallito");
                 }
             }
 
             @Override
-            public void onFailure(Call<ListaRicette> call, Throwable t) {
+            public void onFailure(Call<Ricetta> call, Throwable t) {
+                Log.d("Test", "Type 2");
+                responseCallback.onFailure(t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void fetchRecipes(String type) {
+        Call<IdList> getRecipeCall = fetchApiService.fetchRecipe(type);
+
+        getRecipeCall.enqueue(new Callback<IdList>() {
+            @Override
+            public void onResponse(Call<IdList> call, Response<IdList> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    String[] ids = response.body().getIds();
+
+                    responseCallback.onResponse(ids);
+                } else {
+                    responseCallback.onFailure("Caricamento Fallito");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IdList> call, Throwable t) {
+                Log.d("Test", "Type 1");
                 responseCallback.onFailure(t.getMessage());
             }
         });

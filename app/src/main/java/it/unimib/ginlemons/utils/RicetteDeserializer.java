@@ -14,21 +14,22 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RicetteDeserializer implements JsonDeserializer<ListaRicette> {
+public class RicetteDeserializer implements JsonDeserializer<Ricetta> {
 
     @Override
-    public ListaRicette deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-
-        List<Ricetta> recipes = new ArrayList<Ricetta>();
+    public Ricetta deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        Ricetta recipe = null;
 
         Gson gson = new Gson();
-        ListaRicette response = gson.fromJson(json, ListaRicette.class);
+        Ricetta response = gson.fromJson(json, Ricetta.class);
 
         final JsonObject jsonObject = json.getAsJsonObject();
         final JsonArray arrayricetteJSON = jsonObject.get("drinks").getAsJsonArray();
 
         for (JsonElement ricettaJSON : arrayricetteJSON) {
             final JsonObject ricetta = ricettaJSON.getAsJsonObject();
+
+            Log.d("Test", ricetta.get("idDrink").getAsString());
 
             String nome = ricetta.get("strDrink").getAsString();
             String istruzioni = ricetta.get("strInstructionsIT").getAsString();
@@ -48,9 +49,9 @@ public class RicetteDeserializer implements JsonDeserializer<ListaRicette> {
                     dosi[k - 1] = ricetta.get("strMeasure" + k).getAsString();
             }
 
-            recipes.add(new Ricetta(nome, 10, 2, istruzioni, ingredienti, dosi));
+            recipe = new Ricetta(nome, 10, 2, istruzioni, ingredienti, dosi);
         }
 
-        return new ListaRicette(recipes);
+        return recipe;
     }
 }

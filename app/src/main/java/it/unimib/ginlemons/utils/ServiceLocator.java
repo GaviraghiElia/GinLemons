@@ -22,7 +22,14 @@ public class ServiceLocator {
     }
 
     public RecipeApiService getRecipeApiService() {
-        Gson builder = new GsonBuilder().registerTypeAdapter(ListaRicette.class, new RicetteDeserializer()).create();
+        Gson builder = new GsonBuilder().registerTypeAdapter(Ricetta.class, new RicetteDeserializer()).create();
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://www.thecocktaildb.com/api/json/v1/1/").addConverterFactory(GsonConverterFactory.create(builder)).build();
+        return retrofit.create(RecipeApiService.class);
+    }
+
+    public RecipeApiService fetchRecipesApiService() {
+        Gson builder = new GsonBuilder().registerTypeAdapter(IdList.class, new IdsDeserializer()).create();
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://www.thecocktaildb.com/api/json/v1/1/").addConverterFactory(GsonConverterFactory.create(builder)).build();
         return retrofit.create(RecipeApiService.class);

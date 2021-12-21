@@ -3,6 +3,7 @@ package it.unimib.ginlemons.utils;
 import java.util.List;
 
 public interface ResponseCallback {
-    void onResponse(List<Ricetta> ricette);
+    void onResponse(Ricetta ricetta);
+    void onResponse(String[] ids);
     void onFailure(String errorString);
 }
