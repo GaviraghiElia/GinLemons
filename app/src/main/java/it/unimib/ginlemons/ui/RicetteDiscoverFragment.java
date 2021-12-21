@@ -34,7 +34,6 @@ import java.util.List;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.ListeRecyclerViewAdapter;
-import it.unimib.ginlemons.data.FetchData;
 import it.unimib.ginlemons.repository.IRecipeRepository;
 import it.unimib.ginlemons.repository.RecipeRepository;
 import it.unimib.ginlemons.utils.ResponseCallback;
@@ -271,6 +270,15 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
 
     @Override
     public void onFailure(String errorString) {
-        Snackbar.make(requireActivity().findViewById(android.R.id.content), errorString, Snackbar.LENGTH_LONG).show();
+        Snackbar msg = Snackbar.make(requireActivity().findViewById(android.R.id.content), errorString, Snackbar.LENGTH_LONG);
+
+        msg.setAction("Riprova", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iRecipeRepository.fetchRecipes();
+            }
+        });
+
+        msg.show();
     }
 }

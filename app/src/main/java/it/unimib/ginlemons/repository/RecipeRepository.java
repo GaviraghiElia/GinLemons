@@ -1,6 +1,7 @@
 package it.unimib.ginlemons.repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import java.util.List;
 
@@ -26,7 +27,9 @@ public class RecipeRepository implements IRecipeRepository{
 
     @Override
     public void fetchRecipes() {
+
         Call<ListaRicette> getRecipesCall = recipeApiService.getRecipes("margarita");
+
 
         getRecipesCall.enqueue(new Callback<ListaRicette>() {
             @Override
@@ -36,7 +39,7 @@ public class RecipeRepository implements IRecipeRepository{
 
                     responseCallback.onResponse(recipes);
                 } else {
-                    responseCallback.onFailure("Errore");
+                    responseCallback.onFailure("Caricamento Fallito");
                 }
             }
 

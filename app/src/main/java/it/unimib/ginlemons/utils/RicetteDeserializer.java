@@ -18,7 +18,6 @@ public class RicetteDeserializer implements JsonDeserializer<ListaRicette> {
 
     @Override
     public ListaRicette deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        Log.d("Test_Deserializer", "Using a custom deserializer for the Login request");
 
         List<Ricetta> recipes = new ArrayList<Ricetta>();
 
@@ -36,15 +35,17 @@ public class RicetteDeserializer implements JsonDeserializer<ListaRicette> {
             String[] ingredienti = new String[15];
             String[] dosi = new String[15];
 
-            Log.d("Deserializer", istruzioni);
-
             for (int k = 1; k <= 15; k++)
             {
-                ingredienti[k - 1] = ricetta.get("strIngredient" + k).getAsString();
-                dosi[k - 1] = ricetta.get("strMeasure" + k).getAsString();
+                if(ricetta.get("strIngredient" + k).isJsonNull())
+                    ingredienti[k - 1] = null;
+                else
+                    ingredienti[k - 1] = ricetta.get("strIngredient" + k).getAsString();
 
-                Log.d("Deserializer", "Ingrediente " + k + ": " + ingredienti[k - 1]);
-                Log.d("Deserializer", "Dose " + k + ": " + dosi[k - 1]);
+                if(ricetta.get("strMeasure" + k).isJsonNull())
+                    dosi[k - 1] = null;
+                else
+                    dosi[k - 1] = ricetta.get("strMeasure" + k).getAsString();
             }
 
             recipes.add(new Ricetta(nome, 10, 2, istruzioni, ingredienti, dosi));
