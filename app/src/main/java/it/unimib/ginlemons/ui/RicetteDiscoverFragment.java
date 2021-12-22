@@ -1,5 +1,6 @@
 package it.unimib.ginlemons.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityOptionsCompat;
@@ -167,7 +169,9 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         // si popola l'ArrayList
-        iRecipeRepository.fetchRecipes("Alcoholic");
+        Log.d("Print", "Lista" + ricettaList.isEmpty());
+        if(ricettaList.isEmpty())
+            iRecipeRepository.fetchRecipes("Alcoholic");
 
         return view;
     }
@@ -209,6 +213,7 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
     }
 
     // Selezione la lista da inserire nella RecyclerView a seconda dell'elemento del menu selezionato
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()) {
@@ -230,6 +235,22 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
                 Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlcoolDecrescente);
                 listeRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
+            case R.id.change_list: {
+                Log.d("Test", "Cambio: " + item.getTitle());
+
+                if (item.getTitle().equals(getString(R.string.list_analcolici))) {
+                    item.setTitle(getString(R.string.list_analcolici));
+                    ricettaList.clear();
+                    iRecipeRepository.fetchRecipes("Non_Alcoholic");
+                } else {
+                    item.setTitle(getString(R.string.list_alcolici));
+                    ricettaList.clear();
+                    iRecipeRepository.fetchRecipes("Alcoholic");
+                }
+
+                listeRecyclerViewAdapter.notifyDataSetChanged();
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -258,7 +279,6 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
     @Override
     public void onResponse(String[] ids) {
         if(ids != null) {
-            Log.d("Print", "Lunga" + ids.length);
             for (int i = 0; i < ids.length; i++)
                 iRecipeRepository.getRecipeById(ids[i]);
 

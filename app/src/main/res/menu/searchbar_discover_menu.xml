@@ -31,6 +31,10 @@
                 android:id="@+id/ordine_alcool_decrescente"
                 android:title="@string/ordine_alcool_decrescente_title"
                 app:showAsAction="ifRoom|collapseActionView" />
+            <item
+                android:id="@+id/change_list"
+                android:title="@string/list_alcolici"
+                app:showAsAction="ifRoom|collapseActionView" />
         </menu>
     </item>
 </menu>

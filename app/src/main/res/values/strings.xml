@@ -20,6 +20,8 @@
     <string name="ordine_alfabetico_decrescente_title"><![CDATA[Z -> A]]></string>
     <string name="ordine_alcool_decrescente_title">Decrescente</string>
     <string name="ordine_alcool_crescente_title">Crescente</string>
+    <string name="list_alcolici">Alcolici</string>
+    <string name="list_analcolici">Analcolici</string>
     <string name="title_activity_ricette_info">RicetteInfoActivity</string>
 
     <!-- Strings used for fragments for navigation -->

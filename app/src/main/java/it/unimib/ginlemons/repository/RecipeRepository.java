@@ -29,7 +29,6 @@ public class RecipeRepository implements IRecipeRepository{
 
     @Override
     public void getRecipeById(String id) {
-        Log.d("Test", "2");
         Call<Ricetta> getRecipesCall = recipeApiService.getRecipeById(id);
 
         getRecipesCall.enqueue(new Callback<Ricetta>() {
@@ -46,14 +45,14 @@ public class RecipeRepository implements IRecipeRepository{
 
             @Override
             public void onFailure(Call<Ricetta> call, Throwable t) {
-                Log.d("Test", "Type 2");
-                responseCallback.onFailure(t.getMessage());
+                    responseCallback.onFailure(t.getMessage());
             }
         });
     }
 
     @Override
     public void fetchRecipes(String type) {
+        Log.d("Test", "Tipo: " + type);
         Call<IdList> getRecipeCall = fetchApiService.fetchRecipe(type);
 
         getRecipeCall.enqueue(new Callback<IdList>() {
@@ -70,7 +69,6 @@ public class RecipeRepository implements IRecipeRepository{
 
             @Override
             public void onFailure(Call<IdList> call, Throwable t) {
-                Log.d("Test", "Type 1");
                 responseCallback.onFailure(t.getMessage());
             }
         });

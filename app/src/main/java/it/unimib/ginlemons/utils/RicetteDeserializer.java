@@ -29,10 +29,14 @@ public class RicetteDeserializer implements JsonDeserializer<Ricetta> {
         for (JsonElement ricettaJSON : arrayricetteJSON) {
             final JsonObject ricetta = ricettaJSON.getAsJsonObject();
 
-            Log.d("Test", ricetta.get("idDrink").getAsString());
-
             String nome = ricetta.get("strDrink").getAsString();
-            String istruzioni = ricetta.get("strInstructionsIT").getAsString();
+            String istruzioni;
+
+            if(ricetta.get("strInstructionsIT").isJsonNull())
+                istruzioni = ricetta.get("strInstructions").getAsString();
+            else
+                istruzioni = ricetta.get("strInstructionsIT").getAsString();
+
             String[] ingredienti = new String[15];
             String[] dosi = new String[15];
 
