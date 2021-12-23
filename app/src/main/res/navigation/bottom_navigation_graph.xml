@@ -57,7 +57,11 @@
         android:id="@+id/ricettePreferitiFragment"
         android:name="it.unimib.ginlemons.ui.RicettePreferitiFragment"
         android:label="fragment_ricette_preferiti"
-        tools:layout="@layout/fragment_ricette_preferiti" />
+        tools:layout="@layout/fragment_ricette_preferiti" >
+        <action
+            android:id="@+id/action_ricettePreferitiFragment_to_ricetteInfoActivity2"
+            app:destination="@id/ricetteInfoActivity" />
+    </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="it.unimib.ginlemons.ui.UserProfileFragment"
@@ -75,4 +79,9 @@
         android:name="it.unimib.ginlemons.ui.RicetteInfoActivity"
         android:label="activity_ricette_info"
         tools:layout="@layout/activity_ricette_info" />
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="it.unimib.ginlemons.ui.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
 </navigation>

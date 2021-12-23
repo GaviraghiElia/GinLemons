@@ -72,49 +72,28 @@
                 android:inputType="textEmailAddress"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="15dp"
-            android:layout_marginTop="15dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="@string/password"
-            app:hintTextColor="@color/black_secondary"
-            app:boxStrokeWidthFocused="2dp"
-            app:startIconDrawable="@drawable/ic_baseline_mail_24"
-            app:startIconTint="@color/purple_personal_dark"
-            app:endIconMode="clear_text"
-            app:endIconTint="@color/black"
-            android:visibility="gone">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:id="@+id/userProfilePassword"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:inputType="textPassword"/>
-        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/updateUserButton"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
+            android:paddingHorizontal="45dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/login_background_button"
+            android:background="@drawable/button_ripple_background"
             android:minHeight="48dp"
-            android:elevation="8dp"
+            android:elevation="4dp"
             android:text="@string/common_google_play_services_update_button"/>
 
-        <ProgressBar
-            android:id="@+id/progressBarUpdate"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/userForgetPassword"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:indeterminate="true"
-            android:indeterminateTint="@color/purple_personal"
-            android:visibility="gone"/>
+            android:layout_gravity="center"
+            android:text="@string/forget_password"
+            android:textColor="@color/black"
+            android:textSize="11sp"/>
 
     </LinearLayout>
 </FrameLayout>

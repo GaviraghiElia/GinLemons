@@ -244,7 +244,13 @@ public class RicetteDiscoverFragment extends Fragment {
     }
 
     public void setTitleToolbar() {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
-        toolbar.setTitle(R.string.discover_toolbar_title);
+
+        // fix il bug che faceva crashare l'app se facevi la restart activity
+        if(getActivity() != null){
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
+            if(toolbar != null){
+                toolbar.setTitle(R.string.discover_toolbar_title);
+            }
+        }
     }
 }

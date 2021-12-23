@@ -45,4 +45,7 @@
     <string name="enter_your_email">Enter your Email</string>
     <string name="name">Name</string>
     <string name="profile">Profile</string>
+    <string name="return_to_login">Return to \n Login</string>
+    <string name="already_register">Already Register?</string>
+    <string name="user_profile_toolbar_title">Profile</string>
 </resources>

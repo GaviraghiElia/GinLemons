@@ -142,8 +142,12 @@ public class RicettePreferitiFragment extends Fragment {
     }
 
     public void setTitleToolbar() {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
-        toolbar.setTitle(R.string.preferiti_toolbar_title);
+        if (getActivity() != null) {
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
+            if (toolbar != null) {
+                toolbar.setTitle(R.string.preferiti_toolbar_title);
+            }
+        }
     }
 
 

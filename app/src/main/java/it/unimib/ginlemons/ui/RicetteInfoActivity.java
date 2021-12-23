@@ -65,10 +65,9 @@ public class RicetteInfoActivity extends AppCompatActivity {
         // Codice Toolbar -- ultima push
         Toolbar myToolbar = findViewById(R.id.activity_info_toolbar);
         myToolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24);
-        myToolbar.setTitle(name);
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        myToolbar.setTitle(name);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         // Set campi textView
         TextView textViewName = findViewById(R.id.nomeRicettaInfo);

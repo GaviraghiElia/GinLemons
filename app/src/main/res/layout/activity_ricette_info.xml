@@ -13,6 +13,7 @@
       android:id="@+id/activity_info_toolbar"
       android:background="?attr/colorPrimary"
       android:minHeight="?attr/actionBarSize"
+      app:title="Toolbar"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
@@ -54,7 +55,8 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="20dp"
           android:layout_gravity="center"
-          app:srcCompat="@drawable/cocktail_bottom_navbar" />
+          app:srcCompat="@drawable/cocktail_bottom_navbar"
+          android:contentDescription="Temporanea, da sostituire" />
 
       <RelativeLayout
           android:id="@+id/titoloInfo"
@@ -83,11 +85,11 @@
           android:id="@+id/descrizioneInfo"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginHorizontal="40dp"
           android:layout_marginTop="10dp"
           android:padding="30dp"
           android:background="@drawable/description_fast_info_ricette"
-          android:layout_marginHorizontal="30dp"
-          android:elevation="4dp"
+          android:elevation="8dp"
           app:layout_constraintTop_toBottomOf="@+id/titoloInfo">
 
         <TextView
@@ -117,6 +119,9 @@
           android:layout_marginHorizontal="30dp"
           android:layout_marginBottom="75dp"
           app:layout_constraintTop_toBottomOf="@+id/descrizioneInfo" />
+
     </LinearLayout>
+
   </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
