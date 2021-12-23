@@ -171,7 +171,7 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
         // si popola l'ArrayList
         Log.d("Print", "Lista" + ricettaList.isEmpty());
         if(ricettaList.isEmpty())
-            iRecipeRepository.fetchRecipes("Alcoholic");
+            iRecipeRepository.fetchRecipes("Alcoholic", false);
 
         return view;
     }
@@ -236,16 +236,13 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
                 listeRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
             case R.id.change_list: {
-                Log.d("Test", "Cambio: " + item.getTitle());
-
-                if (item.getTitle().equals(getString(R.string.list_analcolici))) {
+                if (item.getTitle().equals(getString(R.string.list_alcolici)))
+                {
                     item.setTitle(getString(R.string.list_analcolici));
-                    ricettaList.clear();
-                    iRecipeRepository.fetchRecipes("Non_Alcoholic");
+                    iRecipeRepository.fetchRecipes("Alcoholic", true);
                 } else {
                     item.setTitle(getString(R.string.list_alcolici));
-                    ricettaList.clear();
-                    iRecipeRepository.fetchRecipes("Alcoholic");
+                    iRecipeRepository.fetchRecipes("Non_Alcoholic", true);
                 }
 
                 listeRecyclerViewAdapter.notifyDataSetChanged();
@@ -277,8 +274,11 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
     }
 
     @Override
-    public void onResponse(String[] ids) {
+    public void onResponse(String[] ids, boolean clear) {
         if(ids != null) {
+            if(clear)
+                ricettaList.clear();
+
             for (int i = 0; i < ids.length; i++)
                 iRecipeRepository.getRecipeById(ids[i]);
 
@@ -292,7 +292,7 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
         msg.setAction("Riprova", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //IRecipeRepository.fetchRecipes("Alcoholic");
+                iRecipeRepository.fetchRecipes("Alcoholic", true);
             }
         });
 
