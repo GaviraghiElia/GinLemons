@@ -1,7 +1,5 @@
 package it.unimib.ginlemons.utils;
 
-import android.util.Log;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -11,6 +9,8 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+// Custom deserializer per convertire il JSON ricevuto dall'API
+// Estraggo le informazioni dettagliate dei cocktails dagli oggetti JSON ricevuti
 public class IdsDeserializer implements JsonDeserializer<IdList> {
 
     @Override

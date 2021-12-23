@@ -6,6 +6,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
+// Interfaccia con le chiamate da fare all'API
 public interface RecipeApiService {
     @GET("filter.php")
     Call<IdList> fetchRecipe(@Query("a") String type);

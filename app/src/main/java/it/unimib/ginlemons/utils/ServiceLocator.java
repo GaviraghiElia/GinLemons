@@ -7,6 +7,7 @@ import it.unimib.ginlemons.service.RecipeApiService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+// Classe che inizializza il client Retrofit con cui si effettuano le chiamate all'API
 public class ServiceLocator {
     private static ServiceLocator instance = null;
 
@@ -21,6 +22,7 @@ public class ServiceLocator {
         return instance;
     }
 
+    // Inizializzazione per la chiamata che riceve le informazioni dettagliate di un cocktail
     public RecipeApiService getRecipeApiService() {
         Gson builder = new GsonBuilder().registerTypeAdapter(Ricetta.class, new RicetteDeserializer()).create();
 
@@ -28,6 +30,7 @@ public class ServiceLocator {
         return retrofit.create(RecipeApiService.class);
     }
 
+    // Inizializzazione per la chiamata che riceve gli Ids dei cocktails Alcolici o Analcolici
     public RecipeApiService fetchRecipesApiService() {
         Gson builder = new GsonBuilder().registerTypeAdapter(IdList.class, new IdsDeserializer()).create();
 

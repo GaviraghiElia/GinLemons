@@ -1,7 +1,5 @@
 package it.unimib.ginlemons.utils;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -11,9 +9,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
+// Custom Deserializer per le informazioni dettagliate di un cocktail
 public class RicetteDeserializer implements JsonDeserializer<Ricetta> {
 
     @Override
@@ -32,6 +29,7 @@ public class RicetteDeserializer implements JsonDeserializer<Ricetta> {
             String nome = ricetta.get("strDrink").getAsString();
             String istruzioni;
 
+            // Se non sono disponibili le istruzioni in italiano prendo quelle in inglese
             if(ricetta.get("strInstructionsIT").isJsonNull())
                 istruzioni = ricetta.get("strInstructions").getAsString();
             else

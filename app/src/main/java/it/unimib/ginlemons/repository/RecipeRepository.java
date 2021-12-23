@@ -11,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Classe che si occupa dell'interazione con l'API
 public class RecipeRepository implements IRecipeRepository{
 
     private static final String TAG = "NewsRepository";
@@ -19,11 +20,14 @@ public class RecipeRepository implements IRecipeRepository{
     private final ResponseCallback responseCallback;
 
     public RecipeRepository(Application application, ResponseCallback responseCallback) {
+        // Endpoint per richiedere le informazioni di un cocktail
         this.recipeApiService = ServiceLocator.getInstance().getRecipeApiService();
+        // Endpoint per richiedere i cocktail Alcolici o Analcolici
         this.fetchApiService = ServiceLocator.getInstance().fetchRecipesApiService();
         this.responseCallback = responseCallback;
     }
 
+    // Metodo che ottiene i dati dettagliati del cocktail con l'Id passato come parametro
     @Override
     public void getRecipeById(String id) {
         Call<Ricetta> getRecipesCall = recipeApiService.getRecipeById(id);
@@ -47,6 +51,8 @@ public class RecipeRepository implements IRecipeRepository{
         });
     }
 
+    // Metodo che ottiene gli Id dei cocktail Alcolici o Analcolici a seconda del parametro Type
+    // Il parametro clear indica se la lista delle ricette va cancellata o no prima di inserire i nuovi drink
     @Override
     public void fetchRecipes(String type, boolean clear) {
         Call<IdList> getRecipeCall = fetchApiService.fetchRecipe(type);

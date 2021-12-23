@@ -51,8 +51,7 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
     private ListeRecyclerViewAdapter listeRecyclerViewAdapter;
     private IRecipeRepository iRecipeRepository;
 
-
-    // Dati test RecycleView
+    // Lista delle ricette che finiscono nella RecyclerView
     List<Ricetta> ricettaList = new ArrayList<>();
 
     @Override
@@ -168,10 +167,9 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        // si popola l'ArrayList
-        Log.d("Print", "Lista" + ricettaList.isEmpty());
-        if(ricettaList.isEmpty())
-            iRecipeRepository.fetchRecipes("Alcoholic", false);
+        // Popolo l'ArrayList
+        // Di default "scarico" i cocktail alcolici
+        iRecipeRepository.fetchRecipes("Alcoholic", false);
 
         return view;
     }
@@ -258,13 +256,15 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
         toolbar.setTitle(R.string.discover_toolbar_title);
     }
 
-    // TEST API
+    // Metodi che gestiscono i dati ricevuti dalle chiamate all'API
+    // Aggiunge una ricetta dettagliata alla lista della RecyclerView
     @Override
     public void onResponse(Ricetta ricetta) {
 
         if(ricetta != null)
             ricettaList.add(ricetta);
 
+        // Metodo che avvisa la RecyclerView che i suoi dati sono stati aggiornati
         requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -273,6 +273,8 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
         });
     }
 
+    // Ricevo gli id dei cocktails Alcolici o Analcolici
+    // Per ognuno effettuo la richiesta all'API dei dati dettagliati del cocktail
     @Override
     public void onResponse(String[] ids, boolean clear) {
         if(ids != null) {
@@ -285,14 +287,23 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
         }
     }
 
+    // In caso di fallimento della chiamata avviso l'utente con un messaggio
+    // nella snackbar
     @Override
     public void onFailure(String errorString) {
         Snackbar msg = Snackbar.make(requireActivity().findViewById(android.R.id.content), errorString, Snackbar.LENGTH_LONG);
 
+        // Appare anche un pulsante che permette di riprovare la chiamata
         msg.setAction("Riprova", new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                iRecipeRepository.fetchRecipes("Alcoholic", true);
+            public void onClick(View v)
+            {
+                MenuItem item = getActivity().findViewById(R.id.change_list);
+
+                if(item.getTitle().equals(R.string.list_alcolici))
+                    iRecipeRepository.fetchRecipes("Non_Alcoholic", true);
+                else
+                    iRecipeRepository.fetchRecipes("Alcoholic", true);
             }
         });
 
