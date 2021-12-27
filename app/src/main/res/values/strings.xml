@@ -48,4 +48,5 @@
     <string name="return_to_login">Return to \n Login</string>
     <string name="already_register">Already Register?</string>
     <string name="user_profile_toolbar_title">Profile</string>
+    <string name="not_register">Not Register?</string>
 </resources>

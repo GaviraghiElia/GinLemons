@@ -30,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import it.unimib.ginlemons.R;
+import it.unimib.ginlemons.ui.authentication.AuthenticationActivity;
+import it.unimib.ginlemons.ui.authentication.EntryActivity;
 import it.unimib.ginlemons.utils.UserHelper;
 
 public class UserProfileFragment extends Fragment {
@@ -57,6 +59,7 @@ public class UserProfileFragment extends Fragment {
         email = view.findViewById(R.id.userProfileEmail);
         updateButton = view.findViewById(R.id.updateUserButton);
         userForgetPasswordButton = view.findViewById(R.id.userForgetPassword);
+
 
         BUTTON_RESET_COUNTER = 0;
 
@@ -220,7 +223,8 @@ public class UserProfileFragment extends Fragment {
                                                             // signOut
                                                             mAuth.signOut();
                                                             if(!checkSession()){
-                                                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                                                                startActivity(new Intent(getActivity(), AuthenticationActivity.class));
+                                                                getActivity().finish();
                                                             }
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {

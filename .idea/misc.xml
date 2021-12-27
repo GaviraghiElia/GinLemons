@@ -20,25 +20,30 @@
         <entry key="..\:/Scuola/Progetto/app/src/main/res/drawable/myshadow.xml" value="0.24537037037037038" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/drawable/row_discover_ricette.xml" value="0.3768518518518518" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/drawable/shadow.xml" value="0.24537037037037038" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_authentication.xml" value="0.2" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_entry.xml" value="0.5" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_forgot_password.xml" value="0.33" />
-        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_login.xml" value="0.1" />
-        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_login.xml" value="0.5" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_main.xml" value="0.22191011235955055" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_register.xml" value="0.33" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_ricette_info.xml" value="0.33" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/content_ricette_info.xml" value="0.2793819655521783" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_first.xml" value="0.2793819655521783" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_forgot_password.xml" value="0.33" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_liste.xml" value="0.33" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_liste_complete.xml" value="0.18" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_liste_home.xml" value="0.27760891590678827" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_login.xml" value="0.33" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_register.xml" value="0.33" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_ricette.xml" value="0.25" />
-        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_ricette_discover.xml" value="0.18" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_ricette_discover.xml" value="0.5" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_ricette_preferite.xml" value="0.33" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_ricette_preferiti.xml" value="0.27760891590678827" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_second.xml" value="0.2793819655521783" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/fragment_user_profile.xml" value="0.33" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/intro_1.xml" value="0.5" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/intro_2.xml" value="0.33" />
-        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/list_adapter.xml" value="0.1" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/list_adapter.xml" value="0.33" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.30185185185185187" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/menu/main_activity_menu.xml" value="0.5702564102564103" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/menu/searchbar_discover_menu.xml" value="0.325" />

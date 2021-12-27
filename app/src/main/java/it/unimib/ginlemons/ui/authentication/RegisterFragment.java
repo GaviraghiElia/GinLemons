@@ -1,38 +1,37 @@
-package it.unimib.ginlemons.ui;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+package it.unimib.ginlemons.ui.authentication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
 import it.unimib.ginlemons.R;
+import it.unimib.ginlemons.ui.LoginActivity;
+import it.unimib.ginlemons.ui.RegisterActivity;
 import it.unimib.ginlemons.utils.UserHelper;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterFragment extends Fragment {
 
     private TextInputEditText name;
     private TextInputEditText email;
@@ -44,34 +43,42 @@ public class RegisterActivity extends AppCompatActivity {
     private String userID;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_register);
-        name = findViewById(R.id.registerName);
-        email = findViewById(R.id.registerEmail);
-        password = findViewById(R.id.registerPassword);
-        registerButton = findViewById(R.id.buttonRegister);
-        signIn = findViewById(R.id.buttonSignIn);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_register, container, false);
+
+        name = view.findViewById(R.id.registerName);
+        email = view.findViewById(R.id.registerEmail);
+        password = view.findViewById(R.id.registerPassword);
+        registerButton = view.findViewById(R.id.buttonRegister);
+        signIn = view.findViewById(R.id.buttonSignIn);
 
         firebaseAuth = FirebaseAuth.getInstance();
         fDB = FirebaseDatabase.getInstance("https://ginlemons-6adb3-default-rtdb.europe-west1.firebasedatabase.app/");
         reference = fDB.getReference("users");
 
-
-        registerButton.setOnClickListener(view ->{
-            createUser();
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createUser();
+            }
         });
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_loginFragment);
             }
         });
+        return view;
     }
+
 
     private void createUser() {
         String fullName = name.getText().toString();
@@ -95,7 +102,6 @@ public class RegisterActivity extends AppCompatActivity {
             password.requestFocus();
         }else{
 
-
             firebaseAuth.createUserWithEmailAndPassword(sMail, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -105,27 +111,23 @@ public class RegisterActivity extends AppCompatActivity {
 
                         // set the realtime DB
                         reference.child(userID).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        Log.d("Firestore", "Successo");
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Log.d("Firestore", "Successo");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                    Log.d("Firestore", "Errore! DB non scritto");
+                                Log.d("Firestore", "Errore! DB non scritto");
                             }
                         });
 
-                        Toast.makeText(RegisterActivity.this, "User registered is successfully", Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+                        Toast.makeText(getContext(), "User registered is successfully", Toast.LENGTH_LONG).show();
+                        Navigation.findNavController(requireView()).navigate(R.id.action_registerFragment_to_loginFragment);
                         firebaseAuth.signOut();
 
                     }else{
-                        Toast.makeText(RegisterActivity.this, "Registration Error :" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Registration Error :" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });

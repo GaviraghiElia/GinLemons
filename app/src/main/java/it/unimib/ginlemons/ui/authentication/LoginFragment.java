@@ -1,12 +1,17 @@
-package it.unimib.ginlemons.ui;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+package it.unimib.ginlemons.ui.authentication;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,9 +21,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import it.unimib.ginlemons.R;
+import java.util.Objects;
 
-public class LoginActivity extends AppCompatActivity {
+import it.unimib.ginlemons.R;
+import it.unimib.ginlemons.ui.ForgotPasswordActivity;
+import it.unimib.ginlemons.ui.LoginActivity;
+import it.unimib.ginlemons.ui.MainActivity;
+import it.unimib.ginlemons.ui.RegisterActivity;
+
+public class LoginFragment extends Fragment {
 
     private EditText email;
     private EditText password;
@@ -26,51 +37,51 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_login);
+    }
 
-        email = findViewById(R.id.loginEmail);
-        password = findViewById(R.id.loginPassword);
-        login = findViewById(R.id.buttonLogin);
-        signUp = findViewById(R.id.buttonSignUp);
-        forgetPassword = findViewById(R.id.forgetPassword);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view =  inflater.inflate(R.layout.fragment_login, container, false);
+
+        email = view.findViewById(R.id.loginEmail);
+        password = view.findViewById(R.id.loginPassword);
+        login = view.findViewById(R.id.buttonLogin);
+        signUp = view.findViewById(R.id.buttonSignUp);
+        forgetPassword = view.findViewById(R.id.forgetPassword);
 
         mAuth = FirebaseAuth.getInstance();
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginUser();
+                loginUser(v);
             }
         });
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_registerFragment);
             }
-         });
+        });
+
 
         // button forget passowrd
         forgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_forgotPasswordFragment);
             }
         });
+        return view;
     }
 
 
-    private void loginUser() {
+    private void loginUser(View view) {
         String e = email.getText().toString();
         String pwd = password.getText().toString();
 
@@ -88,14 +99,11 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
-                        Toast.makeText(LoginActivity.this, "User login is successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-
+                        Toast.makeText(getContext(), "User login is successfully", Toast.LENGTH_SHORT).show();
+                        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_mainActivity);
+                        requireActivity().finish();
                     }else{
-                        Toast.makeText(LoginActivity.this, "Login Error :" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Login Error :" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });

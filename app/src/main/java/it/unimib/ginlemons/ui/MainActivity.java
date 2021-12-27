@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import it.unimib.ginlemons.R;
+import it.unimib.ginlemons.ui.authentication.AuthenticationActivity;
+import it.unimib.ginlemons.ui.authentication.EntryActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -65,10 +67,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if(!checkSession()){
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            startActivity(new Intent(MainActivity.this, EntryActivity.class));
+            finish();
         }
     }
 
@@ -91,10 +91,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.action_logout){
             mAuth.signOut();
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            startActivity(new Intent(MainActivity.this, EntryActivity.class));
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

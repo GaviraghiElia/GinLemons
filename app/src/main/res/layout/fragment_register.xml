@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.RegisterActivity">
-
+    tools:context=".ui.authentication.RegisterFragment">
     <ImageView
         android:id="@+id/imageRegister"
         android:layout_width="wrap_content"
@@ -15,7 +14,7 @@
         android:layout_marginHorizontal="15dp"
         android:layout_marginTop="5dp"
         app:srcCompat="@drawable/ic_register"
-        android:contentDescription="Register Image" />
+        android:contentDescription="@string/register" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -135,7 +134,6 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:text="@string/sign_in"
             android:textStyle="bold" />
-
 
     </LinearLayout>
 
