@@ -10,7 +10,7 @@
         android:name="it.unimib.ginlemons.ui.MainActivity"
         android:label="activity_main"
         tools:layout="@layout/activity_main">
-        </activity>
+    </activity>
 
     <fragment
         android:id="@+id/forgotPasswordFragment"

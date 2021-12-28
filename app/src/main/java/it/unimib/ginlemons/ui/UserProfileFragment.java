@@ -1,12 +1,15 @@
 package it.unimib.ginlemons.ui;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -101,14 +105,14 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 BUTTON_RESET_COUNTER ++;
-                if(BUTTON_RESET_COUNTER > 1){
-                    Toast.makeText(getContext(), "Keep calm: reset link already sent", Toast.LENGTH_LONG).show();
+                if(BUTTON_RESET_COUNTER > 3){
+                    Toast.makeText(getContext(), "Keep calm with the reset", Toast.LENGTH_LONG).show();
                 }else{
-                    AlertDialog.Builder insertMailDialog = new AlertDialog.Builder(requireActivity());
-                    insertMailDialog
+                    AlertDialog.Builder resetPasswordMailDialog = new AlertDialog.Builder(requireActivity());
+                    resetPasswordMailDialog
                             .setTitle("Forgot Password?");
                     // Preme "si"
-                    insertMailDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    resetPasswordMailDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String emailReset = mAuth.getCurrentUser().getEmail();
@@ -127,13 +131,13 @@ public class UserProfileFragment extends Fragment {
                             });
                         }
                     });
-                    insertMailDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    resetPasswordMailDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
                         }
                     });
-                    AlertDialog alertDialog = insertMailDialog.create();
+                    AlertDialog alertDialog = resetPasswordMailDialog.create();
                     alertDialog.show();
                 }
             }
@@ -174,12 +178,111 @@ public class UserProfileFragment extends Fragment {
                     });
 
                 } else if(!displayEmail.equals(onClickMail)){
+
                     // vuole cambiare mail? Allora si deve riautenticare sto infame
                     Log.d("Snapshot", "OnclickMail " + onClickMail + " DisplayMail = " + displayEmail);
 
+                    Dialog dialog = new Dialog(getContext());
+                    dialog.setContentView(R.layout.custom_password_dialog);
+                    dialog.setCancelable(true);
+                    final TextInputLayout inputLayoutPassword = dialog.findViewById(R.id.resetInputEmailPasswordLayout);
+                    final TextInputEditText insertPasswordChangeEmail = dialog.findViewById(R.id.resetInputEmailPassword);
+                    final Button cancel = dialog.findViewById(R.id.noButtonResetEmailPassword);
+                    final Button yes = dialog.findViewById(R.id.yesButtonResetEmailPassword);
+
+                    yes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(insertPasswordChangeEmail.getText().toString().isEmpty()){
+                                inputLayoutPassword.setError("Passowrd cannot be empty");
+                                insertPasswordChangeEmail.requestFocus();
+                            } else {
+                                Log.d("Snapshot", "Password inserita = " + insertPasswordChangeEmail.getText().toString());
+                                UserHelper userObj = new UserHelper(onClickName, onClickMail);
+                                String passwordInsert = insertPasswordChangeEmail.getText().toString();
+                                // Credenziali
+                                AuthCredential credential = EmailAuthProvider
+                                        .getCredential(displayEmail, passwordInsert); // Current Login Credentials \\
+
+                                //update
+                                Log.d("Snapshot", "Reauthenticate with " + displayEmail + " " +passwordInsert );
+                                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                                firebaseUser.reauthenticate(credential)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Log.d("Snapshot", "onSuccess reathenticate");
+
+                                                // update mail firebaseUser
+                                                firebaseUser.updateEmail(onClickMail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+
+                                                        // update the Real Time DB
+                                                        reference.child(mAuth.getCurrentUser().getUid()).setValue(userObj).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void unused) {
+                                                                // abbiamo finito
+
+                                                                // update display attribute
+                                                                displayEmail = onClickMail;
+                                                                displayName = onClickName;
+                                                                Log.d("Snapshot", "Update Real time DB");
+
+                                                                dialog.dismiss();
+                                                                Toast.makeText(getContext(), "Your information updated", Toast.LENGTH_SHORT).show();
+                                                                // signOut
+                                                                mAuth.signOut();
+                                                                if(!checkSession()){
+                                                                    startActivity(new Intent(getActivity(), AuthenticationActivity.class));
+                                                                    getActivity().finish();
+                                                                }
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.d("Snapshot", "User re-authenticated failed " + e.getMessage());
+                                                                Toast.makeText(getContext(), "Information not updated : please login", Toast.LENGTH_LONG).show();
+                                                            }
+                                                        });
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.d("Snapshot", "Fail update mail" + e.getMessage());
+                                                    }
+                                                });
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getContext(), "Password is not correct", Toast.LENGTH_SHORT).show();
+                                        inputLayoutPassword.setError("Password is not correct");
+                                        insertPasswordChangeEmail.requestFocus();
+                                        //insertPasswordChangeEmail.setError("Password is not correct");
+                                        Log.d("Snapshot", "onFailure reauthentication");
+                                    }
+                                });
+
+                            }
+                        }
+                    });
+
+                    cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    dialog.show();
+
+
+                    /*
                     // Dialog per inserimento password - deve autenticarsi prima di fare il change mail
-                    EditText insertPasswordChangeEmail = new EditText(v.getContext());
-                    AlertDialog.Builder insertPasswordUpdateMailDialog = new AlertDialog.Builder(getActivity());
+                    TextInputEditText insertPasswordChangeEmail = new TextInputEditText(v.getContext());
+                    insertPasswordChangeEmail.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    AlertDialog.Builder insertPasswordUpdateMailDialog = new AlertDialog.Builder(requireActivity());
                     insertPasswordUpdateMailDialog.setTitle("Want change your Email?");
                     insertPasswordUpdateMailDialog.setMessage("Enter Your Password");
                     insertPasswordUpdateMailDialog.setView(insertPasswordChangeEmail);
@@ -260,7 +363,7 @@ public class UserProfileFragment extends Fragment {
                         }
                     });
                     AlertDialog alertDialog = insertPasswordUpdateMailDialog.create();
-                    alertDialog.show();
+                    alertDialog.show();*/
 
                 }else {
                     Log.d("Snapshot", "Non è cambiato nulla");
@@ -291,4 +394,5 @@ public class UserProfileFragment extends Fragment {
         }
         return true;
     }
+
 }

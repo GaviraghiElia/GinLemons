@@ -1,13 +1,6 @@
 package it.unimib.ginlemons.ui.authentication;
 
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,18 +9,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.Objects;
-
 import it.unimib.ginlemons.R;
-import it.unimib.ginlemons.ui.ForgotPasswordActivity;
-import it.unimib.ginlemons.ui.LoginActivity;
-import it.unimib.ginlemons.ui.MainActivity;
-import it.unimib.ginlemons.ui.RegisterActivity;
 
 public class LoginFragment extends Fragment {
 
