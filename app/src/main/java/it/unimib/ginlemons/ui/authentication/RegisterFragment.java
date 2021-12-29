@@ -1,6 +1,8 @@
 package it.unimib.ginlemons.ui.authentication;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +55,11 @@ public class RegisterFragment extends Fragment {
         registerButton = view.findViewById(R.id.buttonRegister);
         signIn = view.findViewById(R.id.buttonSignIn);
 
+        // Text Watcher per abilitare il bottone di registrazione
+        name.addTextChangedListener(loginTextWatcher);
+        email.addTextChangedListener(loginTextWatcher);
+        password.addTextChangedListener(loginTextWatcher);
+
         firebaseAuth = FirebaseAuth.getInstance();
         fDB = FirebaseDatabase.getInstance("https://ginlemons-6adb3-default-rtdb.europe-west1.firebasedatabase.app/");
         reference = fDB.getReference("users");
@@ -72,6 +79,28 @@ public class RegisterFragment extends Fragment {
         });
         return view;
     }
+
+    // watcher of text change
+    private TextWatcher loginTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String nameInput = name.getText().toString();
+            String usernameInput = email.getText().toString();
+            String passwordInput = password.getText().toString();
+            registerButton.setEnabled((!nameInput.isEmpty()) && (!usernameInput.isEmpty()) && (!passwordInput.isEmpty()));
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
 
 
     private void createUser() {

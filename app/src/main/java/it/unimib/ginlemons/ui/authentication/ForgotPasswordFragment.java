@@ -1,6 +1,8 @@
 package it.unimib.ginlemons.ui.authentication;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +16,14 @@ import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
 import it.unimib.ginlemons.R;
 
 public class ForgotPasswordFragment extends Fragment {
 
-    private EditText emailReset;
+    private TextInputEditText emailReset;
     private Button resetButton;
     private Button returnLoginButton;
     private FirebaseAuth mAuth;
@@ -40,6 +43,23 @@ public class ForgotPasswordFragment extends Fragment {
         resetButton = view.findViewById(R.id.resetButton);
         returnLoginButton = view.findViewById(R.id.returnToLogin);
         mAuth = FirebaseAuth.getInstance();
+
+        emailReset.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                resetButton.setEnabled(!emailReset.getText().toString().isEmpty());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +83,6 @@ public class ForgotPasswordFragment extends Fragment {
                                     + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
-
 
                 }
             }

@@ -1,7 +1,9 @@
 package it.unimib.ginlemons.ui.authentication;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -22,8 +25,7 @@ import it.unimib.ginlemons.R;
 
 public class LoginFragment extends Fragment {
 
-    private EditText email;
-    private EditText password;
+    private TextInputEditText email, password;
     private Button login, signUp, forgetPassword;
     private FirebaseAuth mAuth;
 
@@ -43,6 +45,9 @@ public class LoginFragment extends Fragment {
         login = view.findViewById(R.id.buttonLogin);
         signUp = view.findViewById(R.id.buttonSignUp);
         forgetPassword = view.findViewById(R.id.forgetPassword);
+
+        email.addTextChangedListener(loginTextWatcher);
+        password.addTextChangedListener(loginTextWatcher);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -70,6 +75,29 @@ public class LoginFragment extends Fragment {
         });
         return view;
     }
+
+
+    // watcher of text change
+    private TextWatcher loginTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String usernameInput = email.getText().toString();
+            String passwordInput = password.getText().toString();
+            login.setEnabled(!usernameInput.isEmpty() && !passwordInput.isEmpty());
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+
 
 
     private void loginUser(View view) {
