@@ -95,7 +95,8 @@ public class ForgotPasswordFragment extends Fragment {
         returnLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
+                NavController navController = NavHostFragment.findNavController(ForgotPasswordFragment.this);
+                navController.navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
             }
         });
 

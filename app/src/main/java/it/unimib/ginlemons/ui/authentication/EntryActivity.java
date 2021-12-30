@@ -27,6 +27,7 @@ public class EntryActivity extends AppCompatActivity {
         } else {
             startActivity(new Intent(EntryActivity.this, AuthenticationActivity.class));
         }
+        finish();
     }
 
     private boolean checkSession(){

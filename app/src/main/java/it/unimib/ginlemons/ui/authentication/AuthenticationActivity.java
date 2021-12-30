@@ -25,4 +25,5 @@ public class AuthenticationActivity extends AppCompatActivity {
                 (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentAuthContainerView);
         navController = navHostFragment.getNavController();
     }
+
 }
