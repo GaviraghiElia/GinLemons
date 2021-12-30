@@ -8,12 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,6 +28,7 @@ public class LoginFragment extends Fragment {
     private TextInputEditText email, password;
     private Button login, signUp, forgetPassword;
     private FirebaseAuth mAuth;
+    private NavController navController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class LoginFragment extends Fragment {
         login = view.findViewById(R.id.buttonLogin);
         signUp = view.findViewById(R.id.buttonSignUp);
         forgetPassword = view.findViewById(R.id.forgetPassword);
+        navController = NavHostFragment.findNavController(this);
 
         email.addTextChangedListener(loginTextWatcher);
         password.addTextChangedListener(loginTextWatcher);
@@ -61,7 +63,7 @@ public class LoginFragment extends Fragment {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_registerFragment);
+                navController.navigate(R.id.action_loginFragment_to_registerFragment);
             }
         });
 
@@ -70,7 +72,7 @@ public class LoginFragment extends Fragment {
         forgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_forgotPasswordFragment);
+                navController.navigate(R.id.action_loginFragment_to_forgotPasswordFragment);
             }
         });
         return view;
@@ -81,7 +83,6 @@ public class LoginFragment extends Fragment {
     private TextWatcher loginTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
         }
 
         @Override
@@ -93,11 +94,8 @@ public class LoginFragment extends Fragment {
 
         @Override
         public void afterTextChanged(Editable s) {
-
         }
     };
-
-
 
 
     private void loginUser(View view) {
@@ -119,7 +117,7 @@ public class LoginFragment extends Fragment {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         Toast.makeText(getContext(), "User login is successfully", Toast.LENGTH_SHORT).show();
-                        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_mainActivity);
+                        navController.navigate(R.id.action_loginFragment_to_mainActivity);
                         requireActivity().finish();
                     }else{
                         Toast.makeText(getContext(), "Login Error :" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();

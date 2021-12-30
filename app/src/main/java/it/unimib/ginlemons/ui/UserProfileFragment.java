@@ -1,5 +1,7 @@
 package it.unimib.ginlemons.ui;
 
+import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -73,7 +75,7 @@ public class UserProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         // Istanza real time DB
-        fDB = FirebaseDatabase.getInstance("https://ginlemons-6adb3-default-rtdb.europe-west1.firebasedatabase.app/");
+        fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         reference = fDB.getReference("users");
 
         // Listener per dati Real Time sempre aggiornati
@@ -114,7 +116,7 @@ public class UserProfileFragment extends Fragment {
                     resetPasswordMailDialog
                             .setTitle("Forgot Password?");
                     // Preme "si"
-                    resetPasswordMailDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    resetPasswordMailDialog.setPositiveButton("Reset", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String emailReset = mAuth.getCurrentUser().getEmail();

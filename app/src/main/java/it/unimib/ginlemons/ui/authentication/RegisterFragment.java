@@ -1,5 +1,7 @@
 package it.unimib.ginlemons.ui.authentication;
 
+import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,7 +14,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -37,6 +40,7 @@ public class RegisterFragment extends Fragment {
     private FirebaseDatabase fDB;
     private DatabaseReference reference;
     private String userID;
+    private NavController navController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,7 @@ public class RegisterFragment extends Fragment {
         password = view.findViewById(R.id.registerPassword);
         registerButton = view.findViewById(R.id.buttonRegister);
         signIn = view.findViewById(R.id.buttonSignIn);
+        navController = NavHostFragment.findNavController(this);
 
         // Text Watcher per abilitare il bottone di registrazione
         name.addTextChangedListener(loginTextWatcher);
@@ -61,7 +66,7 @@ public class RegisterFragment extends Fragment {
         password.addTextChangedListener(loginTextWatcher);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        fDB = FirebaseDatabase.getInstance("https://ginlemons-6adb3-default-rtdb.europe-west1.firebasedatabase.app/");
+        fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         reference = fDB.getReference("users");
 
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +79,7 @@ public class RegisterFragment extends Fragment {
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_loginFragment);
+                navController.navigate(R.id.action_registerFragment_to_loginFragment);
             }
         });
         return view;
@@ -146,7 +151,7 @@ public class RegisterFragment extends Fragment {
                         });
 
                         Toast.makeText(getContext(), "User registered is successfully", Toast.LENGTH_LONG).show();
-                        Navigation.findNavController(requireView()).navigate(R.id.action_registerFragment_to_loginFragment);
+                        navController.navigate(R.id.action_registerFragment_to_loginFragment);
                         firebaseAuth.signOut();
 
                     }else{

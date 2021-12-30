@@ -29,6 +29,7 @@ public class ForgotPasswordFragment extends Fragment {
     private Button resetButton;
     private Button returnLoginButton;
     private FirebaseAuth mAuth;
+    private NavController navController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class ForgotPasswordFragment extends Fragment {
         resetButton = view.findViewById(R.id.resetButton);
         returnLoginButton = view.findViewById(R.id.returnToLogin);
         mAuth = FirebaseAuth.getInstance();
+        navController = NavHostFragment.findNavController(this);
 
         emailReset.addTextChangedListener(new TextWatcher() {
             @Override
@@ -75,9 +77,7 @@ public class ForgotPasswordFragment extends Fragment {
                         public void onSuccess(Void unused) {
                             Toast.makeText(getContext(), "Reset link sent to your mail",
                                     Toast.LENGTH_SHORT).show();
-                            NavController navController = NavHostFragment.findNavController(ForgotPasswordFragment.this);
                             navController.navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
-                            //Navigation.findNavController(view).navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
 
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -95,7 +95,6 @@ public class ForgotPasswordFragment extends Fragment {
         returnLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavController navController = NavHostFragment.findNavController(ForgotPasswordFragment.this);
                 navController.navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
             }
         });
