@@ -12,7 +12,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -73,7 +75,9 @@ public class ForgotPasswordFragment extends Fragment {
                         public void onSuccess(Void unused) {
                             Toast.makeText(getContext(), "Reset link sent to your mail",
                                     Toast.LENGTH_SHORT).show();
-                            Navigation.findNavController(view).navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
+                            NavController navController = NavHostFragment.findNavController(ForgotPasswordFragment.this);
+                            navController.navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
+                            //Navigation.findNavController(view).navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
 
                         }
                     }).addOnFailureListener(new OnFailureListener() {
