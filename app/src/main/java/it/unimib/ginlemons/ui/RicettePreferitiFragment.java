@@ -47,6 +47,7 @@ public class RicettePreferitiFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase fDB;
     private DatabaseReference reference;
+    private String Micucci;
 
     // Dati per test della RecycleView
     ArrayList<Ricetta> ricettePreferitiList;
