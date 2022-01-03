@@ -39,7 +39,6 @@ public class RegisterFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase fDB;
     private DatabaseReference reference;
-    private String userID;
     private NavController navController;
 
     @Override
@@ -134,7 +133,7 @@ public class RegisterFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
-                        userID = firebaseAuth.getCurrentUser().getUid();
+                        String userID = firebaseAuth.getCurrentUser().getUid();
                         UserHelper user = new UserHelper(fullName, sMail);
 
                         // set the realtime DB

@@ -9,11 +9,22 @@ public class Ricetta {
     private int level;
     private boolean preferito;
 
+    public Ricetta(){
+
+    }
+
     public Ricetta(String name, int alcool, int level){
         this.name = name;
         this.alcool = alcool;
         this.level = level;
         preferito = false;
+    }
+
+    public Ricetta(String name, int alcool, int level, boolean preferito){
+        this.name = name;
+        this.alcool = alcool;
+        this.level = level;
+        this.preferito = preferito;
     }
 
     public String getName(){

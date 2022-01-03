@@ -1,5 +1,7 @@
 package it.unimib.ginlemons.ui;
 
+import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
+
 import android.graphics.Canvas;
 import android.os.Bundle;
 
@@ -20,35 +22,34 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import it.unimib.ginlemons.R;
-import it.unimib.ginlemons.adapter.ListeRecyclerViewAdapter;
+import it.unimib.ginlemons.adapter.ListePreferitiAdapter;
 import it.unimib.ginlemons.utils.Ricetta;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class RicettePreferitiFragment extends Fragment {
 
     private static final String TAG = "Discover_Recipes";
-    private ListeRecyclerViewAdapter listeRecyclerViewAdapter;
+    private ListePreferitiAdapter listePreferitiAdapter;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase fDB;
+    private DatabaseReference reference;
 
     // Dati per test della RecycleView
-    List<Ricetta> ricettePreferitiList = new ArrayList<>();
-    private Ricetta [] names = {new Ricetta("Campari Spritz", 10, 1),
-            new Ricetta("Aperol Spritz", 15, 2), new Ricetta("Micucci Spritz", 18, 3),
-            new Ricetta("Hugo", 8, 1), new Ricetta("Mojito", 14, 2),
-            new Ricetta("Mai Tai", 12, 2), new Ricetta("Martini Spritz", 13, 3),
-            new Ricetta("Martini", 20, 3), new Ricetta("Black Russian", 25, 2),
-            new Ricetta("White Russian", 26, 2), new Ricetta("Vodka Lemon", 19, 1),
-            new Ricetta("Gin Tonic", 17, 2), new Ricetta("Gin Lemon", 17, 2),
-            new Ricetta("Negroni", 22, 2), new Ricetta("Daiquiri", 14, 3),
-            new Ricetta("Cosmopolitan", 24, 3), new Ricetta("Leporati", 100, 3),
-            new Ricetta("Zandron", 100, 3), new Ricetta("Dennunzio", 100, 3)
-    };
+    ArrayList<Ricetta> ricettePreferitiList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,38 @@ public class RicettePreferitiFragment extends Fragment {
         // Set Toolbar
         setTitleToolbar();
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
+        reference = fDB.getReference("favorites").child(firebaseAuth.getCurrentUser().getUid());
+
         RecyclerView recyclerView = view.findViewById(R.id.preferiti_recycler_view);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        ricettePreferitiList = new ArrayList<>();
+        listePreferitiAdapter = new ListePreferitiAdapter(ricettePreferitiList, new ListePreferitiAdapter.OnItemClickListener() {
+            @Override
+            public void onIntemClick(Ricetta ricetta) {
+                Log.d(TAG, "onItemClickListener " + ricetta.getName() + " preferito : " + ricetta.isPreferito());
+            }
+        });
+
+        recyclerView.setAdapter(listePreferitiAdapter);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ricettePreferitiList.clear(); // altrimenti fa i doppioni
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Ricetta ricetta = dataSnapshot.getValue(Ricetta.class);
+                    ricettePreferitiList.add(ricetta);
+                }
+                listePreferitiAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         // Swipe right do Add preferite
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -97,13 +129,42 @@ public class RicettePreferitiFragment extends Fragment {
                 // andrà inserita la logica: "ricetta.removePreferito() quando avremo un DB/qualsiasi
                 // che sia aggiornabile e condiviso
                 ricettePreferitiList.remove(position);
-                listeRecyclerViewAdapter.notifyItemRemoved(position);
+                reference.child(ricetta.getName())
+                        .removeValue()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Log.d("Preferito", "Rimosso dai preferiti nel real time DB");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Preferito", "Erorre nel real time DB");
+                    }
+                });
+
+                listePreferitiAdapter.notifyItemRemoved(position);
 
                 Snackbar.make(recyclerView, ricetta.getName() + " rimosso dai preferiti", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ricettePreferitiList.add(position, ricetta);
-                        listeRecyclerViewAdapter.notifyItemInserted(position);
+
+                        reference.child(ricetta.getName())
+                                .setValue(ricetta)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Log.d("Preferito", "Aggiunto ai preferiti nel real time DB");
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("Preferito", "Erorre nel real time DB");
+                            }
+                        });
+
+                        listePreferitiAdapter.notifyItemInserted(position);
                     }
                 }).show();
             }
@@ -112,24 +173,9 @@ public class RicettePreferitiFragment extends Fragment {
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
 
-        listeRecyclerViewAdapter = new ListeRecyclerViewAdapter(ricettePreferitiList, new ListeRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onIntemClick(Ricetta ricetta) {
-                Log.d(TAG, "onItemClickListener " + ricetta.getName() + " preferito : " + ricetta.isPreferito());
-            }
-        });
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        recyclerView.setAdapter(listeRecyclerViewAdapter);
-
         // Bordi per gli item della RecycleView
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
-
-        for(int i = 0; i < names.length; i++){
-            names[i].addPreferito();
-            ricettePreferitiList.add(names[i]);
-        }
 
         return view;
     }
@@ -171,7 +217,7 @@ public class RicettePreferitiFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                listeRecyclerViewAdapter.getFilter().filter(newText);
+                listePreferitiAdapter.getFilter().filter(newText);
                 //filter(newText);
                 return false;
             }
@@ -187,19 +233,19 @@ public class RicettePreferitiFragment extends Fragment {
                 return true;
             case R.id.ordine_alfabetico_crescente:
                 Collections.sort(ricettePreferitiList, Ricetta.OrdinaRicetteAlfabeticoAZ);
-                listeRecyclerViewAdapter.notifyDataSetChanged();
+                listePreferitiAdapter.notifyDataSetChanged();
                 return true;
             case R.id.ordine_alfabetico_decrescente:
                 Collections.sort(ricettePreferitiList, Ricetta.OrdinaRicetteAlfabeticoZA);
-                listeRecyclerViewAdapter.notifyDataSetChanged();
+                listePreferitiAdapter.notifyDataSetChanged();
                 return true;
             case R.id.ordine_alcool_crescente:
                 Collections.sort(ricettePreferitiList, Ricetta.OrdinaRicetteAlcoolCrescente);
-                listeRecyclerViewAdapter.notifyDataSetChanged();
+                listePreferitiAdapter.notifyDataSetChanged();
                 return true;
             case R.id.ordine_alcool_decrescente:
                 Collections.sort(ricettePreferitiList, Ricetta.OrdinaRicetteAlcoolDecrescente);
-                listeRecyclerViewAdapter.notifyDataSetChanged();
+                listePreferitiAdapter.notifyDataSetChanged();
                 return true;
         }
 
