@@ -19,7 +19,7 @@
                 android:id="@+id/ordine_alfabetico_crescente"
                 android:icon="@android:drawable/ic_menu_sort_alphabetically"
                 android:title="@string/ordine_alfabetico_crescente_title"
-                app:showAsAction="ifRoom|collapseActionView" />
+                app:showAsAction="ifRoom|collapseActionView"/>
             <item
                 android:id="@+id/ordine_alfabetico_decrescente"
                 android:icon="@android:drawable/ic_menu_sort_alphabetically"

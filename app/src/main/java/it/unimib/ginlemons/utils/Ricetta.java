@@ -7,7 +7,6 @@ public class Ricetta {
     private String name;
     private int alcool;
     private int level;
-    private boolean preferito;
 
     public Ricetta(){
 
@@ -17,15 +16,8 @@ public class Ricetta {
         this.name = name;
         this.alcool = alcool;
         this.level = level;
-        preferito = false;
     }
 
-    public Ricetta(String name, int alcool, int level, boolean preferito){
-        this.name = name;
-        this.alcool = alcool;
-        this.level = level;
-        this.preferito = preferito;
-    }
 
     public String getName(){
         return name;
@@ -49,18 +41,6 @@ public class Ricetta {
 
     public void setLevel(int level){
         this.level = level;
-    }
-
-    public boolean isPreferito(){
-        return preferito;
-    }
-
-    public void addPreferito(){
-        preferito = true;
-    }
-
-    public void removePreferito(){
-        preferito = false;
     }
 
     public static Comparator<Ricetta> OrdinaRicetteAlfabeticoAZ = new Comparator<Ricetta>() {

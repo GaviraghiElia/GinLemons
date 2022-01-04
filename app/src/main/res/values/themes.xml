@@ -17,16 +17,16 @@
 
         <!-- transition effect -->
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:textColorHint">@color/white</item>
     </style>
 
     <style name="Theme.GinLemons.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
-        <!-- change color icon toolbar -->
         <item name="android:textColorSecondary">@color/white</item>
         <item name="colorControlNormal">@color/white</item>
         <item name="android:textColorHint">@color/white</item>
+        <item name="android:editTextColor">@color/white</item>
 
     </style>
 

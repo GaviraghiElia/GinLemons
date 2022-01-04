@@ -30,8 +30,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,7 +87,8 @@ public class RicetteDiscoverFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
-        reference = fDB.getReference("favorites");
+        reference = fDB.getReference("favorites")
+                .child(firebaseAuth.getCurrentUser().getUid());
 
 
         // Riferimento Recyclerview
@@ -102,18 +106,9 @@ public class RicetteDiscoverFragment extends Fragment {
                                     @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
                                     int actionState, boolean isCurrentlyActive) {
 
-                /* Logica: se apprtiene ai preferiti bar rossa, altrimenti bar verde in modo dimnamico...
-                Ricetta ricetta = ricettaList.get(position);
-                int background = 0;
-                if (!ricetta.isPreferito()){
-                    background = getResources().getColor(R.color.green_add_light);
-                }else{
-                    background = getResources().getColor(R.color.red_delete_light);
-                }*/
-
                 // libreria esterna per settare colore e icona facilmente
                 new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                        .addSwipeRightBackgroundColor(getResources().getColor(R.color.green_add_light))
+                        .addSwipeRightBackgroundColor(getResources().getColor(R.color.yellow_preferits))
                         .addSwipeRightActionIcon(R.drawable.ic_baseline_star_24)
                         .create()
                         .decorate();
@@ -126,79 +121,21 @@ public class RicetteDiscoverFragment extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 Ricetta ricetta = ricettaList.get(position);
-                String snack;
-                if(! ricetta.isPreferito()){
-                    ricetta.addPreferito();
-                    snack = " aggiunto ai preferiti";
-                    Log.d("Preferito", "Aggiunto ai preferiti");
-                    reference.child(firebaseAuth.getCurrentUser().getUid())
-                            .child(ricetta.getName())
-                            .setValue(ricetta)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Log.d("Preferito", "Aggiunto ai preferiti nel real time DB");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("Preferito", "Erorre nel real time DB");
-                        }
-                    });
 
-                }else{
-                    ricetta.removePreferito();
-                    snack = " rimosso dai preferiti";
-                    Log.d("Preferito", "Rimosso dai preferiti");
-                    reference.child(firebaseAuth.getCurrentUser().getUid())
-                            .child(ricetta.getName())
-                            .removeValue()
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Log.d("Preferito", "Aggiunto ai preferiti nel real time DB");
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("Preferito", "Erorre nel real time DB");
-                        }
-                    });
-                }
-                listeRecyclerViewAdapter.notifyItemChanged(position);
-
-                Snackbar.make(recyclerView, ricetta.getName() + snack, Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                // check if esiste già nel DB == è già un preferito
+                reference.child(ricetta.getName())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onClick(View v) {
-                        if(!ricettaList.get(position).isPreferito()){
-                            ricettaList.get(position).addPreferito();
-                            Log.d("Preferito Snackbar", "Aggiunto ai preferiti");
-                            reference.child(firebaseAuth.getCurrentUser().getUid())
-                                    .child(ricetta.getName())
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(!dataSnapshot.exists()){
+                            // se non esiste, allora lo aggiungiamo ai preferiti
+                            reference.child(ricetta.getName())
                                     .setValue(ricetta)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
-                                            Log.d("Preferito", "Aggiunto ai preferiti nel real time DB");
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d("Preferito Snackbar", "Erorre nel real time DB");
-                                }
-                            });
-
-                        }else{
-                            ricettaList.get(position).removePreferito();
-                            Log.d("Preferito", "Rimosso dai preferiti");
-
-                            reference.child(firebaseAuth.getCurrentUser().getUid())
-                                    .child(ricetta.getName())
-                                    .removeValue()
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Log.d("Preferito", "Aggiunto ai preferiti nel real time DB");
+                                            Log.d("Preferito", "Aggiunto " + ricetta.getName() + " ai preferiti nel real time DB");
+                                            snackbarMake(recyclerView, ricetta, "aggiunta ai preferiti");
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -207,16 +144,38 @@ public class RicetteDiscoverFragment extends Fragment {
                                 }
                             });
 
+                        }else{
+                            // se già esiste, allora lo rimuoviamo dai preferiti
+                            reference.child(ricetta.getName())
+                                    .removeValue()
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d("Preferito", "Rimosso " + ricetta.getName() + " dai preferiti nel real time DB");
+                                            snackbarMake(recyclerView, ricetta, "rimossa dai preferiti");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("Preferito", "Erorre nel real time DB");
+                                }
+                            });
                         }
-                        listeRecyclerViewAdapter.notifyItemChanged(position);
                     }
-                }).show();
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.d("Preferito", "Errore " +databaseError.getMessage());
+                    }
+                });
+                listeRecyclerViewAdapter.notifyItemChanged(position);
             }
         };
+
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        // set transition on tap
+        // set transition to new activity
         Fade fade = new Fade();
         View decor = getActivity().getWindow().getDecorView();
         fade.excludeTarget(decor.findViewById(R.id.activity_toolbar), true);
@@ -226,7 +185,7 @@ public class RicetteDiscoverFragment extends Fragment {
         listeRecyclerViewAdapter = new ListeRecyclerViewAdapter(ricettaList, new ListeRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onIntemClick(Ricetta ricetta) {
-                Log.d(TAG, "onItemClickListener " + ricetta.getName() + " preferito : " + ricetta.isPreferito());
+                Log.d(TAG, "onItemClickListener " + ricetta.getName());
 
                 Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
                 intent.putExtra(ITEM_NAME_PRESSED_KEY, ricetta.getName());
@@ -238,9 +197,6 @@ public class RicetteDiscoverFragment extends Fragment {
                         ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), textViewName, ViewCompat.getTransitionName(textViewName));
 
                 startActivity(intent, optionsCompat.toBundle());
-
-                // old transition
-                //getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
             }
         });
@@ -263,6 +219,56 @@ public class RicetteDiscoverFragment extends Fragment {
     public void onResume() {
         setTitleToolbar();
         super.onResume();
+    }
+
+
+    public void snackbarMake(View view, Ricetta ricetta, String snack) {
+        Snackbar.make(view, ricetta.getName() +" " + snack, Snackbar.LENGTH_SHORT).setAction("Undo", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (snack.equals("aggiunta ai preferiti")) {
+                    // fa undo, l'ho inserito prima e ora quindi voglio rimuoverlo
+                    Log.d("Preferito", "Snack - rimozione " + ricetta.getName() + " dai preferiti");
+                    removePreferitoRealTimeDB(ricetta);
+                } else {
+                    // fa undo, l'ho rimosso prima e quindi ora voglio aggiungerlo
+                    Log.d("Preferito", "Snack - riaggiunta " + ricetta.getName() + " ai preferiti");
+                    addPreferitoRealTimeDB(ricetta);
+                }
+            }
+        }).show();
+    }
+
+    public void addPreferitoRealTimeDB(Ricetta ricetta){
+        reference.child(ricetta.getName())
+                .setValue(ricetta)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Preferito", "Snack - OnSuccess Aggiunto " + ricetta.getName() + " ai preferiti nel real time DB");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Preferito", "Snack - Erorre nel real time DB");
+            }
+        });
+    }
+
+    public void removePreferitoRealTimeDB(Ricetta ricetta){
+        reference.child(ricetta.getName())
+                .removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Preferito", "Rimosso " + ricetta.getName()+ " dai preferiti nel real time DB");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Preferito", "Erorre nel real time DB");
+            }
+        });
     }
 
 
@@ -329,4 +335,5 @@ public class RicetteDiscoverFragment extends Fragment {
             }
         }
     }
+
 }

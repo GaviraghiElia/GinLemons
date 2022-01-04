@@ -34,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.ListePreferitiAdapter;
@@ -76,7 +77,7 @@ public class RicettePreferitiFragment extends Fragment {
         listePreferitiAdapter = new ListePreferitiAdapter(ricettePreferitiList, new ListePreferitiAdapter.OnItemClickListener() {
             @Override
             public void onIntemClick(Ricetta ricetta) {
-                Log.d(TAG, "onItemClickListener " + ricetta.getName() + " preferito : " + ricetta.isPreferito());
+                Log.d(TAG, "onItemClickListener " + ricetta.getName());
             }
         });
 
@@ -126,15 +127,14 @@ public class RicettePreferitiFragment extends Fragment {
                 final int position = viewHolder.getAdapterPosition();
                 Ricetta ricetta = ricettePreferitiList.get(position);
 
-                // andrà inserita la logica: "ricetta.removePreferito() quando avremo un DB/qualsiasi
-                // che sia aggiornabile e condiviso
                 ricettePreferitiList.remove(position);
                 reference.child(ricetta.getName())
                         .removeValue()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
-                                Log.d("Preferito", "Rimosso dai preferiti nel real time DB");
+                                Log.d("Preferito", "Rimosso " + ricetta.getName() + " dai preferiti nel real time DB");
+                                snackbarMake(recyclerView, position, ricetta);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -250,6 +250,33 @@ public class RicettePreferitiFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void snackbarMake(View view, int position, Ricetta ricetta) {
+        Snackbar.make(view, ricetta.getName() +" rimossa dai preferiti ", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    // fa undo, l'ho rimosso prima e quindi ora voglio aggiungerlo
+                    Log.d("Preferito", "Snack - riaggiunta " + ricetta.getName() + " ai preferiti");
+                    addPreferitoRealTimeDB(ricetta);
+            }
+        }).show();
+    }
+
+    public void addPreferitoRealTimeDB(Ricetta ricetta){
+        reference.child(ricetta.getName())
+                .setValue(ricetta)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Preferito", "Snack - OnSuccess Aggiunto " + ricetta.getName() + " ai preferiti nel real time DB");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Preferito", "Snack - Erorre nel real time DB");
+            }
+        });
     }
 
 }
