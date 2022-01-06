@@ -1,6 +1,5 @@
 package it.unimib.ginlemons.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.utils.Ricetta;
 
-public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecyclerViewAdapter.ListeViewHolder> implements Filterable {
+public class DiscoverRicetteRecyclerViewAdapter extends RecyclerView.Adapter<DiscoverRicetteRecyclerViewAdapter.ListeViewHolder> implements Filterable {
 
     private List<Ricetta> ricettaList;
     private List<Ricetta> getRicettaListFiltered;
@@ -30,7 +28,7 @@ public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecycler
     }
 
     // costruttore
-    public ListeRecyclerViewAdapter(List<Ricetta> ricettaList, OnItemClickListener onItemClickListener){
+    public DiscoverRicetteRecyclerViewAdapter(List<Ricetta> ricettaList, OnItemClickListener onItemClickListener){
         this.ricettaList = ricettaList;
         this.getRicettaListFiltered = ricettaList;
         this.onItemClickListener = onItemClickListener;

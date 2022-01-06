@@ -41,14 +41,14 @@ import java.util.Collections;
 import java.util.List;
 
 import it.unimib.ginlemons.R;
-import it.unimib.ginlemons.adapter.ListeRecyclerViewAdapter;
+import it.unimib.ginlemons.adapter.DiscoverRicetteRecyclerViewAdapter;
 import it.unimib.ginlemons.utils.Ricetta;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class RicetteDiscoverFragment extends Fragment {
 
     private static final String TAG = "Discover_Recipes";
-    private ListeRecyclerViewAdapter listeRecyclerViewAdapter;
+    private DiscoverRicetteRecyclerViewAdapter discoverRicetteRecyclerViewAdapter;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase fDB;
     private DatabaseReference reference;
@@ -168,7 +168,7 @@ public class RicetteDiscoverFragment extends Fragment {
                         Log.d("Preferito", "Errore " +databaseError.getMessage());
                     }
                 });
-                listeRecyclerViewAdapter.notifyItemChanged(position);
+                discoverRicetteRecyclerViewAdapter.notifyItemChanged(position);
             }
         };
 
@@ -182,7 +182,7 @@ public class RicetteDiscoverFragment extends Fragment {
         getActivity().getWindow().setEnterTransition(fade);
         getActivity().getWindow().setExitTransition(fade);
 
-        listeRecyclerViewAdapter = new ListeRecyclerViewAdapter(ricettaList, new ListeRecyclerViewAdapter.OnItemClickListener() {
+        discoverRicetteRecyclerViewAdapter = new DiscoverRicetteRecyclerViewAdapter(ricettaList, new DiscoverRicetteRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onIntemClick(Ricetta ricetta) {
                 Log.d(TAG, "onItemClickListener " + ricetta.getName());
@@ -202,7 +202,7 @@ public class RicetteDiscoverFragment extends Fragment {
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        recyclerView.setAdapter(listeRecyclerViewAdapter);
+        recyclerView.setAdapter(discoverRicetteRecyclerViewAdapter);
 
         // Bordi per gli item della RecycleView
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
@@ -292,7 +292,7 @@ public class RicetteDiscoverFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                listeRecyclerViewAdapter.getFilter().filter(newText);
+                discoverRicetteRecyclerViewAdapter.getFilter().filter(newText);
                 return false;
             }
         });
@@ -307,19 +307,19 @@ public class RicetteDiscoverFragment extends Fragment {
                 return true;
             case R.id.ordine_alfabetico_crescente:
                 Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
-                listeRecyclerViewAdapter.notifyDataSetChanged();
+                discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
             case R.id.ordine_alfabetico_decrescente:
                 Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoZA);
-                listeRecyclerViewAdapter.notifyDataSetChanged();
+                discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
             case R.id.ordine_alcool_crescente:
                 Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlcoolCrescente);
-                listeRecyclerViewAdapter.notifyDataSetChanged();
+                discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
             case R.id.ordine_alcool_decrescente:
                 Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlcoolDecrescente);
-                listeRecyclerViewAdapter.notifyDataSetChanged();
+                discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
         }
 

@@ -16,7 +16,7 @@ import java.util.List;
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.utils.Ricetta;
 
-public class ListePreferitiAdapter extends RecyclerView.Adapter<ListePreferitiAdapter.ListeViewHolder> implements Filterable {
+public class PreferitiRicetteRecyclerviewAdapter extends RecyclerView.Adapter<PreferitiRicetteRecyclerviewAdapter.ListeViewHolder> implements Filterable {
 
     private ArrayList<Ricetta> ricettePreferitiList;
     private ArrayList<Ricetta> getRicettaListFiltered;
@@ -29,7 +29,7 @@ public class ListePreferitiAdapter extends RecyclerView.Adapter<ListePreferitiAd
     }
 
     // costruttore
-    public ListePreferitiAdapter(ArrayList<Ricetta> ricettePreferitiList, OnItemClickListener onItemClickListener){
+    public PreferitiRicetteRecyclerviewAdapter(ArrayList<Ricetta> ricettePreferitiList, OnItemClickListener onItemClickListener){
         this.ricettePreferitiList = ricettePreferitiList;
         this.getRicettaListFiltered = ricettePreferitiList;
         this.onItemClickListener = onItemClickListener;
