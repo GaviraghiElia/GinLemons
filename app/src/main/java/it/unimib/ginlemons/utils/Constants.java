@@ -6,6 +6,7 @@ public class Constants {
     public static final String ITEM_ALCOOL_PRESSED_KEY = "ItemAlcoolPressedKey";
     public static final String ITEM_NAME_PRESSED_KEY = "ItemNamePressedKey";
     public static final String ITEM_LEVEL_PRESSED_KEY = "ItemLevelPressedKey";
+    public static final String FRAGMENTFORTRANSITION = "FragmentIntent";
 
 
 

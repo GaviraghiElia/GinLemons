@@ -79,13 +79,7 @@ public class RicettePreferitiFragment extends Fragment {
             @Override
             public void onIntemClick(Ricetta ricetta) {
                 Log.d(TAG, "onItemClickListener " + ricetta.getName());
-                Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
-                intent.putExtra(ITEM_NAME_PRESSED_KEY, ricetta.getName());
-                intent.putExtra(ITEM_ALCOOL_PRESSED_KEY, ricetta.getAlcool());
-                intent.putExtra(ITEM_LEVEL_PRESSED_KEY, ricetta.getLevel());
-
-
-                startActivity(intent);
+                navigateToRicettaInfo(ricetta);
             }
         });
 
@@ -177,9 +171,9 @@ public class RicettePreferitiFragment extends Fragment {
                 }).show();
             }
         };
+
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(mBinding.preferitiRecyclerView);
-
 
         // Bordi per gli item della RecycleView
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mBinding.preferitiRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
@@ -285,6 +279,16 @@ public class RicettePreferitiFragment extends Fragment {
                 Log.d("Preferito", "Snack - Erorre nel real time DB");
             }
         });
+    }
+
+    public void navigateToRicettaInfo(Ricetta ricetta){
+        Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
+        intent.putExtra(FRAGMENTFORTRANSITION, "RicettePreferiti");
+        intent.putExtra(ITEM_NAME_PRESSED_KEY, ricetta.getName());
+        intent.putExtra(ITEM_ALCOOL_PRESSED_KEY, ricetta.getAlcool());
+        intent.putExtra(ITEM_LEVEL_PRESSED_KEY, ricetta.getLevel());
+        startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
 }

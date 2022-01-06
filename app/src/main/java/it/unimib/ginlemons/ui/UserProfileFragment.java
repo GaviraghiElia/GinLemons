@@ -19,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,6 +49,7 @@ public class UserProfileFragment extends Fragment {
     private DatabaseReference reference;
     private FragmentUserProfileBinding mBinding;
     private static int BUTTON_RESET_COUNTER;
+    private NavController navController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,7 @@ public class UserProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         mBinding = FragmentUserProfileBinding.inflate(inflater, container, false);
         View view = mBinding.getRoot();
+        navController = NavHostFragment.findNavController(this);
 
         setTitleToolbar();
 
@@ -249,7 +253,8 @@ public class UserProfileFragment extends Fragment {
                                                                 // signOut
                                                                 mAuth.signOut();
                                                                 if(!checkSession()){
-                                                                    startActivity(new Intent(getActivity(), AuthenticationActivity.class));
+                                                                    navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
+                                                                    //startActivity(new Intent(getActivity(), AuthenticationActivity.class));
                                                                     getActivity().finish();
                                                                 }
                                                             }

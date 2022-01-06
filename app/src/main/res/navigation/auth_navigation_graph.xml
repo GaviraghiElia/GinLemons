@@ -19,7 +19,7 @@
         tools:layout="@layout/fragment_forgot_password" >
         <action
             android:id="@+id/action_forgotPasswordFragment_to_loginFragment"
-            app:enterAnim="@anim/slide_in_left"
+            app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:destination="@id/loginFragment"
             app:popUpTo="@+id/loginFragment"
@@ -34,17 +34,17 @@
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_left"
+            app:exitAnim="@anim/slide_out_right"
             app:destination="@id/registerFragment" />
         <action
             android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_right"
+            app:exitAnim="@anim/slide_out_left"
             app:destination="@id/forgotPasswordFragment" />
         <action
             android:id="@+id/action_loginFragment_to_mainActivity"
-            app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_left"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
             app:destination="@id/mainActivity"
             app:popUpTo="@+id/mainActivity"
             app:popUpToInclusive="true"
@@ -58,7 +58,7 @@
         tools:layout="@layout/fragment_register">
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
-            app:enterAnim="@anim/slide_in_right"
+            app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_right"
             app:destination="@id/loginFragment"
             app:popUpTo="@+id/loginFragment"

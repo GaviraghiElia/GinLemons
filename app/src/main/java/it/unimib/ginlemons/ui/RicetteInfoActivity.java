@@ -13,11 +13,13 @@ import java.util.Objects;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.ActivityRicetteInfoBinding;
+import it.unimib.ginlemons.utils.Constants;
 
 
 public class RicetteInfoActivity extends AppCompatActivity {
 
     private ActivityRicetteInfoBinding mBinding;
+    private String fragmentProvenienza;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +31,10 @@ public class RicetteInfoActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        String name = intent.getStringExtra(RicetteDiscoverFragment.ITEM_NAME_PRESSED_KEY);
-        int alcool = intent.getIntExtra(RicetteDiscoverFragment.ITEM_ALCOOL_PRESSED_KEY, 0);
-        int costo = intent.getIntExtra(RicetteDiscoverFragment.ITEM_LEVEL_PRESSED_KEY, 0);
+        fragmentProvenienza = intent.getStringExtra(Constants.FRAGMENTFORTRANSITION);
+        String name = intent.getStringExtra(Constants.ITEM_NAME_PRESSED_KEY);
+        int alcool = intent.getIntExtra(Constants.ITEM_ALCOOL_PRESSED_KEY, 0);
+        int costo = intent.getIntExtra(Constants.ITEM_LEVEL_PRESSED_KEY, 0);
 
         // serve almeno la versione 23, noi lavoriamo con la 21
         // non c'è un gran divario
@@ -93,6 +96,13 @@ public class RicetteInfoActivity extends AppCompatActivity {
     public void onBackPressed() {
         finish();
         super.onBackPressed();
+
+        // transition in base al fragment di provenienza taaac
+        if(fragmentProvenienza.equals("RicettePreferiti")) {
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        }else{
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        }
     }
 
     @Override
@@ -100,5 +110,4 @@ public class RicetteInfoActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
-
 }

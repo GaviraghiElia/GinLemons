@@ -100,4 +100,5 @@ public class ForgotPasswordFragment extends Fragment {
 
         return view;
     }
+
 }

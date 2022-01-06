@@ -1,11 +1,11 @@
 package it.unimib.ginlemons.ui;
 
 import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
+import static it.unimib.ginlemons.utils.Constants.*;
 
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.transition.Fade;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -51,9 +53,7 @@ public class RicetteDiscoverFragment extends Fragment {
     private FirebaseDatabase fDB;
     private DatabaseReference reference;
     private FragmentRicetteDiscoverBinding mBinding;
-    public static final String ITEM_ALCOOL_PRESSED_KEY = "ItemAlcoolPressedKey";
-    public static final String ITEM_NAME_PRESSED_KEY = "ItemNamePressedKey";
-    public static final String ITEM_LEVEL_PRESSED_KEY = "ItemLevelPressedKey";
+    private NavController navController;
 
 
     // Dati test RecycleView - TEMPORANEI
@@ -89,6 +89,8 @@ public class RicetteDiscoverFragment extends Fragment {
         fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         reference = fDB.getReference("favorites")
                 .child(firebaseAuth.getCurrentUser().getUid());
+
+        navController = NavHostFragment.findNavController(this);
 
         // Swipe right per l'aggiunta al preferite
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -176,15 +178,11 @@ public class RicetteDiscoverFragment extends Fragment {
             @Override
             public void onIntemClick(Ricetta ricetta) {
                 Log.d(TAG, "onItemClickListener " + ricetta.getName());
-
-                Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
-                intent.putExtra(ITEM_NAME_PRESSED_KEY, ricetta.getName());
-                intent.putExtra(ITEM_ALCOOL_PRESSED_KEY, ricetta.getAlcool());
-                intent.putExtra(ITEM_LEVEL_PRESSED_KEY, ricetta.getLevel());
-
-
-                startActivity(intent);
-
+                // non posso usare il Navigation Component!
+                // Sto navigando da un fragment verso un'altra activity: non c'è modo di recuperare
+                // i dati dall'altro parte, almeno stando ai tutorial disponibili....
+                // stack overflow consiglia ciò
+                navigateToRicettaInfo(ricetta);
             }
         });
 
@@ -321,6 +319,16 @@ public class RicetteDiscoverFragment extends Fragment {
                 toolbar.setTitle(R.string.discover_toolbar_title);
             }
         }
+    }
+
+    public void navigateToRicettaInfo(Ricetta ricetta){
+        Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
+        intent.putExtra(FRAGMENTFORTRANSITION, "RicetteDiscover");
+        intent.putExtra(ITEM_NAME_PRESSED_KEY, ricetta.getName());
+        intent.putExtra(ITEM_ALCOOL_PRESSED_KEY, ricetta.getAlcool());
+        intent.putExtra(ITEM_LEVEL_PRESSED_KEY, ricetta.getLevel());
+        startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
 }

@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId() == R.id.action_logout){
             mAuth.signOut();
             startActivity(new Intent(MainActivity.this, EntryActivity.class));
+            overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
             finish();
             return true;
         }
