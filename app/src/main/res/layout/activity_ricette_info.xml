@@ -21,7 +21,7 @@
 
 
   <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-      android:id="@+id/add_to_list_extended_floating_action_button"
+      android:id="@+id/addToListExtButton"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="end"

@@ -6,23 +6,28 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
-import it.unimib.ginlemons.R;
+import it.unimib.ginlemons.databinding.ActivityAuthenticationBinding;
 
 public class AuthenticationActivity extends AppCompatActivity {
 
     private NavHostFragment navHostFragment;
     private NavController navController;
+    private ActivityAuthenticationBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_authentication);
+        mBinding = ActivityAuthenticationBinding.inflate(getLayoutInflater());
+        View view = mBinding.getRoot();
+        setContentView(view);
 
         Log.d("Auth Activity", "Capitano siamo dentro");
 
+
         navHostFragment =
-                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentAuthContainerView);
+                (NavHostFragment) getSupportFragmentManager().findFragmentById(mBinding.fragmentAuthContainerView.getId());
         navController = navHostFragment.getNavController();
     }
 

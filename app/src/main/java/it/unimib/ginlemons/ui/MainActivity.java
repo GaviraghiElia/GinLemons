@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import it.unimib.ginlemons.R;
-import it.unimib.ginlemons.ui.authentication.AuthenticationActivity;
+import it.unimib.ginlemons.databinding.ActivityMainBinding;
 import it.unimib.ginlemons.ui.authentication.EntryActivity;
 
 
@@ -32,18 +33,22 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private Toolbar myToolbar;
     private FirebaseAuth mAuth;
-
+    private ActivityMainBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = mBinding.getRoot();
+        setContentView(view);
+        //setContentView(R.layout.activity_main);
 
         // Autentication
         mAuth = FirebaseAuth.getInstance();
 
         // Toolbar
-        myToolbar = findViewById(R.id.activity_toolbar);
+        //myToolbar = findViewById(R.id.activity_toolbar);
+        myToolbar = mBinding.activityToolbar;
         setSupportActionBar(myToolbar);
 
 
@@ -53,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
         navController = navHostFragment.getNavController();
 
         // Controllo della bottom bar attraverso il fragment manager
-        bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        //bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView = mBinding.bottomNavigationView;
 
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 

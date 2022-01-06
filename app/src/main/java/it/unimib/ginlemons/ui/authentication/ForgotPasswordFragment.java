@@ -22,14 +22,13 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
 import it.unimib.ginlemons.R;
+import it.unimib.ginlemons.databinding.FragmentForgotPasswordBinding;
 
 public class ForgotPasswordFragment extends Fragment {
 
-    private TextInputEditText emailReset;
-    private Button resetButton;
-    private Button returnLoginButton;
     private FirebaseAuth mAuth;
     private NavController navController;
+    private FragmentForgotPasswordBinding mBinding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,16 +38,15 @@ public class ForgotPasswordFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_forgot_password, container, false);
 
-        emailReset = view.findViewById(R.id.resetMail);
-        resetButton = view.findViewById(R.id.resetButton);
-        returnLoginButton = view.findViewById(R.id.returnToLogin);
+        mBinding = FragmentForgotPasswordBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
+
         mAuth = FirebaseAuth.getInstance();
         navController = NavHostFragment.findNavController(this);
 
-        emailReset.addTextChangedListener(new TextWatcher() {
+
+        mBinding.resetMail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -56,7 +54,7 @@ public class ForgotPasswordFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                resetButton.setEnabled(!emailReset.getText().toString().isEmpty());
+                mBinding.resetButton.setEnabled(!mBinding.resetMail.getText().toString().isEmpty());
             }
 
             @Override
@@ -65,12 +63,12 @@ public class ForgotPasswordFragment extends Fragment {
             }
         });
 
-        resetButton.setOnClickListener(new View.OnClickListener() {
+        mBinding.resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = emailReset.getText().toString();
+                String email = mBinding.resetMail.getText().toString();
                 if(email.isEmpty()){
-                    emailReset.setError("Email cannot be empty!");
+                    mBinding.resetMail.setError("Email cannot be empty!");
                 }else{
                     mAuth.sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -92,7 +90,7 @@ public class ForgotPasswordFragment extends Fragment {
             }
         });
 
-        returnLoginButton.setOnClickListener(new View.OnClickListener() {
+        mBinding.returnToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navController.navigate(R.id.action_forgotPasswordFragment_to_loginFragment);

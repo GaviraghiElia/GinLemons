@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,25 +20,22 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import it.unimib.ginlemons.R;
+import it.unimib.ginlemons.databinding.FragmentRegisterBinding;
 import it.unimib.ginlemons.utils.UserHelper;
 
 public class RegisterFragment extends Fragment {
 
-    private TextInputEditText name;
-    private TextInputEditText email;
-    private TextInputEditText password;
-    private Button registerButton, signIn;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase fDB;
     private DatabaseReference reference;
     private NavController navController;
+    private FragmentRegisterBinding mBinding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,33 +45,39 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_register, container, false);
 
-        name = view.findViewById(R.id.registerName);
-        email = view.findViewById(R.id.registerEmail);
-        password = view.findViewById(R.id.registerPassword);
-        registerButton = view.findViewById(R.id.buttonRegister);
-        signIn = view.findViewById(R.id.buttonSignIn);
+        // Inflate the layout for this fragment
+        mBinding = FragmentRegisterBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
+
+        //View view = inflater.inflate(R.layout.fragment_register, container, false);
+
+        /*
+        name = view.findViewById(R.id.mBinding.registerName);
+        email = view.findViewById(R.id.mBinding.registerEmail);
+        password = view.findViewById(R.id.mBinding.registerPassword);
+        registerButton = view.findViewById(R.id.mBinding.buttonRegister);
+        signIn = view.findViewById(R.id.mBinding.buttonSignIn);
+        */
         navController = NavHostFragment.findNavController(this);
 
         // Text Watcher per abilitare il bottone di registrazione
-        name.addTextChangedListener(loginTextWatcher);
-        email.addTextChangedListener(loginTextWatcher);
-        password.addTextChangedListener(loginTextWatcher);
+        mBinding.registerName.addTextChangedListener(loginTextWatcher);
+        mBinding.registerEmail.addTextChangedListener(loginTextWatcher);
+        mBinding.registerPassword.addTextChangedListener(loginTextWatcher);
 
         firebaseAuth = FirebaseAuth.getInstance();
         fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         reference = fDB.getReference("users");
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        mBinding.buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createUser();
             }
         });
 
-        signIn.setOnClickListener(new View.OnClickListener() {
+        mBinding.buttonSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navController.navigate(R.id.action_registerFragment_to_loginFragment);
@@ -93,10 +95,10 @@ public class RegisterFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String nameInput = name.getText().toString();
-            String usernameInput = email.getText().toString();
-            String passwordInput = password.getText().toString();
-            registerButton.setEnabled((!nameInput.isEmpty()) && (!usernameInput.isEmpty()) && (!passwordInput.isEmpty()));
+            String nameInput = mBinding.registerName.getText().toString();
+            String usernameInput = mBinding.registerEmail.getText().toString();
+            String passwordInput = mBinding.registerPassword.getText().toString();
+            mBinding.buttonRegister.setEnabled((!nameInput.isEmpty()) && (!usernameInput.isEmpty()) && (!passwordInput.isEmpty()));
         }
 
         @Override
@@ -108,25 +110,25 @@ public class RegisterFragment extends Fragment {
 
 
     private void createUser() {
-        String fullName = name.getText().toString();
-        String sMail = email.getText().toString();
-        String pwd = password.getText().toString();
+        String fullName = mBinding.registerName.getText().toString();
+        String sMail = mBinding.registerEmail.getText().toString();
+        String pwd = mBinding.registerPassword.getText().toString();
 
         if(fullName.isEmpty()){
-            name.setError("Name cannot be empty");
-            name.requestFocus();
+            mBinding.registerName.setError("Name cannot be empty");
+            mBinding.registerName.requestFocus();
 
         }else if(sMail.isEmpty()){
-            email.setError("Email cannot be empty");
-            email.requestFocus();
+            mBinding.registerEmail.setError("Email cannot be empty");
+            mBinding.registerEmail.requestFocus();
 
         }else if (pwd.isEmpty()){
-            password.setError("Passowrd cannot be empty");
-            password.requestFocus();
+            mBinding.registerPassword.setError("Passowrd cannot be empty");
+            mBinding.registerPassword.requestFocus();
 
         }else if(pwd.length() < 7) {
-            password.setError("Passowrd must be more than 6 characters long");
-            password.requestFocus();
+            mBinding.registerPassword.setError("Passowrd must be more than 6 characters long");
+            mBinding.registerPassword.requestFocus();
         }else{
 
             firebaseAuth.createUserWithEmailAndPassword(sMail, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {

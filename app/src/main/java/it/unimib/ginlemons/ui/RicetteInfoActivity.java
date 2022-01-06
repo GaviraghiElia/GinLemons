@@ -1,31 +1,31 @@
 package it.unimib.ginlemons.ui;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Fade;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Objects;
 
 import it.unimib.ginlemons.R;
+import it.unimib.ginlemons.databinding.ActivityRicetteInfoBinding;
 
 
 public class RicetteInfoActivity extends AppCompatActivity {
 
+    private ActivityRicetteInfoBinding mBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ricette_info);
+        mBinding = ActivityRicetteInfoBinding.inflate(getLayoutInflater());
+        View view = mBinding.getRoot();
+        setContentView(view);
+
 
         Intent intent = getIntent();
 
@@ -36,56 +36,46 @@ public class RicetteInfoActivity extends AppCompatActivity {
         // set transition
         Fade fade = new Fade();
         View decor = getWindow().getDecorView();
-        fade.excludeTarget(decor.findViewById(R.id.activity_info_toolbar), true);
+        fade.excludeTarget(decor.findViewById(mBinding.activityInfoToolbar.getId()), true);
         getWindow().setEnterTransition(fade);
         getWindow().setExitTransition(fade);
-
-
-        // Bottone add to list
-        ScrollView scrollView = findViewById(R.id.scrollViewInfo);
-        ExtendedFloatingActionButton fbutton = findViewById(R.id.add_to_list_extended_floating_action_button);
 
         // serve almeno la versione 23, noi lavoriamo con la 21
         // non c'è un gran divario
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            mBinding.scrollViewInfo.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                    if (scrollY > oldScrollY + 5 && fbutton.isShown()) {
-                        fbutton.shrink();
+                    if (scrollY > oldScrollY + 5 && mBinding.addToListExtButton.isShown()) {
+                        mBinding.addToListExtButton.shrink();
                     }else if (scrollY < oldScrollY - 20) {
-                        fbutton.extend();
+                        mBinding.addToListExtButton.extend();
                     } else if (scrollY == 0) {
-                        fbutton.extend();
+                        mBinding.addToListExtButton.extend();
                     }
                 }
             });
         }
 
         // Codice Toolbar -- ultima push
-        Toolbar myToolbar = findViewById(R.id.activity_info_toolbar);
-        myToolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24);
-        setSupportActionBar(myToolbar);
-        myToolbar.setTitle(name);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        mBinding.activityInfoToolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24);
+        setSupportActionBar(mBinding.activityInfoToolbar);
+        mBinding.activityInfoToolbar.setTitle(name);
+        Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
 
         // Set campi textView
-        TextView textViewName = findViewById(R.id.nomeRicettaInfo);
-        TextView textViewAlcool = findViewById(R.id.alcoolRicettaInfo);
-        TextView textViewCosto = findViewById(R.id.costoRicettaInfo);
         TextView textViewDescrizione = findViewById(R.id.descrizioneRicettaInfo);
 
-        textViewName.setText(name);
-        textViewAlcool.setText(Integer.toString(alcool) + " %");
+        mBinding.alcoolRicettaInfo.setText(Integer.toString(alcool) + " %");
         if(costo == 1){
-            textViewCosto.setText("€");
+            mBinding.costoRicettaInfo.setText("€");
         }else if(costo == 2){
-            textViewCosto.setText("€€");
+            mBinding.costoRicettaInfo.setText("€€");
         }else{
-            textViewCosto.setText("€€€");
+            mBinding.costoRicettaInfo.setText("€€€");
         }
 
-        textViewDescrizione.setText("Abbiamo chiesto a un barman professionista di preparare con noi la ricetta dello Spritz, o meglio dell'Aperol Spritz, codificato dal 2011 come Italian Spritz o Venetian Spritz.\n" +
+        mBinding.descrizioneRicettaInfo.setText("Abbiamo chiesto a un barman professionista di preparare con noi la ricetta dello Spritz, o meglio dell'Aperol Spritz, codificato dal 2011 come Italian Spritz o Venetian Spritz.\n" +
                 "\n" +
                 "L' Aperol Spritz è infatti la famosa versione dello Spritz che ha origini controverse.\n" +
                 "\n" +
@@ -105,18 +95,6 @@ public class RicetteInfoActivity extends AppCompatActivity {
                 "\n" +
                 "Ecco quali sono i 10 attrezzi imperdibili per preparare ottimi cocktail a casa vostra.");
     }
-    /*
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home){
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-
-    }
-    */
 
 
     @Override

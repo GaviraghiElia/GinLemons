@@ -6,11 +6,7 @@
     android:id="@+id/fragment_liste_home"
     tools:context=".ui.ListeHomeFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:text="@string/mieListe" />
-
+        android:layout_height="match_parent" />
 </FrameLayout>
