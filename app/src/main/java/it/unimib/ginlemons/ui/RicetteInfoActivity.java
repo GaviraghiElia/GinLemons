@@ -33,13 +33,6 @@ public class RicetteInfoActivity extends AppCompatActivity {
         int alcool = intent.getIntExtra(RicetteDiscoverFragment.ITEM_ALCOOL_PRESSED_KEY, 0);
         int costo = intent.getIntExtra(RicetteDiscoverFragment.ITEM_LEVEL_PRESSED_KEY, 0);
 
-        // set transition
-        Fade fade = new Fade();
-        View decor = getWindow().getDecorView();
-        fade.excludeTarget(decor.findViewById(mBinding.activityInfoToolbar.getId()), true);
-        getWindow().setEnterTransition(fade);
-        getWindow().setExitTransition(fade);
-
         // serve almeno la versione 23, noi lavoriamo con la 21
         // non c'è un gran divario
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -64,7 +57,6 @@ public class RicetteInfoActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
 
         // Set campi textView
-        TextView textViewDescrizione = findViewById(R.id.descrizioneRicettaInfo);
 
         mBinding.alcoolRicettaInfo.setText(Integer.toString(alcool) + " %");
         if(costo == 1){

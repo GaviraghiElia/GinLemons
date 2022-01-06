@@ -50,15 +50,6 @@ public class RegisterFragment extends Fragment {
         mBinding = FragmentRegisterBinding.inflate(inflater, container, false);
         View view = mBinding.getRoot();
 
-        //View view = inflater.inflate(R.layout.fragment_register, container, false);
-
-        /*
-        name = view.findViewById(R.id.mBinding.registerName);
-        email = view.findViewById(R.id.mBinding.registerEmail);
-        password = view.findViewById(R.id.mBinding.registerPassword);
-        registerButton = view.findViewById(R.id.mBinding.buttonRegister);
-        signIn = view.findViewById(R.id.mBinding.buttonSignIn);
-        */
         navController = NavHostFragment.findNavController(this);
 
         // Text Watcher per abilitare il bottone di registrazione

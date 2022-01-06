@@ -94,6 +94,5 @@
             android:text="@string/forget_password"
             android:textColor="@color/black"
             android:textSize="11sp"/>
-
     </LinearLayout>
 </FrameLayout>

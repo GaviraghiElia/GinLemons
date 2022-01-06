@@ -13,13 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -42,6 +39,7 @@ import java.util.List;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.DiscoverRicetteRecyclerViewAdapter;
+import it.unimib.ginlemons.databinding.FragmentRicetteDiscoverBinding;
 import it.unimib.ginlemons.utils.Ricetta;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
@@ -52,12 +50,13 @@ public class RicetteDiscoverFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase fDB;
     private DatabaseReference reference;
+    private FragmentRicetteDiscoverBinding mBinding;
     public static final String ITEM_ALCOOL_PRESSED_KEY = "ItemAlcoolPressedKey";
     public static final String ITEM_NAME_PRESSED_KEY = "ItemNamePressedKey";
     public static final String ITEM_LEVEL_PRESSED_KEY = "ItemLevelPressedKey";
 
 
-    // Dati test RecycleView
+    // Dati test RecycleView - TEMPORANEI
     List<Ricetta> ricettaList = new ArrayList<>();
     private Ricetta [] names = {new Ricetta("Campari Spritz", 10, 1),
             new Ricetta("Aperol Spritz", 15, 2), new Ricetta("Micucci Spritz", 18, 3),
@@ -83,16 +82,13 @@ public class RicetteDiscoverFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment (Layout fragment per il discover recipes)
-        View view =  inflater.inflate(R.layout.fragment_ricette_discover, container, false);
+        mBinding = FragmentRicetteDiscoverBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
 
         firebaseAuth = FirebaseAuth.getInstance();
         fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         reference = fDB.getReference("favorites")
                 .child(firebaseAuth.getCurrentUser().getUid());
-
-
-        // Riferimento Recyclerview
-        RecyclerView recyclerView = view.findViewById(R.id.discover_recycler_view);
 
         // Swipe right per l'aggiunta al preferite
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -135,7 +131,7 @@ public class RicetteDiscoverFragment extends Fragment {
                                         @Override
                                         public void onSuccess(Void unused) {
                                             Log.d("Preferito", "Aggiunto " + ricetta.getName() + " ai preferiti nel real time DB");
-                                            snackbarMake(recyclerView, ricetta, "aggiunta ai preferiti");
+                                            snackbarMake(mBinding.discoverRecyclerView, ricetta, "aggiunta ai preferiti");
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -152,7 +148,7 @@ public class RicetteDiscoverFragment extends Fragment {
                                         @Override
                                         public void onSuccess(Void unused) {
                                             Log.d("Preferito", "Rimosso " + ricetta.getName() + " dai preferiti nel real time DB");
-                                            snackbarMake(recyclerView, ricetta, "rimossa dai preferiti");
+                                            snackbarMake(mBinding.discoverRecyclerView, ricetta, "rimossa dai preferiti");
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -173,14 +169,8 @@ public class RicetteDiscoverFragment extends Fragment {
         };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+        itemTouchHelper.attachToRecyclerView(mBinding.discoverRecyclerView);
 
-        // set transition to new activity
-        Fade fade = new Fade();
-        View decor = getActivity().getWindow().getDecorView();
-        fade.excludeTarget(decor.findViewById(R.id.activity_toolbar), true);
-        getActivity().getWindow().setEnterTransition(fade);
-        getActivity().getWindow().setExitTransition(fade);
 
         discoverRicetteRecyclerViewAdapter = new DiscoverRicetteRecyclerViewAdapter(ricettaList, new DiscoverRicetteRecyclerViewAdapter.OnItemClickListener() {
             @Override
@@ -192,21 +182,18 @@ public class RicetteDiscoverFragment extends Fragment {
                 intent.putExtra(ITEM_ALCOOL_PRESSED_KEY, ricetta.getAlcool());
                 intent.putExtra(ITEM_LEVEL_PRESSED_KEY, ricetta.getLevel());
 
-                TextView textViewName = (TextView) view.findViewById(R.id.nomeRicetta);
-                ActivityOptionsCompat optionsCompat =
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), textViewName, ViewCompat.getTransitionName(textViewName));
 
-                startActivity(intent, optionsCompat.toBundle());
+                startActivity(intent);
 
             }
         });
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        recyclerView.setAdapter(discoverRicetteRecyclerViewAdapter);
+        mBinding.discoverRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        mBinding.discoverRecyclerView.setAdapter(discoverRicetteRecyclerViewAdapter);
 
         // Bordi per gli item della RecycleView
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(dividerItemDecoration);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mBinding.discoverRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        mBinding.discoverRecyclerView.addItemDecoration(dividerItemDecoration);
 
         // si popola l'ArrayList
         Collections.addAll(ricettaList, names);

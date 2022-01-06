@@ -1,7 +1,9 @@
 package it.unimib.ginlemons.ui;
 
 import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
+import static it.unimib.ginlemons.utils.Constants.*;
 
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 
@@ -37,6 +39,7 @@ import java.util.Collections;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.PreferitiRicetteRecyclerviewAdapter;
+import it.unimib.ginlemons.databinding.FragmentRicettePreferitiBinding;
 import it.unimib.ginlemons.utils.Ricetta;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
@@ -47,7 +50,7 @@ public class RicettePreferitiFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase fDB;
     private DatabaseReference reference;
-
+    private FragmentRicettePreferitiBinding mBinding;
     // Dati per test della RecycleView
     ArrayList<Ricetta> ricettePreferitiList;
 
@@ -60,7 +63,8 @@ public class RicettePreferitiFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment (Layout fragment ricette preferite)
-        View view = inflater.inflate(R.layout.fragment_ricette_preferiti, container, false);
+        mBinding = FragmentRicettePreferitiBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
 
         // Set Toolbar
         setTitleToolbar();
@@ -69,18 +73,23 @@ public class RicettePreferitiFragment extends Fragment {
         fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         reference = fDB.getReference("favorites").child(firebaseAuth.getCurrentUser().getUid());
 
-        RecyclerView recyclerView = view.findViewById(R.id.preferiti_recycler_view);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        mBinding.preferitiRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         ricettePreferitiList = new ArrayList<>();
         preferitiRicetteRecyclerviewAdapter = new PreferitiRicetteRecyclerviewAdapter(ricettePreferitiList, new PreferitiRicetteRecyclerviewAdapter.OnItemClickListener() {
             @Override
             public void onIntemClick(Ricetta ricetta) {
                 Log.d(TAG, "onItemClickListener " + ricetta.getName());
+                Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
+                intent.putExtra(ITEM_NAME_PRESSED_KEY, ricetta.getName());
+                intent.putExtra(ITEM_ALCOOL_PRESSED_KEY, ricetta.getAlcool());
+                intent.putExtra(ITEM_LEVEL_PRESSED_KEY, ricetta.getLevel());
+
+
+                startActivity(intent);
             }
         });
 
-        recyclerView.setAdapter(preferitiRicetteRecyclerviewAdapter);
+        mBinding.preferitiRecyclerView.setAdapter(preferitiRicetteRecyclerviewAdapter);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -133,7 +142,7 @@ public class RicettePreferitiFragment extends Fragment {
                             @Override
                             public void onSuccess(Void unused) {
                                 Log.d("Preferito", "Rimosso " + ricetta.getName() + " dai preferiti nel real time DB");
-                                snackbarMake(recyclerView, position, ricetta);
+                                snackbarMake(mBinding.preferitiRecyclerView, position, ricetta);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -144,7 +153,7 @@ public class RicettePreferitiFragment extends Fragment {
 
                 preferitiRicetteRecyclerviewAdapter.notifyItemRemoved(position);
 
-                Snackbar.make(recyclerView, ricetta.getName() + " rimosso dai preferiti", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                Snackbar.make(mBinding.preferitiRecyclerView, ricetta.getName() + " rimosso dai preferiti", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ricettePreferitiList.add(position, ricetta);
@@ -169,12 +178,12 @@ public class RicettePreferitiFragment extends Fragment {
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+        itemTouchHelper.attachToRecyclerView(mBinding.preferitiRecyclerView);
 
 
         // Bordi per gli item della RecycleView
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(dividerItemDecoration);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mBinding.preferitiRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        mBinding.preferitiRecyclerView.addItemDecoration(dividerItemDecoration);
 
         return view;
     }

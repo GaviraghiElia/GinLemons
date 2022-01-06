@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // Toolbar
-        //myToolbar = findViewById(R.id.activity_toolbar);
         myToolbar = mBinding.activityToolbar;
         setSupportActionBar(myToolbar);
 
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         navController = navHostFragment.getNavController();
 
         // Controllo della bottom bar attraverso il fragment manager
-        //bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView = mBinding.bottomNavigationView;
 
         NavigationUI.setupWithNavController(bottomNavigationView, navController);

@@ -49,4 +49,6 @@
     <string name="already_register">Already Register?</string>
     <string name="user_profile_toolbar_title">Profile</string>
     <string name="not_register">Not Register?</string>
+    <string name="want_change_your_email">Want change your Email?</string>
+    <string name="enter_your_password">Enter your password</string>
 </resources>

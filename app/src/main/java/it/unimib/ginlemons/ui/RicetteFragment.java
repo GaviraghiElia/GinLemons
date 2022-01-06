@@ -14,13 +14,13 @@ import com.google.android.material.tabs.TabLayout;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.FragmentRicetteAdapter;
+import it.unimib.ginlemons.databinding.FragmentRicetteBinding;
 
 public class RicetteFragment extends Fragment {
 
-    private TabLayout tabLayout;
-    private ViewPager2 viewPager2;
     private FragmentRicetteAdapter adapter;
     private FragmentManager fm;
+    private FragmentRicetteBinding mBinding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,21 +31,19 @@ public class RicetteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment (layout fragment toolbar Discover - Preferiti)
-        View view = inflater.inflate(R.layout.fragment_ricette, container, false);
+        mBinding = FragmentRicetteBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
 
         // controllo fragment figli
-        tabLayout = (TabLayout) view.findViewById(R.id.tabs_ricette);
-        viewPager2 = (ViewPager2) view.findViewById(R.id.view_pager2_ricette);
-
         fm = getChildFragmentManager();
         adapter = new FragmentRicetteAdapter(fm, getLifecycle());
-        viewPager2.setAdapter(adapter);
+        mBinding.viewPager2Ricette.setAdapter(adapter);
 
         // Listener per le interazioni con la tab
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mBinding.tabsRicette.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager2.setCurrentItem(tab.getPosition());
+                mBinding.viewPager2Ricette.setCurrentItem(tab.getPosition());
             }
 
             @Override
@@ -56,10 +54,10 @@ public class RicetteFragment extends Fragment {
         });
 
         // Cattura l'evento generato dallo swipe left/right tra tab
-        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+        mBinding.viewPager2Ricette.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                tabLayout.selectTab(tabLayout.getTabAt(position));
+                mBinding.tabsRicette.selectTab(mBinding.tabsRicette.getTabAt(position));
             }
         });
 
