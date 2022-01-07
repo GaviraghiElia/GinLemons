@@ -46,7 +46,6 @@ public class UserProfileFragment extends Fragment {
     private FirebaseDatabase fDB;
     private DatabaseReference reference;
     private FragmentUserProfileBinding mBinding;
-    private static int BUTTON_RESET_COUNTER;
     private NavController navController;
 
     @Override
@@ -63,12 +62,12 @@ public class UserProfileFragment extends Fragment {
         navController = NavHostFragment.findNavController(this);
 
         setTitleToolbar();
-        BUTTON_RESET_COUNTER = 0;
 
         // Firebase
         mAuth = FirebaseAuth.getInstance();
         fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         reference = fDB.getReference("users");
+
         // Listener per dati Real Time sempre aggiornati
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -99,12 +98,7 @@ public class UserProfileFragment extends Fragment {
         mBinding.userForgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // massimo 2 premute per volta, se no se sto l'utente impazzisce partono i reset a manetta
-                if(BUTTON_RESET_COUNTER > 1){
-                    Toast.makeText(getContext(), "Keep calm with the reset", Toast.LENGTH_LONG).show();
-                }else{
-                    resetPassword();
-                }
+                resetPassword();
             }
         });
 
@@ -112,30 +106,7 @@ public class UserProfileFragment extends Fragment {
         mBinding.updateUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Stringhe al momento dell'Onclick
-                String onClickName = mBinding.userProfileName.getText().toString();
-                String onClickMail = mBinding.userProfileEmail.getText().toString().toLowerCase();
-
-                if(onClickName.isEmpty()){
-                    mBinding.userProfileName.setError("Name cannot be empty");
-                    mBinding.userProfileName.requestFocus();
-
-                }else if(onClickMail.isEmpty()){
-                    mBinding.userProfileEmail.setError("Email cannot be empty!");
-                    mBinding.userProfileEmail.requestFocus();
-
-                } else if(!displayName.equals(onClickName) && displayEmail.equals(onClickMail)){
-                    // NON ha cambiato la mail, più easy
-                    changeOnlyName(new UserHelper(onClickName, onClickMail));
-
-                } else if(!displayEmail.equals(onClickMail)){
-                    // vuole cambiare mail? Allora si deve riautenticare sto infame
-                    changeEmailName(onClickName, onClickMail);
-
-                }else {
-                    Toast.makeText(getContext(), "No changes", Toast.LENGTH_LONG).show();
-                }
-
+                changeClickButton();
             }
         });
 
@@ -157,6 +128,31 @@ public class UserProfileFragment extends Fragment {
         toolbar.setTitle(R.string.user_profile_toolbar_title);
     }
 
+    public void changeClickButton(){
+        // Stringhe al momento dell'Onclick
+        String onClickName = mBinding.userProfileName.getText().toString();
+        String onClickMail = mBinding.userProfileEmail.getText().toString().toLowerCase();
+
+        if(onClickName.isEmpty()){
+            mBinding.userProfileName.setError("Name cannot be empty");
+            mBinding.userProfileName.requestFocus();
+
+        }else if(onClickMail.isEmpty()){
+            mBinding.userProfileEmail.setError("Email cannot be empty!");
+            mBinding.userProfileEmail.requestFocus();
+
+        } else if(!displayName.equals(onClickName) && displayEmail.equals(onClickMail)){
+            // NON ha cambiato la mail, più easy
+            changeOnlyName(new UserHelper(onClickName, onClickMail));
+
+        } else if(!displayEmail.equals(onClickMail)){
+            // vuole cambiare mail? Allora si deve riautenticare sto infame
+            changeEmailName(onClickName, onClickMail);
+
+        }else {
+            Toast.makeText(getContext(), "No changes", Toast.LENGTH_LONG).show();
+        }
+    }
 
     public void changeOnlyName(UserHelper userObj){
         Log.d("Snapshot", "Name changed, not email");
@@ -278,22 +274,28 @@ public class UserProfileFragment extends Fragment {
     public void resetPassword(){
         AlertDialog.Builder resetPasswordMailDialog = new AlertDialog.Builder(requireActivity());
         resetPasswordMailDialog.setTitle("Forgot Password?");
+        resetPasswordMailDialog.setCancelable(true);
         // Preme "si"
         resetPasswordMailDialog.setPositiveButton("Reset", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String emailReset = mAuth.getCurrentUser().getEmail();
-                BUTTON_RESET_COUNTER ++;
                 mAuth.sendPasswordResetEmail(emailReset).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(getContext(), "Reset link sent to your mail", Toast.LENGTH_SHORT).show();
+                        mAuth.signOut();
+                        if(!checkSession()){
+                            navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
+                            getActivity().finish();
+                        }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getContext(), "Error ! Reset Link is not sent"
                                 + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
                 });
             }
@@ -301,7 +303,7 @@ public class UserProfileFragment extends Fragment {
         resetPasswordMailDialog.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                dialog.dismiss();
             }
         });
         AlertDialog alertDialog = resetPasswordMailDialog.create();
