@@ -4,7 +4,6 @@ import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.net.wifi.hotspot2.pps.Credential;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,7 +35,6 @@ import com.google.firebase.database.ValueEventListener;
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.CustomPasswordDialogBinding;
 import it.unimib.ginlemons.databinding.FragmentUserProfileBinding;
-import it.unimib.ginlemons.model.Ricetta;
 import it.unimib.ginlemons.model.UserHelper;
 
 public class UserProfileFragment extends Fragment {
