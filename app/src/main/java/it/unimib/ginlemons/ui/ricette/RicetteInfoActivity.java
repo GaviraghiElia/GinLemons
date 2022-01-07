@@ -1,4 +1,4 @@
-package it.unimib.ginlemons.ui;
+package it.unimib.ginlemons.ui.ricette;
 
 import android.content.Intent;
 import android.os.Build;

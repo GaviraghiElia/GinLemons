@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unimib.ginlemons.R;
-import it.unimib.ginlemons.utils.Ricetta;
+import it.unimib.ginlemons.model.Ricetta;
 
 public class PreferitiRicetteRecyclerviewAdapter extends RecyclerView.Adapter<PreferitiRicetteRecyclerviewAdapter.ListeViewHolder> implements Filterable {
 

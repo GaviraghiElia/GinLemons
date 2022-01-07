@@ -37,7 +37,7 @@
             android:name=".ui.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.RicetteInfoActivity"
+            android:name=".ui.ricette.RicetteInfoActivity"
             android:exported="false"
             android:theme="@style/Theme.GinLemons.NoActionBar" />
         <activity

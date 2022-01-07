@@ -51,4 +51,5 @@
     <string name="not_register">Not Register?</string>
     <string name="want_change_your_email">Want change your Email?</string>
     <string name="enter_your_password">Enter your password</string>
+    <string name="hello">Hello</string>
 </resources>

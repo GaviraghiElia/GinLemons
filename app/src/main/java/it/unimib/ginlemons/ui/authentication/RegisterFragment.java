@@ -27,7 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.FragmentRegisterBinding;
-import it.unimib.ginlemons.utils.UserHelper;
+import it.unimib.ginlemons.model.UserHelper;
 
 public class RegisterFragment extends Fragment {
 

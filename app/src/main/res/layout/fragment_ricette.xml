@@ -5,7 +5,7 @@
     android:id="@+id/fragment_ricette"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.RicetteFragment">
+    tools:context=".ui.ricette.RicetteFragment">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs_ricette"

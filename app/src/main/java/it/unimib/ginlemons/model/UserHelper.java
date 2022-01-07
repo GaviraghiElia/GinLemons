@@ -1,4 +1,4 @@
-package it.unimib.ginlemons.utils;
+package it.unimib.ginlemons.model;
 
 public class UserHelper {
 

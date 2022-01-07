@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         myToolbar = mBinding.activityToolbar;
         setSupportActionBar(myToolbar);
 
-
         // Navigation Component
         navHostFragment = (NavHostFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragmentListeRicetteContainerView);
@@ -58,11 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Controllo della bottom bar attraverso il fragment manager
         bottomNavigationView = mBinding.bottomNavigationView;
-
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
-
         appBarConfiguration = new AppBarConfiguration.Builder(R.id.listeFragment, R.id.ricetteFragment, R.id.userProfileFragment).build();
-
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
     }

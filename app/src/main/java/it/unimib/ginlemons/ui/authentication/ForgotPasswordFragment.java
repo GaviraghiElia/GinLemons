@@ -16,8 +16,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -66,27 +68,7 @@ public class ForgotPasswordFragment extends Fragment {
         mBinding.resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = mBinding.resetMail.getText().toString();
-                if(email.isEmpty()){
-                    mBinding.resetMail.setError("Email cannot be empty!");
-                }else{
-                    mAuth.sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(getContext(), "Reset link sent to your mail",
-                                    Toast.LENGTH_SHORT).show();
-                            navController.navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
-
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getContext(), "Error ! Reset Link is not sent"
-                                    + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                }
+                resetPassword(mBinding.resetMail.getText().toString());
             }
         });
 
@@ -99,6 +81,29 @@ public class ForgotPasswordFragment extends Fragment {
 
 
         return view;
+    }
+
+    public void resetPassword(String email){
+        if(email.isEmpty()){
+            mBinding.resetMail.setError("Email cannot be empty!");
+        } else {
+
+            mAuth.sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(getContext(), "Reset link sent to your mail",
+                            Toast.LENGTH_SHORT).show();
+                    navController.navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
+                }
+
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(), "Error ! Reset Link is not sent"
+                            + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
 }

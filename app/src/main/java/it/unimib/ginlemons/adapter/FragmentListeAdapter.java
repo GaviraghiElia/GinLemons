@@ -6,8 +6,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import it.unimib.ginlemons.ui.ListeCompleteFragment;
-import it.unimib.ginlemons.ui.ListeHomeFragment;
+import it.unimib.ginlemons.ui.liste.ListeCompleteFragment;
+import it.unimib.ginlemons.ui.liste.ListeHomeFragment;
 
 public class FragmentListeAdapter extends FragmentStateAdapter {
 

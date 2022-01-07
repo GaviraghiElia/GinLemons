@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/listeFragment"
-        android:name="it.unimib.ginlemons.ui.ListeFragment"
+        android:name="it.unimib.ginlemons.ui.liste.ListeFragment"
         android:label="fragment_liste"
         tools:layout="@layout/fragment_liste" >
         <action
@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/ricetteFragment"
-        android:name="it.unimib.ginlemons.ui.RicetteFragment"
+        android:name="it.unimib.ginlemons.ui.ricette.RicetteFragment"
         android:label="fragment_ricette"
         tools:layout="@layout/fragment_ricette" >
         <action
@@ -38,17 +38,17 @@
     </fragment>
     <fragment
         android:id="@+id/listeCompleteFragment"
-        android:name="it.unimib.ginlemons.ui.ListeCompleteFragment"
+        android:name="it.unimib.ginlemons.ui.liste.ListeCompleteFragment"
         android:label="fragment_liste_complete"
         tools:layout="@layout/fragment_liste_complete" />
     <fragment
         android:id="@+id/listeHomeFragment"
-        android:name="it.unimib.ginlemons.ui.ListeHomeFragment"
+        android:name="it.unimib.ginlemons.ui.liste.ListeHomeFragment"
         android:label="fragment_liste_home"
         tools:layout="@layout/fragment_liste_home" />
     <fragment
         android:id="@+id/ricetteDiscoverFragment"
-        android:name="it.unimib.ginlemons.ui.RicetteDiscoverFragment"
+        android:name="it.unimib.ginlemons.ui.ricette.RicetteDiscoverFragment"
         android:label="fragment_ricette_discover"
         tools:layout="@layout/fragment_ricette_discover" >
         <action
@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/ricettePreferitiFragment"
-        android:name="it.unimib.ginlemons.ui.RicettePreferitiFragment"
+        android:name="it.unimib.ginlemons.ui.ricette.RicettePreferitiFragment"
         android:label="fragment_ricette_preferiti"
         tools:layout="@layout/fragment_ricette_preferiti" >
         <action
@@ -66,7 +66,7 @@
     </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
-        android:name="it.unimib.ginlemons.ui.UserProfileFragment"
+        android:name="it.unimib.ginlemons.ui.settings.UserProfileFragment"
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_user_profile" >
         <action
@@ -86,7 +86,7 @@
     </fragment>
     <activity
         android:id="@+id/ricetteInfoActivity"
-        android:name="it.unimib.ginlemons.ui.RicetteInfoActivity"
+        android:name="it.unimib.ginlemons.ui.ricette.RicetteInfoActivity"
         android:label="activity_ricette_info"
         tools:layout="@layout/activity_ricette_info" />
     <activity

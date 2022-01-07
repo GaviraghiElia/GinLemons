@@ -1,4 +1,4 @@
-package it.unimib.ginlemons.ui;
+package it.unimib.ginlemons.ui.ricette;
 
 import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
 import static it.unimib.ginlemons.utils.Constants.*;
@@ -40,7 +40,7 @@ import java.util.Collections;
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.PreferitiRicetteRecyclerviewAdapter;
 import it.unimib.ginlemons.databinding.FragmentRicettePreferitiBinding;
-import it.unimib.ginlemons.utils.Ricetta;
+import it.unimib.ginlemons.model.Ricetta;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class RicettePreferitiFragment extends Fragment {

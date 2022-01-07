@@ -4,7 +4,7 @@
     android:id="@+id/fragment_ricette_preferiti"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.RicettePreferitiFragment">
+    tools:context=".ui.ricette.RicettePreferitiFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/preferiti_recycler_view"

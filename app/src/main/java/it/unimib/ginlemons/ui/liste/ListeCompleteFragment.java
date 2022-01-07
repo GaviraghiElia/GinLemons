@@ -1,4 +1,4 @@
-package it.unimib.ginlemons.ui;
+package it.unimib.ginlemons.ui.liste;
 
 import android.os.Bundle;
 
