@@ -1,11 +1,15 @@
 package it.unimib.ginlemons.repository;
 
 import android.app.Application;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 import it.unimib.ginlemons.service.RecipeApiService;
 import it.unimib.ginlemons.utils.IdList;
 import it.unimib.ginlemons.utils.ResponseCallback;
 import it.unimib.ginlemons.utils.Ricetta;
+import it.unimib.ginlemons.utils.RicetteList;
 import it.unimib.ginlemons.utils.ServiceLocator;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,22 +59,22 @@ public class RecipeRepository implements IRecipeRepository{
     // Il parametro clear indica se la lista delle ricette va cancellata o no prima di inserire i nuovi drink
     @Override
     public void fetchRecipes(String type, boolean clear) {
-        Call<IdList> getRecipeCall = fetchApiService.fetchRecipe(type);
+        Call<RicetteList> getRecipeCall = fetchApiService.fetchRecipes(type);
 
-        getRecipeCall.enqueue(new Callback<IdList>() {
+        getRecipeCall.enqueue(new Callback<RicetteList>() {
             @Override
-            public void onResponse(Call<IdList> call, Response<IdList> response) {
+            public void onResponse(Call<RicetteList> call, Response<RicetteList> response) {
                 if (response.body() != null && response.isSuccessful()) {
-                    String[] ids = response.body().getIds();
 
-                    responseCallback.onResponse(ids, clear);
+                    ArrayList<Ricetta> ricette = response.body().getRepices();
+                    responseCallback.onResponse(ricette, clear);
                 } else {
                     responseCallback.onFailure("Caricamento Fallito");
                 }
             }
 
             @Override
-            public void onFailure(Call<IdList> call, Throwable t) {
+            public void onFailure(Call<RicetteList> call, Throwable t) {
                 responseCallback.onFailure(t.getMessage());
             }
         });

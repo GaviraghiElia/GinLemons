@@ -40,6 +40,7 @@ import it.unimib.ginlemons.repository.IRecipeRepository;
 import it.unimib.ginlemons.repository.RecipeRepository;
 import it.unimib.ginlemons.utils.ResponseCallback;
 import it.unimib.ginlemons.utils.Ricetta;
+import it.unimib.ginlemons.utils.RicetteList;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class RicetteDiscoverFragment extends Fragment implements ResponseCallback{
@@ -262,8 +263,18 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
     public void onResponse(Ricetta ricetta) {
 
         if(ricetta != null)
-            ricettaList.add(ricetta);
+        {
+            int index = 0;
 
+            for (int i = 0; i < ricettaList.size(); i++)
+                if(ricettaList.get(i).getId().equals(ricetta.getId()))
+                {
+                    index = i;
+                    break;
+                }
+
+            ricettaList.add(index, ricetta);
+        }
         // Metodo che avvisa la RecyclerView che i suoi dati sono stati aggiornati
         requireActivity().runOnUiThread(new Runnable() {
             @Override
@@ -276,14 +287,20 @@ public class RicetteDiscoverFragment extends Fragment implements ResponseCallbac
     // Ricevo gli id dei cocktails Alcolici o Analcolici
     // Per ognuno effettuo la richiesta all'API dei dati dettagliati del cocktail
     @Override
-    public void onResponse(String[] ids, boolean clear) {
-        if(ids != null) {
+    public void onResponse(List<Ricetta> ricette, boolean clear) {
+        if(ricette != null) {
+
             if(clear)
                 ricettaList.clear();
 
-            for (int i = 0; i < ids.length; i++)
-                iRecipeRepository.getRecipeById(ids[i]);
-
+            ricettaList.addAll(ricette);
+            // Metodo che avvisa la RecyclerView che i suoi dati sono stati aggiornati
+            requireActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    listeRecyclerViewAdapter.notifyDataSetChanged();
+                }
+            });
         }
     }
 

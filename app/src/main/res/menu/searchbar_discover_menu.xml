@@ -33,7 +33,8 @@
                 app:showAsAction="ifRoom|collapseActionView" />
             <item
                 android:id="@+id/change_list"
-                android:title="@string/list_alcolici"
+                android:icon="@drawable/ic_swap_horizontal"
+                android:title="@string/list_analcolici"
                 app:showAsAction="ifRoom|collapseActionView" />
         </menu>
     </item>

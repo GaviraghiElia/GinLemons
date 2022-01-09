@@ -6,24 +6,22 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Ricetta {
-    @SerializedName("strDrink")
+    private String id;
     private String name;
     private int alcool;
     private int level;
-    @SerializedName("strInstructionsIT")
     private String istruzioni;
     private String[] ingredienti;
     private String[] dosi;
     private boolean preferito;
 
-    public Ricetta(String name, int alcool, int level){
+    public Ricetta(String id, String name){
+        this.id = id;
         this.name = name;
-        this.alcool = alcool;
-        this.level = level;
-        preferito = false;
     }
 
-    public Ricetta(String name, int alcool, int level, String istruzioni, String[] ingredienti, String[] dosi){
+    public Ricetta(String id, String name, int alcool, int level, String istruzioni, String[] ingredienti, String[] dosi){
+        this.id = id;
         this.name = name;
         this.alcool = alcool;
         this.level = level;
@@ -31,6 +29,10 @@ public class Ricetta {
         this.ingredienti = ingredienti;
         this.dosi = dosi;
         preferito = false;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName(){

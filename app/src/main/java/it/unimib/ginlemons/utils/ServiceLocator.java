@@ -32,7 +32,7 @@ public class ServiceLocator {
 
     // Inizializzazione per la chiamata che riceve gli Ids dei cocktails Alcolici o Analcolici
     public RecipeApiService fetchRecipesApiService() {
-        Gson builder = new GsonBuilder().registerTypeAdapter(IdList.class, new IdsDeserializer()).create();
+        Gson builder = new GsonBuilder().registerTypeAdapter(RicetteList.class, new IdsDeserializer()).create();
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://www.thecocktaildb.com/api/json/v1/1/").addConverterFactory(GsonConverterFactory.create(builder)).build();
         return retrofit.create(RecipeApiService.class);
