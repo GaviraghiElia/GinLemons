@@ -1,6 +1,7 @@
 package it.unimib.ginlemons.ui.authentication;
 
 import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
+import static it.unimib.ginlemons.utils.Constants.PASSWORD_PATTERN;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,6 +25,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.FragmentRegisterBinding;
@@ -117,8 +121,9 @@ public class RegisterFragment extends Fragment {
             mBinding.registerPassword.setError("Passowrd cannot be empty");
             mBinding.registerPassword.requestFocus();
 
-        }else if(pwd.length() < 7) {
-            mBinding.registerPassword.setError("Passowrd must be more than 6 characters long");
+        }else if(!isValidPassword(pwd)) {
+            mBinding.registerPassword.setError("Passowrd not valid");
+            Toast.makeText(getContext(), "Password must contain 6 to 15 characters, 1 special character and 1 number", Toast.LENGTH_LONG).show();
             mBinding.registerPassword.requestFocus();
         }else{
 
@@ -152,6 +157,12 @@ public class RegisterFragment extends Fragment {
                 }
             });
         }
+    }
+
+    public boolean isValidPassword(String password){
+        Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
     }
 
 }

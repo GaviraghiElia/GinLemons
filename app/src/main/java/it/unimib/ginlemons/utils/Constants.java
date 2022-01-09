@@ -7,6 +7,8 @@ public class Constants {
     public static final String ITEM_NAME_PRESSED_KEY = "ItemNamePressedKey";
     public static final String ITEM_LEVEL_PRESSED_KEY = "ItemLevelPressedKey";
     public static final String FRAGMENTFORTRANSITION = "FragmentIntent";
+    public static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[!@#$%^&*+=?-]).{6,15}$";
+
 
 
 
