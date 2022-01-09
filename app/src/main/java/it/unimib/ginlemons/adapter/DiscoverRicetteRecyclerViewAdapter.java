@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unimib.ginlemons.R;
-import it.unimib.ginlemons.model.Ricetta;
+import it.unimib.ginlemons.utils.Ricetta;
 
 public class DiscoverRicetteRecyclerViewAdapter extends RecyclerView.Adapter<DiscoverRicetteRecyclerViewAdapter.ListeViewHolder> implements Filterable {
 
@@ -38,7 +38,7 @@ public class DiscoverRicetteRecyclerViewAdapter extends RecyclerView.Adapter<Dis
     @NonNull
     @Override
     public ListeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_adapter, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ricetta_item_recyclerview, parent, false);
         return new ListeViewHolder(view);
     }
 
@@ -46,7 +46,7 @@ public class DiscoverRicetteRecyclerViewAdapter extends RecyclerView.Adapter<Dis
     @Override
     public void onBindViewHolder(@NonNull ListeViewHolder holder, int position) {
         Ricetta ricetta = ricettaList.get(position);
-        holder.bind(ricetta.getName(), ricetta.getLevel(), ricetta.getAlcool());
+        holder.bind(ricetta.getName());
     }
 
     @Override
@@ -98,29 +98,15 @@ public class DiscoverRicetteRecyclerViewAdapter extends RecyclerView.Adapter<Dis
     class ListeViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;
-        TextView level;
-        TextView alcool;
 
         public ListeViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.nomeRicetta);
-            level = itemView.findViewById(R.id.costoRicetta);
-            alcool = itemView.findViewById(R.id.alcoolRicetta);
         }
 
         // set item RecyclerView
-        public void bind(String n, int l, int a){
+        public void bind(String n){
             name.setText(n);
-            alcool.setText(Integer.toString(a));
-
-            //temporaneo, da spostare/modificare il parametro level
-            if(l == 1){
-                level.setText("€");
-            }else if(l == 2){
-                level.setText("€€");
-            }else{
-                level.setText("€€€");
-            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

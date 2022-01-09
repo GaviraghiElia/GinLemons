@@ -30,11 +30,9 @@ public class RicetteInfoActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-
         fragmentProvenienza = intent.getStringExtra(Constants.FRAGMENTFORTRANSITION);
         String name = intent.getStringExtra(Constants.ITEM_NAME_PRESSED_KEY);
-        int alcool = intent.getIntExtra(Constants.ITEM_ALCOOL_PRESSED_KEY, 0);
-        int costo = intent.getIntExtra(Constants.ITEM_LEVEL_PRESSED_KEY, 0);
+        mBinding.nomeRicettaInfo.setText(name);
 
         // serve almeno la versione 23, noi lavoriamo con la 21
         // non c'è un gran divario
@@ -59,16 +57,6 @@ public class RicetteInfoActivity extends AppCompatActivity {
         mBinding.activityInfoToolbar.setTitle(name);
         Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
 
-        // Set campi textView
-
-        mBinding.alcoolRicettaInfo.setText(Integer.toString(alcool) + " %");
-        if(costo == 1){
-            mBinding.costoRicettaInfo.setText("€");
-        }else if(costo == 2){
-            mBinding.costoRicettaInfo.setText("€€");
-        }else{
-            mBinding.costoRicettaInfo.setText("€€€");
-        }
 
         mBinding.descrizioneRicettaInfo.setText("Abbiamo chiesto a un barman professionista di preparare con noi la ricetta dello Spritz, o meglio dell'Aperol Spritz, codificato dal 2011 come Italian Spritz o Venetian Spritz.\n" +
                 "\n" +

@@ -20,7 +20,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,10 +41,13 @@ import java.util.List;
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.DiscoverRicetteRecyclerViewAdapter;
 import it.unimib.ginlemons.databinding.FragmentRicetteDiscoverBinding;
-import it.unimib.ginlemons.model.Ricetta;
+import it.unimib.ginlemons.repository.IRecipeRepository;
+import it.unimib.ginlemons.repository.RecipeRepository;
+import it.unimib.ginlemons.utils.ResponseCallback;
+import it.unimib.ginlemons.utils.Ricetta;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-public class RicetteDiscoverFragment extends Fragment {
+public class RicetteDiscoverFragment extends Fragment implements ResponseCallback {
 
     private static final String TAG = "Discover_Recipes";
     private DiscoverRicetteRecyclerViewAdapter discoverRicetteRecyclerViewAdapter;
@@ -54,28 +56,18 @@ public class RicetteDiscoverFragment extends Fragment {
     private DatabaseReference reference;
     private FragmentRicetteDiscoverBinding mBinding;
     private NavController navController;
+    private IRecipeRepository iRecipeRepository;
 
 
     // Dati test RecycleView - TEMPORANEI
     List<Ricetta> ricettaList = new ArrayList<>();
-    private Ricetta [] names = {new Ricetta("Campari Spritz", 10, 1),
-            new Ricetta("Aperol Spritz", 15, 2), new Ricetta("Micucci Spritz", 18, 3),
-            new Ricetta("Hugo", 8, 1), new Ricetta("Mojito", 14, 2),
-            new Ricetta("Mai Tai", 12, 2), new Ricetta("Martini Spritz", 13, 3),
-            new Ricetta("Martini", 20, 3), new Ricetta("Black Russian", 25, 2),
-            new Ricetta("White Russian", 26, 2), new Ricetta("Vodka Lemon", 19, 1),
-            new Ricetta("Gin Tonic", 17, 2), new Ricetta("Gin Lemon", 17, 2),
-            new Ricetta("Negroni", 22, 2), new Ricetta("Daiquiri", 14, 3),
-            new Ricetta("Cosmopolitan", 24, 3), new Ricetta("Leporati", 100, 3),
-            new Ricetta("Zandron", 100, 3), new Ricetta("Dennunzio", 100, 3)
-    };
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setTitleToolbar();
+        iRecipeRepository = new RecipeRepository(requireActivity().getApplication(), this);
 
     }
 
@@ -121,13 +113,13 @@ public class RicetteDiscoverFragment extends Fragment {
                 Ricetta ricetta = ricettaList.get(position);
 
                 // check if esiste già nel DB == è già un preferito
-                reference.child(ricetta.getName())
+                reference.child(ricetta.getId())
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(!dataSnapshot.exists()){
                             // se non esiste, allora lo aggiungiamo ai preferiti
-                            reference.child(ricetta.getName())
+                            reference.child(ricetta.getId())
                                     .setValue(ricetta)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
@@ -144,7 +136,7 @@ public class RicetteDiscoverFragment extends Fragment {
 
                         }else{
                             // se già esiste, allora lo rimuoviamo dai preferiti
-                            reference.child(ricetta.getName())
+                            reference.child(ricetta.getId())
                                     .removeValue()
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
@@ -189,8 +181,7 @@ public class RicetteDiscoverFragment extends Fragment {
         mBinding.discoverRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mBinding.discoverRecyclerView.setAdapter(discoverRicetteRecyclerViewAdapter);
 
-        // si popola l'ArrayList
-        Collections.addAll(ricettaList, names);
+        iRecipeRepository.fetchRecipes("Alcoholic", false);
 
         return view;
     }
@@ -221,7 +212,7 @@ public class RicetteDiscoverFragment extends Fragment {
     }
 
     public void addPreferitoRealTimeDB(Ricetta ricetta){
-        reference.child(ricetta.getName())
+        reference.child(ricetta.getId())
                 .setValue(ricetta)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -237,7 +228,7 @@ public class RicetteDiscoverFragment extends Fragment {
     }
 
     public void removePreferitoRealTimeDB(Ricetta ricetta){
-        reference.child(ricetta.getName())
+        reference.child(ricetta.getId())
                 .removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -294,14 +285,20 @@ public class RicetteDiscoverFragment extends Fragment {
                 Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoZA);
                 discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
-            case R.id.ordine_alcool_crescente:
-                Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlcoolCrescente);
+
+            case R.id.change_list: {
+                if (item.getTitle().equals(getString(R.string.list_alcolici)))
+                {
+                    item.setTitle(getString(R.string.list_analcolici));
+                    iRecipeRepository.fetchRecipes("Alcoholic", true);
+                } else {
+                    item.setTitle(getString(R.string.list_alcolici));
+                    iRecipeRepository.fetchRecipes("Non_Alcoholic", true);
+                }
+
                 discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
-            case R.id.ordine_alcool_decrescente:
-                Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlcoolDecrescente);
-                discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
-                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -321,10 +318,78 @@ public class RicetteDiscoverFragment extends Fragment {
         Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
         intent.putExtra(FRAGMENTFORTRANSITION, "RicetteDiscover");
         intent.putExtra(ITEM_NAME_PRESSED_KEY, ricetta.getName());
-        intent.putExtra(ITEM_ALCOOL_PRESSED_KEY, ricetta.getAlcool());
-        intent.putExtra(ITEM_LEVEL_PRESSED_KEY, ricetta.getLevel());
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    // Metodi che gestiscono i dati ricevuti dalle chiamate all'API
+    // Aggiunge una ricetta dettagliata alla lista della RecyclerView
+    @Override
+    public void onResponse(Ricetta ricetta) {
+
+        if(ricetta != null)
+        {
+            int index = 0;
+
+            for (int i = 0; i < ricettaList.size(); i++)
+                if(ricettaList.get(i).getId().equals(ricetta.getId()))
+                {
+                    index = i;
+                    break;
+                }
+
+            ricettaList.add(index, ricetta);
+        }
+        // Metodo che avvisa la RecyclerView che i suoi dati sono stati aggiornati
+        requireActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    // Ricevo gli id dei cocktails Alcolici o Analcolici
+    // Per ognuno effettuo la richiesta all'API dei dati dettagliati del cocktail
+    @Override
+    public void onResponse(List<Ricetta> ricette, boolean clear) {
+        if(ricette != null) {
+
+            if(clear)
+                ricettaList.clear();
+
+            ricettaList.addAll(ricette);
+            // Metodo che avvisa la RecyclerView che i suoi dati sono stati aggiornati
+            requireActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
+    // In caso di fallimento della chiamata avviso l'utente con un messaggio
+    // nella snackbar
+    @Override
+    public void onFailure(String errorString) {
+        Snackbar msg = Snackbar.make(requireActivity().findViewById(android.R.id.content), errorString, Snackbar.LENGTH_LONG);
+
+        // Appare anche un pulsante che permette di riprovare la chiamata
+        msg.setAction("Riprova", new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                MenuItem item = getActivity().findViewById(R.id.change_list);
+
+                if(item.getTitle().equals(R.string.list_alcolici))
+                    iRecipeRepository.fetchRecipes("Non_Alcoholic", true);
+                else
+                    iRecipeRepository.fetchRecipes("Alcoholic", true);
+            }
+        });
+
+        msg.show();
     }
 
 }

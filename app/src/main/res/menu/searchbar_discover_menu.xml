@@ -6,12 +6,10 @@
         android:title=""
         android:icon="@android:drawable/ic_menu_search"
         app:showAsAction="ifRoom|collapseActionView"
-        android:iconTint="@color/white"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
     <item
         android:id="@+id/sort_discover"
         android:title=""
-        android:iconTint="@color/white"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         app:showAsAction="ifRoom|collapseActionView">
         <menu>
@@ -19,19 +17,16 @@
                 android:id="@+id/ordine_alfabetico_crescente"
                 android:icon="@android:drawable/ic_menu_sort_alphabetically"
                 android:title="@string/ordine_alfabetico_crescente_title"
-                app:showAsAction="ifRoom|collapseActionView"/>
+                app:showAsAction="ifRoom|collapseActionView" />
             <item
                 android:id="@+id/ordine_alfabetico_decrescente"
                 android:icon="@android:drawable/ic_menu_sort_alphabetically"
                 android:title="@string/ordine_alfabetico_decrescente_title"
                 app:showAsAction="ifRoom|collapseActionView" />
             <item
-                android:id="@+id/ordine_alcool_crescente"
-                android:title="@string/ordine_alcool_crescente_title"
-                app:showAsAction="ifRoom|collapseActionView" />
-            <item
-                android:id="@+id/ordine_alcool_decrescente"
-                android:title="@string/ordine_alcool_decrescente_title"
+                android:id="@+id/change_list"
+                android:icon="@drawable/ic_swap_horizontal"
+                android:title="@string/list_analcolici"
                 app:showAsAction="ifRoom|collapseActionView" />
         </menu>
     </item>

@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,7 +39,7 @@ import java.util.Collections;
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.PreferitiRicetteRecyclerviewAdapter;
 import it.unimib.ginlemons.databinding.FragmentRicettePreferitiBinding;
-import it.unimib.ginlemons.model.Ricetta;
+import it.unimib.ginlemons.utils.Ricetta;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class RicettePreferitiFragment extends Fragment {
@@ -130,7 +129,7 @@ public class RicettePreferitiFragment extends Fragment {
                 Ricetta ricetta = ricettePreferitiList.get(position);
 
                 ricettePreferitiList.remove(position);
-                reference.child(ricetta.getName())
+                reference.child(ricetta.getId())
                         .removeValue()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -152,7 +151,7 @@ public class RicettePreferitiFragment extends Fragment {
                     public void onClick(View v) {
                         ricettePreferitiList.add(position, ricetta);
 
-                        reference.child(ricetta.getName())
+                        reference.child(ricetta.getId())
                                 .setValue(ricetta)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -237,14 +236,6 @@ public class RicettePreferitiFragment extends Fragment {
                 Collections.sort(ricettePreferitiList, Ricetta.OrdinaRicetteAlfabeticoZA);
                 preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
                 return true;
-            case R.id.ordine_alcool_crescente:
-                Collections.sort(ricettePreferitiList, Ricetta.OrdinaRicetteAlcoolCrescente);
-                preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
-                return true;
-            case R.id.ordine_alcool_decrescente:
-                Collections.sort(ricettePreferitiList, Ricetta.OrdinaRicetteAlcoolDecrescente);
-                preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
-                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -262,7 +253,7 @@ public class RicettePreferitiFragment extends Fragment {
     }
 
     public void addPreferitoRealTimeDB(Ricetta ricetta){
-        reference.child(ricetta.getName())
+        reference.child(ricetta.getId())
                 .setValue(ricetta)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -281,8 +272,6 @@ public class RicettePreferitiFragment extends Fragment {
         Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
         intent.putExtra(FRAGMENTFORTRANSITION, "RicettePreferiti");
         intent.putExtra(ITEM_NAME_PRESSED_KEY, ricetta.getName());
-        intent.putExtra(ITEM_ALCOOL_PRESSED_KEY, ricetta.getAlcool());
-        intent.putExtra(ITEM_LEVEL_PRESSED_KEY, ricetta.getLevel());
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
