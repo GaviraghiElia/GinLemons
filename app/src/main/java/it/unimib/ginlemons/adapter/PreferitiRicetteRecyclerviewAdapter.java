@@ -1,6 +1,5 @@
 package it.unimib.ginlemons.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.utils.Ricetta;
 
-public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecyclerViewAdapter.ListeViewHolder> implements Filterable {
+public class PreferitiRicetteRecyclerviewAdapter extends RecyclerView.Adapter<PreferitiRicetteRecyclerviewAdapter.ListeViewHolder> implements Filterable {
 
-    private List<Ricetta> ricettaList;
-    private List<Ricetta> getRicettaListFiltered;
+    private ArrayList<Ricetta> ricettePreferitiList;
+    private ArrayList<Ricetta> getRicettaListFiltered;
+
     // Interfaccia per definire la reazione al click su un elemento della RecyclerView
     private OnItemClickListener onItemClickListener;
 
@@ -30,9 +29,9 @@ public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecycler
     }
 
     // costruttore
-    public ListeRecyclerViewAdapter(List<Ricetta> ricettaList, OnItemClickListener onItemClickListener){
-        this.ricettaList = ricettaList;
-        this.getRicettaListFiltered = ricettaList;
+    public PreferitiRicetteRecyclerviewAdapter(ArrayList<Ricetta> ricettePreferitiList, OnItemClickListener onItemClickListener){
+        this.ricettePreferitiList = ricettePreferitiList;
+        this.getRicettaListFiltered = ricettePreferitiList;
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -40,23 +39,23 @@ public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecycler
     @NonNull
     @Override
     public ListeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_adapter, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ricetta_item_recyclerview, parent, false);
         return new ListeViewHolder(view);
     }
 
     // Bind tra item e dati
     @Override
     public void onBindViewHolder(@NonNull ListeViewHolder holder, int position) {
-        Ricetta ricetta = ricettaList.get(position);
-        holder.bind(ricetta.getName(), ricetta.getLevel(), ricetta.getAlcool());
+        Ricetta ricetta = ricettePreferitiList.get(position);
+        holder.bind(ricetta.getName());
     }
 
     @Override
     public int getItemCount() {
-        return ricettaList.size();
+        return ricettePreferitiList.size();
     }
 
-    // Metodo per filtrare la lista delle ricette
+
     @Override
     public Filter getFilter() {
         Filter filter = new Filter() {
@@ -86,10 +85,9 @@ public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecycler
                 return filterResults;
             }
 
-            // Metodo che sostituisce la lista delle ricette con quella filtrata
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                ricettaList = (List<Ricetta>) results.values;
+                ricettePreferitiList = (ArrayList<Ricetta>) results.values;
                 notifyDataSetChanged();
             }
         };
@@ -101,34 +99,20 @@ public class ListeRecyclerViewAdapter extends RecyclerView.Adapter<ListeRecycler
     class ListeViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;
-        TextView level;
-        TextView alcool;
 
         public ListeViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.nomeRicetta);
-            level = itemView.findViewById(R.id.costoRicetta);
-            alcool = itemView.findViewById(R.id.alcoolRicetta);
         }
 
         // set item RecyclerView
-        public void bind(String n, int l, int a){
+        public void bind(String n){
             name.setText(n);
-            alcool.setText(Integer.toString(a));
-
-            //temporaneo, da spostare/modificare il parametro level
-            if(l == 1){
-                level.setText("€");
-            }else if(l == 2){
-                level.setText("€€");
-            }else{
-                level.setText("€€€");
-            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onItemClickListener.onIntemClick(ricettaList.get(getAdapterPosition()));
+                    onItemClickListener.onIntemClick(ricettePreferitiList.get(getAdapterPosition()));
                 }
             });
         }

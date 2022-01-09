@@ -1,8 +1,14 @@
 package it.unimib.ginlemons.ui;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
@@ -11,8 +17,12 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import it.unimib.ginlemons.R;
+import it.unimib.ginlemons.databinding.ActivityMainBinding;
+import it.unimib.ginlemons.ui.authentication.EntryActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -22,15 +32,22 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private AppBarConfiguration appBarConfiguration;
     private Toolbar myToolbar;
-
+    private FirebaseAuth mAuth;
+    private ActivityMainBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = mBinding.getRoot();
+        setContentView(view);
+        //setContentView(R.layout.activity_main);
+
+        // Autentication
+        mAuth = FirebaseAuth.getInstance();
 
         // Toolbar
-        myToolbar = findViewById(R.id.activity_toolbar);
+        myToolbar = mBinding.activityToolbar;
         setSupportActionBar(myToolbar);
 
         // Navigation Component
@@ -39,14 +56,46 @@ public class MainActivity extends AppCompatActivity {
         navController = navHostFragment.getNavController();
 
         // Controllo della bottom bar attraverso il fragment manager
-        bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-
+        bottomNavigationView = mBinding.bottomNavigationView;
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
-
-        appBarConfiguration = new AppBarConfiguration.Builder(R.id.listeFragment, R.id.ricetteFragment).build();
-
+        appBarConfiguration = new AppBarConfiguration.Builder(R.id.listeFragment, R.id.ricetteFragment, R.id.userProfileFragment).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(!checkSession()){
+            startActivity(new Intent(MainActivity.this, EntryActivity.class));
+            finish();
+        }
+    }
+
+    private boolean checkSession(){
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.action_logout){
+            mAuth.signOut();
+            startActivity(new Intent(MainActivity.this, EntryActivity.class));
+            overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

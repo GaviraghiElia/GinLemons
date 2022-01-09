@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.ListeFragment">
+    tools:context=".ui.liste.ListeFragment">
 
 
     <com.google.android.material.tabs.TabLayout
@@ -36,11 +36,3 @@
         android:layout_height="match_parent"
         android:layout_below="@id/tabs_liste" />
 </RelativeLayout>
-    <!--<androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_liste"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:title="Le mie liste"/>-->

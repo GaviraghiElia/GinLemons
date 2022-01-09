@@ -6,8 +6,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import it.unimib.ginlemons.ui.RicetteDiscoverFragment;
-import it.unimib.ginlemons.ui.RicettePreferitiFragment;
+import it.unimib.ginlemons.ui.ricette.RicetteDiscoverFragment;
+import it.unimib.ginlemons.ui.ricette.RicettePreferitiFragment;
 
 public class FragmentRicetteAdapter extends FragmentStateAdapter {
 

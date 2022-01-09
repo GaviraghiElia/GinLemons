@@ -3,17 +3,31 @@ package it.unimib.ginlemons.utils;
 import java.util.Comparator;
 
 public class Ricetta {
-
+    private String id;
     private String name;
-    private int alcool;
-    private int level;
-    private boolean preferito;
+    private String istruzioni;
+    private String[] ingredienti;
+    private String[] dosi;
 
-    public Ricetta(String name, int alcool, int level){
+
+    public Ricetta(){
+    }
+
+    public Ricetta(String id, String name){
+        this.id = id;
         this.name = name;
-        this.alcool = alcool;
-        this.level = level;
-        preferito = false;
+    }
+
+    public Ricetta(String id, String name, String istruzioni, String[] ingredienti, String[] dosi){
+        this.id = id;
+        this.name = name;
+        this.istruzioni = istruzioni;
+        this.ingredienti = ingredienti;
+        this.dosi = dosi;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName(){
@@ -24,33 +38,6 @@ public class Ricetta {
         this.name = name;
     }
 
-    public int getAlcool(){
-        return alcool;
-    }
-
-    public void setAlcool(int alcool){
-        this.alcool = alcool;
-    }
-
-    public int getLevel(){
-        return level;
-    }
-
-    public void setLevel(int level){
-        this.level = level;
-    }
-
-    public boolean isPreferito(){
-        return preferito;
-    }
-
-    public void addPreferito(){
-        preferito = true;
-    }
-
-    public void removePreferito(){
-        preferito = false;
-    }
 
     // Metodi per il sort delle ricette nelle sezioni Esplora e Preferiti
 
@@ -70,19 +57,4 @@ public class Ricetta {
         }
     };
 
-    // Ordine di gradazione alcolica crescente
-    public static Comparator<Ricetta> OrdinaRicetteAlcoolCrescente = new Comparator<Ricetta>() {
-        @Override
-        public int compare(Ricetta r1, Ricetta r2) {
-            return r1.getAlcool() - r2.getAlcool();
-        }
-    };
-
-    // Ordine di gradazione alcolica decrescente
-    public static Comparator<Ricetta> OrdinaRicetteAlcoolDecrescente = new Comparator<Ricetta>() {
-        @Override
-        public int compare(Ricetta r1, Ricetta r2) {
-            return r2.getAlcool() - r1.getAlcool();
-        }
-    };
 }

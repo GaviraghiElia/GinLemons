@@ -1,4 +1,4 @@
-package it.unimib.ginlemons.ui;
+package it.unimib.ginlemons.ui.liste;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -53,7 +53,9 @@ public class ListeFragment extends Fragment {
             public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {
+                viewPager2.setCurrentItem(tab.getPosition());
+            }
         });
 
         // Cattura l'evento del cambio tab (tap una sezione)
@@ -63,27 +65,6 @@ public class ListeFragment extends Fragment {
                 tabLayout.selectTab(tabLayout.getTabAt(position));
             }
         });
-
-
-        /* EVENTUALI ANIMAZIONI
-           Personalmente non mi fanno impazzire
-        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                tabLayout.selectTab(tabLayout.getTabAt(position));
-            }
-        });
-
-        viewPager2.setPageTransformer(new ViewPager2.PageTransformer() {
-            @Override
-            public void transformPage(@NonNull View page, float position) {
-
-                page.setPivotX(position < 0 ? 0 : page.getWidth());
-                page.setScaleX(position < 0 ? 1f + position : 1f - position);
-
-            }
-        });*/
-
 
         return view;
     }

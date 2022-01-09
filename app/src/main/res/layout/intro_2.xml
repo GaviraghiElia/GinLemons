@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_marginTop="60dp"
+        android:src="@drawable/ic_intro_2"
+        android:elevation="10dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:layout_marginHorizontal="30dp"
+        android:text="Tieni traccia delle tue"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-condensed"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginHorizontal="30dp"
+        android:text="Liste delle Feste"
+        android:textColor="@color/black"
+        android:textSize="50sp"
+        android:fontFamily="cursive"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="40dp"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textColor="@color/black_secondary"
+        android:fontFamily="sans-serif-condensed-light"
+        android:text="Crea e completa liste della spesa dei cocktail che \nvuoi realizzare!\n
+        Tieni traccia di cosa hai già preso e di quanto \nti devono i tuoi amici."
+        android:textStyle="italic"/>
+
+</LinearLayout>
