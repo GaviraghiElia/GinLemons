@@ -181,17 +181,13 @@ public class RicetteDiscoverFragment extends Fragment {
                 // non posso usare il Navigation Component!
                 // Sto navigando da un fragment verso un'altra activity: non c'è modo di recuperare
                 // i dati dall'altro parte, almeno stando ai tutorial disponibili....
-                // stack overflow consiglia ciò
+                // stack overflow consiglia ciòi
                 navigateToRicettaInfo(ricetta);
             }
         });
 
         mBinding.discoverRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mBinding.discoverRecyclerView.setAdapter(discoverRicetteRecyclerViewAdapter);
-
-        // Bordi per gli item della RecycleView
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mBinding.discoverRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
-        mBinding.discoverRecyclerView.addItemDecoration(dividerItemDecoration);
 
         // si popola l'ArrayList
         Collections.addAll(ricettaList, names);

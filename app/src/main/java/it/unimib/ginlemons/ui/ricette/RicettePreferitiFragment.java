@@ -175,10 +175,6 @@ public class RicettePreferitiFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(mBinding.preferitiRecyclerView);
 
-        // Bordi per gli item della RecycleView
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mBinding.preferitiRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
-        mBinding.preferitiRecyclerView.addItemDecoration(dividerItemDecoration);
-
         return view;
     }
 
