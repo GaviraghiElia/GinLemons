@@ -1,5 +1,6 @@
 package it.unimib.ginlemons.utils;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 public class Ricetta {
@@ -13,9 +14,11 @@ public class Ricetta {
     public Ricetta(){
     }
 
-    public Ricetta(String id, String name){
+    public Ricetta(String id, String name)
+    {
         this.id = id;
         this.name = name;
+        this.istruzioni = null;
     }
 
     public Ricetta(String id, String name, String istruzioni, String[] ingredienti, String[] dosi){
@@ -38,6 +41,14 @@ public class Ricetta {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Ricetta{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", istruzioni='" + istruzioni + '\'' +
+                '}';
+    }
 
     // Metodi per il sort delle ricette nelle sezioni Esplora e Preferiti
 
