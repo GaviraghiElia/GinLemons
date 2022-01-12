@@ -9,9 +9,16 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -36,6 +43,7 @@ import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.CustomPasswordDialogBinding;
 import it.unimib.ginlemons.databinding.FragmentUserProfileBinding;
 import it.unimib.ginlemons.model.UserHelper;
+import it.unimib.ginlemons.ui.authentication.EntryActivity;
 
 public class UserProfileFragment extends Fragment {
 
@@ -60,6 +68,7 @@ public class UserProfileFragment extends Fragment {
         navController = NavHostFragment.findNavController(this);
 
         setTitleToolbar();
+        setHasOptionsMenu(true);
 
         // Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -110,6 +119,15 @@ public class UserProfileFragment extends Fragment {
 
         return view;
     }
+
+    // Inserisce il pulsante per il logout nella toolbar
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.user_profile_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
 
     @Override
     public void onResume() {
