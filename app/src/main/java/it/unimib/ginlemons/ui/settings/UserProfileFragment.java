@@ -11,14 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -43,7 +38,6 @@ import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.CustomPasswordDialogBinding;
 import it.unimib.ginlemons.databinding.FragmentUserProfileBinding;
 import it.unimib.ginlemons.model.UserHelper;
-import it.unimib.ginlemons.ui.authentication.EntryActivity;
 
 public class UserProfileFragment extends Fragment {
 
@@ -97,7 +91,7 @@ public class UserProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getContext(), "Fail to get data", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.get_data_fail), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -150,11 +144,11 @@ public class UserProfileFragment extends Fragment {
         String onClickMail = mBinding.userProfileEmail.getText().toString().toLowerCase();
 
         if(onClickName.isEmpty()){
-            mBinding.userProfileName.setError("Name cannot be empty");
+            mBinding.userProfileName.setError(getString(R.string.name_not_empty));
             mBinding.userProfileName.requestFocus();
 
         }else if(onClickMail.isEmpty()){
-            mBinding.userProfileEmail.setError("Email cannot be empty!");
+            mBinding.userProfileEmail.setError(getString(R.string.email_not_empty));
             mBinding.userProfileEmail.requestFocus();
 
         } else if(!displayName.equals(onClickName) && displayEmail.equals(onClickMail)){
@@ -166,7 +160,7 @@ public class UserProfileFragment extends Fragment {
             changeEmailName(onClickName, onClickMail);
 
         }else {
-            Toast.makeText(getContext(), "No changes", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.no_changes), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -176,12 +170,12 @@ public class UserProfileFragment extends Fragment {
         reference.child(mAuth.getCurrentUser().getUid()).setValue(userObj).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Toast.makeText(getContext(), "Name updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.name_updated), Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(), "Name not updated", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getString(R.string.name_not_updated), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -221,7 +215,7 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(mBindingDialog.resetInputEmailPassword.getText().toString().isEmpty()){
-                    mBindingDialog.resetInputEmailPasswordLayout.setError("Passowrd cannot be empty");
+                    mBindingDialog.resetInputEmailPasswordLayout.setError(getString(R.string.password_not_empty));
                     mBindingDialog.resetInputEmailPassword.requestFocus();
                 } else {
                     UserHelper userObj = new UserHelper(onClickName, onClickMail);
@@ -253,7 +247,7 @@ public class UserProfileFragment extends Fragment {
                                                     displayName = onClickName;
 
                                                     dialog.dismiss();
-                                                    Toast.makeText(getContext(), "Your information updated", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getContext(), getString(R.string.informations_updated), Toast.LENGTH_SHORT).show();
 
                                                     mAuth.signOut();
                                                     if(!checkSession()){
@@ -267,15 +261,15 @@ public class UserProfileFragment extends Fragment {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
                                             dialog.dismiss();
-                                            mBinding.userProfileEmail.setError("Bad Email");
+                                            mBinding.userProfileEmail.setError(getString(R.string.bad_email));
                                         }
                                     });
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getContext(), "Password is not correct", Toast.LENGTH_SHORT).show();
-                            mBindingDialog.resetInputEmailPasswordLayout.setError("Password is not correct");
+                            Toast.makeText(getContext(), getString(R.string.incorrect_password), Toast.LENGTH_SHORT).show();
+                            mBindingDialog.resetInputEmailPasswordLayout.setError(getString(R.string.incorrect_password));
                             mBindingDialog.resetInputEmailPassword.requestFocus();
                         }
                     });
@@ -289,7 +283,7 @@ public class UserProfileFragment extends Fragment {
 
     public void resetPassword(){
         AlertDialog.Builder resetPasswordMailDialog = new AlertDialog.Builder(requireActivity());
-        resetPasswordMailDialog.setTitle("Forgot Password?");
+        resetPasswordMailDialog.setTitle(getString(R.string.forgot_password));
         resetPasswordMailDialog.setCancelable(true);
         // Preme "si"
         resetPasswordMailDialog.setPositiveButton("Reset", new DialogInterface.OnClickListener() {
@@ -299,7 +293,7 @@ public class UserProfileFragment extends Fragment {
                 mAuth.sendPasswordResetEmail(emailReset).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(getContext(), "Reset link sent to your mail", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.password_reset_link), Toast.LENGTH_SHORT).show();
                         mAuth.signOut();
                         if(!checkSession()){
                             navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
@@ -309,7 +303,7 @@ public class UserProfileFragment extends Fragment {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Error ! Reset Link is not sent"
+                        Toast.makeText(getContext(), getString(R.string.password_reset_link_error)
                                 + e.getMessage(), Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }

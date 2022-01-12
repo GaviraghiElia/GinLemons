@@ -27,7 +27,7 @@ public class DiscoverRicetteRecyclerViewAdapter extends RecyclerView.Adapter<Dis
         void onIntemClick(Ricetta ricetta);
     }
 
-    // costruttore
+    // Costruttore
     public DiscoverRicetteRecyclerViewAdapter(List<Ricetta> ricettaList, OnItemClickListener onItemClickListener){
         this.ricettaList = ricettaList;
         this.getRicettaListFiltered = ricettaList;
@@ -94,8 +94,6 @@ public class DiscoverRicetteRecyclerViewAdapter extends RecyclerView.Adapter<Dis
         return filter;
     }
 
-
-    // nuova classe
     class ListeViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;

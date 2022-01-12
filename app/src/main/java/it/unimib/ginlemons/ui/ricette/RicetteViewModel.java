@@ -1,14 +1,10 @@
 package it.unimib.ginlemons.ui.ricette;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 import it.unimib.ginlemons.repository.IRecipeRepository;
 import it.unimib.ginlemons.repository.RecipeRepository;
@@ -52,5 +48,4 @@ public class RicetteViewModel extends AndroidViewModel {
         for (Ricetta r : appo.getValue().getRepices())
             r.setType(type);
     }
-
 }

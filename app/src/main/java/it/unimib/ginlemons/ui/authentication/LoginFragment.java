@@ -95,24 +95,24 @@ public class LoginFragment extends Fragment {
         String pwd = mBinding.loginPassword.getText().toString();
 
         if (TextUtils.isEmpty(e)) {
-            mBinding.loginEmail.setError("Email cannot be empty");
+            mBinding.loginEmail.setError(getContext().getString(R.string.email_not_empty));
             mBinding.loginEmail.requestFocus();
         } else if (TextUtils.isEmpty(pwd)) {
-            mBinding.loginPassword.setError("Passowrd cannot be empty");
+            mBinding.loginPassword.setError(getContext().getString(R.string.password_not_empty));
             mBinding.loginPassword.requestFocus();
         }else if (pwd.isEmpty()){
-            mBinding.loginPassword.setError("Password must be >= 6 characters");
+            mBinding.loginPassword.setError(getContext().getString(R.string.password_too_short));
             mBinding.loginPassword.requestFocus();
         }else{
             mAuth.signInWithEmailAndPassword(e, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
-                        Toast.makeText(getContext(), "User login is successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getContext().getString(R.string.successfull_login), Toast.LENGTH_SHORT).show();
                         navController.navigate(R.id.action_loginFragment_to_mainActivity);
                         requireActivity().finish();
                     }else{
-                        Toast.makeText(getContext(), "Login Error :" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getContext().getString(R.string.login_error) + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });

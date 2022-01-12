@@ -1,14 +1,12 @@
 package it.unimib.ginlemons.repository;
 
 import android.app.Application;
+import android.content.res.Resources;
 
 import androidx.lifecycle.MutableLiveData;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
+import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.service.RecipeApiService;
-import it.unimib.ginlemons.utils.Ricetta;
 import it.unimib.ginlemons.utils.RicetteList;
 import it.unimib.ginlemons.utils.ServiceLocator;
 import retrofit2.Call;
@@ -50,9 +48,9 @@ public class RecipeRepository implements IRecipeRepository{
                 else
                 {
                     if(type.equals("Alcoholic"))
-                        alcolici.getValue().setError("Caricamento Fallito");
+                        alcolici.getValue().setError(Resources.getSystem().getString(R.string.load_fail));
                     else
-                        analcolici.getValue().setError("Caricamento Fallito");
+                        analcolici.getValue().setError(Resources.getSystem().getString(R.string.load_fail));
                 }
             }
 

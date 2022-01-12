@@ -23,9 +23,6 @@ public class AuthenticationActivity extends AppCompatActivity {
         View view = mBinding.getRoot();
         setContentView(view);
 
-        Log.d("Auth Activity", "Capitano siamo dentro");
-
-
         navHostFragment =
                 (NavHostFragment) getSupportFragmentManager().findFragmentById(mBinding.fragmentAuthContainerView.getId());
         navController = navHostFragment.getNavController();

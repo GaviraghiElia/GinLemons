@@ -9,9 +9,7 @@ import android.view.View;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.ActivityEntryBinding;
-import it.unimib.ginlemons.databinding.ActivityMainBinding;
 import it.unimib.ginlemons.ui.MainActivity;
 
 public class EntryActivity extends AppCompatActivity {
@@ -25,8 +23,6 @@ public class EntryActivity extends AppCompatActivity {
         mBinding = ActivityEntryBinding.inflate(getLayoutInflater());
         View view = mBinding.getRoot();
         setContentView(view);
-
-
 
         mAuth = FirebaseAuth.getInstance();
         if(checkSession()){
