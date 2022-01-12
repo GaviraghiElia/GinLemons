@@ -41,4 +41,16 @@ public class RicetteViewModel extends AndroidViewModel {
 
         return analcolici;
     }
+
+    public void setType(String type)
+    {
+        MutableLiveData<RicetteList> appo = alcolici;
+
+        if(type.equalsIgnoreCase( "Non_Alcoholic"))
+            appo = analcolici;
+
+        for (Ricetta r : appo.getValue().getRepices())
+            r.setType(type);
+    }
+
 }

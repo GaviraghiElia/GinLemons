@@ -5,6 +5,7 @@ import static it.unimib.ginlemons.utils.Constants.*;
 
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -208,6 +210,7 @@ public class RicetteDiscoverFragment extends Fragment {
                     else
                     {
                         ricettaList.clear();
+                        rViewModel.setType("Alcoholic");;
                         ricettaList.addAll(ricette.getRepices());
                         Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
                         discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
@@ -242,6 +245,7 @@ public class RicetteDiscoverFragment extends Fragment {
                         msg.show();
                     } else {
                         ricettaList.clear();
+                        rViewModel.setType("Non_Alcoholic");;
                         ricettaList.addAll(ricette.getRepices());
                         Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
                         discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
@@ -359,17 +363,23 @@ public class RicetteDiscoverFragment extends Fragment {
                 discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
 
-            case R.id.change_list: {
-                if (item.getTitle().equals(getString(R.string.list_alcolici)))
+            case R.id.change_list:
+            {
+                if(ricettaList.get(1).getType().equalsIgnoreCase( "Non_Alcoholic"))
                 {
+
                     ricettaList.clear();
                     ricettaList.addAll(rViewModel.getAlcolici().getValue().getRepices());
                     discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
+
+                    item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
                     item.setTitle(getString(R.string.list_analcolici));
                 } else {
                     ricettaList.clear();
                     ricettaList.addAll(rViewModel.getAnalcolici().getValue().getRepices());
                     discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
+
+                    item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.alcoholic));
                     item.setTitle(getString(R.string.list_alcolici));
                 }
 

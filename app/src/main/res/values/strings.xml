@@ -52,6 +52,6 @@
     <string name="want_change_your_email">Want change your Email?</string>
     <string name="enter_your_password">Enter your password</string>
     <string name="hello">Hello</string>
-    <string name="list_analcolici">Analcolici</string>
-    <string name="list_alcolici">Alcolici</string>
+    <string name="list_analcolici">Mostra Analcolici</string>
+    <string name="list_alcolici">Mostra Alcolici</string>
 </resources>
