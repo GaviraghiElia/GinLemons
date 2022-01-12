@@ -190,8 +190,7 @@ public class RicettePreferitiFragment extends Fragment {
             if (toolbar != null) {
                 toolbar.setTitle(R.string.preferiti_toolbar_title);
             }
-        }
-    }
+        }   }
 
 
     @Override
@@ -271,7 +270,7 @@ public class RicettePreferitiFragment extends Fragment {
     public void navigateToRicettaInfo(Ricetta ricetta){
         Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
         intent.putExtra(FRAGMENTFORTRANSITION, "RicettePreferiti");
-        intent.putExtra(ITEM_NAME_PRESSED_KEY, ricetta.getName());
+        intent.putExtra(ITEM_ID_PRESSED_KEY, ricetta.getId());
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }

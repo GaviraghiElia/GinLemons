@@ -5,9 +5,9 @@ import android.app.Application;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import it.unimib.ginlemons.service.RecipeApiService;
-import it.unimib.ginlemons.utils.ResponseCallback;
 import it.unimib.ginlemons.utils.Ricetta;
 import it.unimib.ginlemons.utils.RicetteList;
 import it.unimib.ginlemons.utils.ServiceLocator;
@@ -19,14 +19,11 @@ import retrofit2.Response;
 public class RecipeRepository implements IRecipeRepository{
 
     private static final String TAG = "NewsRepository";
-    private final RecipeApiService recipeApiService;
     private final RecipeApiService fetchApiService;
     private MutableLiveData<RicetteList> alcolici;
     private MutableLiveData<RicetteList> analcolici;
 
     public RecipeRepository(Application application) {
-        // Endpoint per richiedere le informazioni di un cocktail
-        this.recipeApiService = ServiceLocator.getInstance().getRecipeApiService();
         // Endpoint per richiedere i cocktail Alcolici o Analcolici
         this.fetchApiService = ServiceLocator.getInstance().fetchRecipesApiService();
 
@@ -72,31 +69,5 @@ public class RecipeRepository implements IRecipeRepository{
             return alcolici;
         else
             return analcolici;
-    }
-
-    // Metodo che ottiene i dati dettagliati del cocktail con l'Id passato come parametro
-    @Override
-    public void getRecipeById(String id) {
-        /*
-        Call<Ricetta> getRecipesCall = recipeApiService.getRecipeById(id);
-
-        getRecipesCall.enqueue(new Callback<Ricetta>() {
-            @Override
-            public void onResponse(Call<Ricetta> call, Response<Ricetta> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    Ricetta recipe = response.body();
-
-                    responseCallback.onResponse(recipe);
-                } else {
-                    responseCallback.onFailure("Caricamento Fallito");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Ricetta> call, Throwable t) {
-                responseCallback.onFailure(t.getMessage());
-            }
-        });
-         */
     }
 }

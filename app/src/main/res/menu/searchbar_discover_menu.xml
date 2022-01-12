@@ -8,6 +8,11 @@
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
     <item
+        android:id="@+id/change_list"
+        android:icon="@drawable/ic_swap_horizontal"
+        android:title="@string/list_analcolici"
+        app:showAsAction="ifRoom|collapseActionView" />
+    <item
         android:id="@+id/sort_discover"
         android:title=""
         android:icon="@android:drawable/ic_menu_sort_by_size"
@@ -22,11 +27,6 @@
                 android:id="@+id/ordine_alfabetico_decrescente"
                 android:icon="@android:drawable/ic_menu_sort_alphabetically"
                 android:title="@string/ordine_alfabetico_decrescente_title"
-                app:showAsAction="ifRoom|collapseActionView" />
-            <item
-                android:id="@+id/change_list"
-                android:icon="@drawable/ic_swap_horizontal"
-                android:title="@string/list_analcolici"
                 app:showAsAction="ifRoom|collapseActionView" />
         </menu>
     </item>

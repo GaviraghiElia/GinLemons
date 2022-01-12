@@ -1,17 +1,30 @@
 package it.unimib.ginlemons.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RicetteList {
     private String error = null;
-    private ArrayList<Ricetta> repices;
+    private HashMap<String, Ricetta> recipes;
 
-    public RicetteList(ArrayList<Ricetta> repices) {
-        this.repices = repices;
+    public RicetteList()
+    {
+        recipes = new HashMap<>();
     }
 
-    public ArrayList<Ricetta> getRepices() {
-        return repices;
+    public RicetteList(HashMap<String, Ricetta> repices)
+    {
+        this.recipes = repices;
+    }
+
+    public ArrayList<Ricetta> getRepices()
+    {
+        return new ArrayList<Ricetta>(recipes.values());
+    }
+
+    public Ricetta getRecipe(String id)
+    {
+        return recipes.get(id);
     }
 
     public String getError() {

@@ -7,8 +7,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import it.unimib.ginlemons.repository.IRecipeRepository;
 import it.unimib.ginlemons.repository.RecipeRepository;
+import it.unimib.ginlemons.utils.Ricetta;
 import it.unimib.ginlemons.utils.RicetteList;
 
 public class RicetteViewModel extends AndroidViewModel {
@@ -28,13 +32,11 @@ public class RicetteViewModel extends AndroidViewModel {
         if(alcolici == null)
             alcolici = iRecipeRepository.fetchRecipes("Alcoholic");
 
-
         return alcolici;
     }
 
-    public MutableLiveData<RicetteList> getAnalcolici()
-    {
-        if(analcolici == null)
+    public MutableLiveData<RicetteList> getAnalcolici() {
+        if (analcolici == null)
             analcolici = iRecipeRepository.fetchRecipes("Non_Alcoholic");
 
         return analcolici;

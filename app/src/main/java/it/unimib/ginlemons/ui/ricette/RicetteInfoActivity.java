@@ -4,26 +4,42 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Fade;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.ActivityRicetteInfoBinding;
+import it.unimib.ginlemons.repository.GetRecipeRepository;
+import it.unimib.ginlemons.repository.IGetRecipeRepository;
 import it.unimib.ginlemons.utils.Constants;
+import it.unimib.ginlemons.utils.ResponseCallback;
+import it.unimib.ginlemons.utils.Ricetta;
+import it.unimib.ginlemons.utils.RicetteList;
 
 
-public class RicetteInfoActivity extends AppCompatActivity {
+public class RicetteInfoActivity extends AppCompatActivity implements ResponseCallback {
 
     private ActivityRicetteInfoBinding mBinding;
     private String fragmentProvenienza;
+    private IGetRecipeRepository iGetRecipeRepository;
+    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        iGetRecipeRepository = new GetRecipeRepository(this.getApplication(), this);
+
         mBinding = ActivityRicetteInfoBinding.inflate(getLayoutInflater());
         View view = mBinding.getRoot();
         setContentView(view);
@@ -31,8 +47,11 @@ public class RicetteInfoActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         fragmentProvenienza = intent.getStringExtra(Constants.FRAGMENTFORTRANSITION);
-        String name = intent.getStringExtra(Constants.ITEM_NAME_PRESSED_KEY);
-        mBinding.nomeRicettaInfo.setText(name);
+        id = intent.getStringExtra(Constants.ITEM_ID_PRESSED_KEY);
+
+        iGetRecipeRepository.getRecipeById(id);
+
+        //mBinding.nomeRicettaInfo.setText(recipe.getName());
 
         // serve almeno la versione 23, noi lavoriamo con la 21
         // non c'è un gran divario
@@ -50,33 +69,16 @@ public class RicetteInfoActivity extends AppCompatActivity {
                 }
             });
         }
-
+        /*
         // Codice Toolbar -- ultima push
         mBinding.activityInfoToolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24);
         setSupportActionBar(mBinding.activityInfoToolbar);
-        mBinding.activityInfoToolbar.setTitle(name);
+        mBinding.activityInfoToolbar.setTitle(recipe.getName());
         Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
 
 
-        mBinding.descrizioneRicettaInfo.setText("Abbiamo chiesto a un barman professionista di preparare con noi la ricetta dello Spritz, o meglio dell'Aperol Spritz, codificato dal 2011 come Italian Spritz o Venetian Spritz.\n" +
-                "\n" +
-                "L' Aperol Spritz è infatti la famosa versione dello Spritz che ha origini controverse.\n" +
-                "\n" +
-                "Ecco cosa c'è da sapere su questo cocktail da aperitivo celebre in tutto il mondo: il bicchiere da usare, gli ingredienti, qualche accortezza e curiosità.\n" +
-                "\n" +
-                "Seguite passo passo la ricetta per preparare l'Aperol Spritz a casa: vi bastano solo 5 minuti. Gli ingredienti sono davvero facili da reperire: 3 parti di Prosecco, 2 di liquore e un po’ di soda. Un consiglio: versate subito il ghiaccio nel bicchiere, in questo modo il Prosecco conserverà meglio la sua parte frizzante.\n" +
-                "\n" +
-                "Qualche curiosità sulla storia dello Spritz: si racconta sia stato creato dai soldati austriaci di stanza in Triveneto nell'Ottocento, durante l'occupazione negli anni precedenti all'Unità d'Italia; infatti le truppe austriache non erano abituate al tenore alcolico dei vini veneti, che invece gli autoctoni ben sopportavano per tradizione e abitudini culturali. Non a caso, il nome Spritz rimanda al verbo tedesco spritzen, equivalente di \"spruzzare\", che indica appunto l'azione dell'allungamento del vino con l'acqua gasata usando la vecchia pistola da selz.\n" +
-                "\n" +
-                "La ricetta originale dello Spritz, risalente agli anni '20 -30 e contesa tra Padova, Venezia e Treviso (terra di Prosecco) prevede quindi pari quantità di soda e vino bianco, da non confondere con la ben più famosa variante con l'Aperol, che vi mostriamo noi.\n" +
-                "\n" +
-                "L'Aperol Spritz si diffode negli anni '40-50, prima a Venezia e poi a Padova: lo Spritz, preparato con il vino veneto bianco frizzante e acqua gasata, inizia ad essere macchiato con una dose di liquore dal tipico colore arancio. L'Aperol, aperitivo alcolico bitter, marchio di Campari dal 2003, nasce infatti a Bassano del Grappa nel 1919 (poi presentato alla Fiera di Padova) ad opera dei fratelli Barbieri.\n" +
-                "\n" +
-                "Lo Spritz è il cocktail da aperitivo per eccellenza. Per un aperitivo a casa ecco 15 ricette perfette da abbinare.\n" +
-                "\n" +
-                "ALTRI COCKTAIL DA PROVARE: Mojito, Negroni, Bloody Mary, Moscow Mule, Margarita, Daiquiri, Dry martini, Manhattan, Cuba Libre\n" +
-                "\n" +
-                "Ecco quali sono i 10 attrezzi imperdibili per preparare ottimi cocktail a casa vostra.");
+        mBinding.descrizioneRicettaInfo.setText("");
+        */
     }
 
 
@@ -97,5 +99,43 @@ public class RicetteInfoActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    // Metodi che gestiscono i dati ricevuti dalle chiamate all'API
+    // Aggiunge una ricetta dettagliata alla lista della RecyclerView
+    @Override
+    public void onResponse(Ricetta recipe) {
+
+        if(recipe != null)
+        {
+            mBinding.nomeRicettaInfo.setText(recipe.getName());
+
+            // Codice Toolbar -- ultima push
+            mBinding.activityInfoToolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24);
+            setSupportActionBar(mBinding.activityInfoToolbar);
+            mBinding.activityInfoToolbar.setTitle(recipe.getName());
+            Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
+
+
+            mBinding.descrizioneRicettaInfo.setText(recipe.getIstruzioni());
+        }
+    }
+
+    // In caso di fallimento della chiamata avviso l'utente con un messaggio
+    // nella snackbar
+    @Override
+    public void onFailure(String errorString) {
+        Snackbar msg = Snackbar.make(this.findViewById(android.R.id.content), errorString, Snackbar.LENGTH_LONG);
+
+        // Appare anche un pulsante che permette di riprovare la chiamata
+        msg.setAction("Riprova", new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                iGetRecipeRepository.getRecipeById(id);
+            }
+        });
+
+        msg.show();
     }
 }

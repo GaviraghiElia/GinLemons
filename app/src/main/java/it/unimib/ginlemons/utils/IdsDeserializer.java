@@ -9,8 +9,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 // Custom deserializer per convertire il JSON ricevuto dall'API
 // Estraggo le informazioni dettagliate dei cocktails dagli oggetti JSON ricevuti
@@ -22,7 +24,7 @@ public class IdsDeserializer implements JsonDeserializer<RicetteList> {
         final JsonObject jsonObject = json.getAsJsonObject();
         final JsonArray arrayricetteJSON = jsonObject.get("drinks").getAsJsonArray();
 
-        ArrayList<Ricetta> recipes = new ArrayList<>();
+        HashMap<String, Ricetta> recipes = new HashMap<>();
         String id;
         String nome;
 
@@ -32,7 +34,7 @@ public class IdsDeserializer implements JsonDeserializer<RicetteList> {
             id = ricetta.get("idDrink").getAsString();
             nome = ricetta.get("strDrink").getAsString();
 
-            recipes.add(new Ricetta(id, nome));
+            recipes.put(id, new Ricetta(id, nome));
         }
 
         return new RicetteList(recipes);

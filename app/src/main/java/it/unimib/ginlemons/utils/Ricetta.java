@@ -10,9 +10,10 @@ public class Ricetta {
     private String[] ingredienti;
     private String[] dosi;
 
+    private String error = null;
 
-    public Ricetta(){
-    }
+
+    public Ricetta(){}
 
     public Ricetta(String id, String name)
     {
@@ -39,6 +40,10 @@ public class Ricetta {
 
     public void setName(String name){
         this.name = name;
+    }
+
+    public String getIstruzioni() {
+        return istruzioni;
     }
 
     @Override
@@ -68,4 +73,12 @@ public class Ricetta {
         }
     };
 
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
 }

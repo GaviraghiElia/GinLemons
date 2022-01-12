@@ -209,6 +209,7 @@ public class RicetteDiscoverFragment extends Fragment {
                     {
                         ricettaList.clear();
                         ricettaList.addAll(ricette.getRepices());
+                        Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
                         discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                     }
                 }
@@ -242,6 +243,7 @@ public class RicetteDiscoverFragment extends Fragment {
                     } else {
                         ricettaList.clear();
                         ricettaList.addAll(ricette.getRepices());
+                        Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
                         discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                     }
                 }
@@ -252,6 +254,7 @@ public class RicetteDiscoverFragment extends Fragment {
         rViewModel.getAnalcolici().observe(getViewLifecycleOwner(), observer_analcolici);
 
         rViewModel.getAlcolici();
+
 
         return view;
     }
@@ -370,7 +373,9 @@ public class RicetteDiscoverFragment extends Fragment {
                     item.setTitle(getString(R.string.list_alcolici));
                 }
 
+                Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
                 discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
+
                 return true;
             }
         }
@@ -379,7 +384,6 @@ public class RicetteDiscoverFragment extends Fragment {
     }
 
     public void setTitleToolbar() {
-        // fix il bug che faceva crashare l'app se facevi la restart activity
         if(getActivity() != null){
             Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
             if(toolbar != null){
@@ -391,7 +395,7 @@ public class RicetteDiscoverFragment extends Fragment {
     public void navigateToRicettaInfo(Ricetta ricetta){
         Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
         intent.putExtra(FRAGMENTFORTRANSITION, "RicetteDiscover");
-        intent.putExtra(ITEM_NAME_PRESSED_KEY, ricetta.getName());
+        intent.putExtra(ITEM_ID_PRESSED_KEY, ricetta.getId());
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
