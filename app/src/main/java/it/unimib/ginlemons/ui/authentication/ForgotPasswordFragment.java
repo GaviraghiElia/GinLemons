@@ -3,6 +3,7 @@ package it.unimib.ginlemons.ui.authentication;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,10 +44,9 @@ public class ForgotPasswordFragment extends Fragment {
 
         mBinding = FragmentForgotPasswordBinding.inflate(inflater, container, false);
         View view = mBinding.getRoot();
-
         mAuth = FirebaseAuth.getInstance();
         navController = NavHostFragment.findNavController(this);
-
+        backButtonPressed(view);
 
         mBinding.resetMail.addTextChangedListener(new TextWatcher() {
             @Override
@@ -106,4 +106,18 @@ public class ForgotPasswordFragment extends Fragment {
         }
     }
 
+    public void backButtonPressed(View view) {
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    navController.navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
 }

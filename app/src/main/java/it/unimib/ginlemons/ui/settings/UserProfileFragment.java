@@ -36,6 +36,7 @@ import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.CustomPasswordDialogBinding;
 import it.unimib.ginlemons.databinding.FragmentUserProfileBinding;
 import it.unimib.ginlemons.model.UserHelper;
+import it.unimib.ginlemons.utils.SharedPreferencesProvider;
 
 public class UserProfileFragment extends Fragment {
 
@@ -76,9 +77,9 @@ public class UserProfileFragment extends Fragment {
 
                         // particolare: la snapshot è il risultato di una hasMap con <Chiave, Valore>
                         // è compatibile con l'oggetto userHelper creato ad hoc per recuperarne i parametri
-                        UserHelper userHelper = snapshot.getValue(UserHelper.class);
-                        displayName = userHelper.getName();
-                        displayEmail = userHelper.getEmail();
+                        UserHelper user = snapshot.getValue(UserHelper.class);
+                        displayName = user.getName();
+                        displayEmail = user.getEmail();
                         mBinding.helloUserProfile.setText("Hello " + displayName + "!");
                         mBinding.userProfileName.setText(displayName);
                         mBinding.userProfileEmail.setText(displayEmail);
@@ -239,6 +240,9 @@ public class UserProfileFragment extends Fragment {
 
                                                     mAuth.signOut();
                                                     if(!checkSession()){
+                                                        SharedPreferencesProvider sharedPreferencesProvider =
+                                                                new SharedPreferencesProvider(requireActivity().getApplication());
+                                                        sharedPreferencesProvider.deleteAll();
                                                         navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
                                                         getActivity().finish();
                                                     }

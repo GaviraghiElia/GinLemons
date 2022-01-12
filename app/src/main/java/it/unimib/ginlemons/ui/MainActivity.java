@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.ActivityMainBinding;
 import it.unimib.ginlemons.ui.authentication.EntryActivity;
+import it.unimib.ginlemons.utils.SharedPreferencesProvider;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -90,6 +91,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.action_logout){
             mAuth.signOut();
+            SharedPreferencesProvider sharedPreferencesProvider =
+                    new SharedPreferencesProvider(getApplication());
+            sharedPreferencesProvider.deleteAll();
             startActivity(new Intent(MainActivity.this, EntryActivity.class));
             overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
             finish();

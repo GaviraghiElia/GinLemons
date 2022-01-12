@@ -30,6 +30,11 @@
 
     </style>
 
+    <style name="Theme.SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_theme</item>
+        <item name="android:statusBarColor">@color/purple_personal</item>
+    </style>
+
     <style name="Theme.GinLemons.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.GinLemons.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

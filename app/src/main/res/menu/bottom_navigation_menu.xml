@@ -4,7 +4,8 @@
     <item
         android:id="@+id/listeFragment"
         android:icon="@drawable/ic_baseline_event_note_24"
-        android:title="@string/liste" />
+        android:title="@string/liste"
+        android:enabled="false"/>
     <item
         android:id="@+id/ricetteFragment"
         android:icon="@drawable/cocktail_bottom_navbar"

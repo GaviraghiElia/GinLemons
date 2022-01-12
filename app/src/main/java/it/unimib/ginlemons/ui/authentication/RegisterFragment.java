@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -21,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -40,10 +43,15 @@ public class RegisterFragment extends Fragment {
     private DatabaseReference reference;
     private NavController navController;
     private FragmentRegisterBinding mBinding;
+    private UserViewModel mUserViewModel;
+
+    public RegisterFragment(){
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUserViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
     }
 
     @Override
@@ -53,8 +61,8 @@ public class RegisterFragment extends Fragment {
         // Inflate the layout for this fragment
         mBinding = FragmentRegisterBinding.inflate(inflater, container, false);
         View view = mBinding.getRoot();
-
         navController = NavHostFragment.findNavController(this);
+        backButtonPressed(view);
 
         // Text Watcher per abilitare il bottone di registrazione
         mBinding.registerName.addTextChangedListener(loginTextWatcher);
@@ -68,7 +76,41 @@ public class RegisterFragment extends Fragment {
         mBinding.buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createUser();
+                //createUser();
+                String name = mBinding.registerName.getText().toString();
+                String email = mBinding.registerEmail.getText().toString();
+                String password = mBinding.registerPassword.getText().toString();
+
+                if(name.isEmpty()){
+                    mBinding.registerName.setError("Name cannot be empty");
+                    mBinding.registerName.requestFocus();
+
+                }else if(email.isEmpty()){
+                    mBinding.registerEmail.setError("Email cannot be empty");
+                    mBinding.registerEmail.requestFocus();
+
+                }else if (password.isEmpty()){
+                    mBinding.registerPassword.setError("Passowrd cannot be empty");
+                    mBinding.registerPassword.requestFocus();
+
+                }else if(!isValidPassword(password)) {
+                    mBinding.registerPassword.setError("Passowrd not valid");
+                    Toast.makeText(getContext(), "Password must contain 6 to 15 characters, 1 special character and 1 number", Toast.LENGTH_LONG).show();
+                    mBinding.registerPassword.requestFocus();
+
+                }else{
+                    mUserViewModel.signUpWithEmail(name, email, password).observe(getViewLifecycleOwner(), authenticationResponse -> {
+                        if (authenticationResponse != null) {
+                            if (authenticationResponse.isSuccess()) {
+                                makeMessageFail("Registrazione andata a buon fine");
+                                firebaseAuth.signOut();
+                                navController.navigate(R.id.action_registerFragment_to_loginFragment);
+                            } else {
+                                makeMessageFail(authenticationResponse.getMessage());
+                            }
+                        }
+                    });
+                }
             }
         });
 
@@ -126,7 +168,6 @@ public class RegisterFragment extends Fragment {
             Toast.makeText(getContext(), "Password must contain 6 to 15 characters, 1 special character and 1 number", Toast.LENGTH_LONG).show();
             mBinding.registerPassword.requestFocus();
         }else{
-
             firebaseAuth.createUserWithEmailAndPassword(sMail, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -159,10 +200,32 @@ public class RegisterFragment extends Fragment {
         }
     }
 
+    // check pattern password
     public boolean isValidPassword(String password){
         Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
+    }
+
+    private void makeMessageFail(String message) {
+        Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                message, Snackbar.LENGTH_SHORT).show();
+        mUserViewModel.clear();
+    }
+
+    public void backButtonPressed(View view) {
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    navController.navigate(R.id.action_registerFragment_to_loginFragment);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
 }

@@ -55,4 +55,5 @@
     <string name="list_analcolici">Mostra Analcolici</string>
     <string name="list_alcolici">Mostra Alcolici</string>
     <string name="ordina_ricette_title">Ordina Ricette</string>
+    <string name="registration_failure">Registrazione fallita</string>
 </resources>

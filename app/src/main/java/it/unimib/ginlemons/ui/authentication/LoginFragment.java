@@ -11,11 +11,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -27,10 +29,15 @@ public class LoginFragment extends Fragment {
     private FirebaseAuth mAuth;
     private NavController navController;
     private FragmentLoginBinding mBinding;
+    private UserViewModel mUserViewModel;
+    private String email;
+    private String password;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUserViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
     }
 
     @Override
@@ -39,18 +46,36 @@ public class LoginFragment extends Fragment {
 
         mBinding = FragmentLoginBinding.inflate(inflater, container, false);
         View view = mBinding.getRoot();
-
         navController = NavHostFragment.findNavController(this);
-
         mBinding.loginEmail.addTextChangedListener(loginTextWatcher);
         mBinding.loginPassword.addTextChangedListener(loginTextWatcher);
-
         mAuth = FirebaseAuth.getInstance();
+
 
         mBinding.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginUser(v);
+                email = mBinding.loginEmail.getText().toString();
+                password = mBinding.loginPassword.getText().toString();
+                if (email.isEmpty()) {
+                    mBinding.loginEmail.setError("Email cannot be empty");
+                    mBinding.loginEmail.requestFocus();
+                } else if (password.isEmpty()) {
+                    mBinding.loginPassword.setError("Passowrd cannot be empty");
+                    mBinding.loginPassword.requestFocus();
+                }else {
+                    mUserViewModel.signInWithEmail(email, password).observe(getViewLifecycleOwner(), authenticationResponse -> {
+                        if (authenticationResponse != null) {
+                            if (authenticationResponse.isSuccess()) {
+                                NavHostFragment.findNavController(LoginFragment.this).
+                                        navigate(R.id.action_loginFragment_to_mainActivity);
+                                requireActivity().finish();
+                            } else {
+                                makeMessageFail(authenticationResponse.getMessage());
+                            }
+                        }
+                    });
+                }
             }
         });
 
@@ -89,7 +114,13 @@ public class LoginFragment extends Fragment {
         }
     };
 
+    private void makeMessageFail(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+        mUserViewModel.clear();
+    }
 
+
+    /*
     private void loginUser(View view) {
         String e = mBinding.loginEmail.getText().toString();
         String pwd = mBinding.loginPassword.getText().toString();
@@ -118,6 +149,6 @@ public class LoginFragment extends Fragment {
             });
         }
 
-    }
+    }*/
 
 }
