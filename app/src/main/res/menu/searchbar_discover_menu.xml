@@ -14,7 +14,7 @@
         android:title="@string/list_alcolici" />
     <item
         android:id="@+id/sort_discover"
-        android:title=""
+        android:title="@string/ordina_ricette_title"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         app:showAsAction="ifRoom|collapseActionView">
         <menu>

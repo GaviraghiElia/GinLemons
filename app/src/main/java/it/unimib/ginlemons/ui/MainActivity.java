@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = mBinding.getRoot();
         setContentView(view);
-        //setContentView(R.layout.activity_main);
 
         // Autentication
         mAuth = FirebaseAuth.getInstance();
