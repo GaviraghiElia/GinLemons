@@ -3,12 +3,14 @@ package it.unimib.ginlemons.ui.ricette;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.RoundedCorner;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.Objects;
 
@@ -91,7 +93,6 @@ public class RicetteInfoActivity extends AppCompatActivity implements ResponseCa
         if(recipe != null)
         {
             mBinding.nomeRicettaInfo.setText(recipe.getName());
-
             // Codice Toolbar -- ultima push
             mBinding.activityInfoToolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24);
             setSupportActionBar(mBinding.activityInfoToolbar);

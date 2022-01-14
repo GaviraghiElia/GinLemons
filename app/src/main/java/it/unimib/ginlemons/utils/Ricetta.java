@@ -93,17 +93,16 @@ public class Ricetta {
 
     public String getIngredienti()
     {
-        String ris = "";
+        String ris = "\n";
 
         for(int i = 0; i < ingredienti.length; i++)
         {
-            if(ingredienti[i] != null)
-            {
-                ris += dosi[i] + ": ";
-                ris += ingredienti[i] ;
+            if(ingredienti[i] != null && !ingredienti[i].isEmpty()) {
+                ris += dosi[i] + " :      ";
+                ris += ingredienti[i];
                 ris += "\n";
-            }
-            else
+
+            } else
                 break;
         }
 
