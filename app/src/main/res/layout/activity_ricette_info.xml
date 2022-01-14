@@ -114,13 +114,49 @@
       </RelativeLayout>
 
       <TextView
+          android:id="@+id/titleIngredienti"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginHorizontal="30dp"
+          android:layout_marginTop="20dp"
+          android:text="@string/title_ingredienti"
+          android:textStyle="bold"
+          app:layout_constraintTop_toBottomOf="@+id/descrizioneInfo" />
+
+      <TextView
+          android:id="@+id/ingredientiRicetteInfo"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginHorizontal="30dp"
+          android:layout_marginTop="5dp"
+          app:layout_constraintTop_toBottomOf="@+id/titleIngredienti" />
+
+      <TextView
+          android:id="@+id/notaIngredienti"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginHorizontal="30dp"
+          android:text="@string/nota_ingredienti"
+          android:textStyle="italic"
+          app:layout_constraintTop_toBottomOf="@+id/ingredientiRicetteInfo" />
+
+      <TextView
+          android:id="@+id/titleDescrizione"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginHorizontal="30dp"
+          android:layout_marginTop="20dp"
+          android:text="@string/title_descrizione"
+          android:textStyle="bold"
+          app:layout_constraintTop_toBottomOf="@+id/notaIngredienti" />
+
+      <TextView
           android:id="@+id/descrizioneRicettaInfo"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="30dp"
           android:layout_marginHorizontal="30dp"
-          android:layout_marginBottom="75dp"
-          app:layout_constraintTop_toBottomOf="@+id/descrizioneInfo" />
+          android:layout_marginTop="5dp"
+          app:layout_constraintTop_toBottomOf="@+id/titleDescrizione" />
 
     </LinearLayout>
 

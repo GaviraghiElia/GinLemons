@@ -144,28 +144,26 @@ public class RegisterFragment extends Fragment {
         }
     };
 
-
-
     private void createUser() {
         String fullName = mBinding.registerName.getText().toString();
         String sMail = mBinding.registerEmail.getText().toString();
         String pwd = mBinding.registerPassword.getText().toString();
 
         if(fullName.isEmpty()){
-            mBinding.registerName.setError("Name cannot be empty");
+            mBinding.registerName.setError(getContext().getString(R.string.name_not_empty));
             mBinding.registerName.requestFocus();
 
         }else if(sMail.isEmpty()){
-            mBinding.registerEmail.setError("Email cannot be empty");
+            mBinding.registerEmail.setError(getContext().getString(R.string.email_not_empty));
             mBinding.registerEmail.requestFocus();
 
         }else if (pwd.isEmpty()){
-            mBinding.registerPassword.setError("Passowrd cannot be empty");
+            mBinding.registerPassword.setError(getContext().getString(R.string.password_not_empty));
             mBinding.registerPassword.requestFocus();
 
         }else if(!isValidPassword(pwd)) {
-            mBinding.registerPassword.setError("Passowrd not valid");
-            Toast.makeText(getContext(), "Password must contain 6 to 15 characters, 1 special character and 1 number", Toast.LENGTH_LONG).show();
+            mBinding.registerPassword.setError(getContext().getString(R.string.invalid_password));
+            Toast.makeText(getContext(), getContext().getString(R.string.password_requirements), Toast.LENGTH_LONG).show();
             mBinding.registerPassword.requestFocus();
         }else{
             firebaseAuth.createUserWithEmailAndPassword(sMail, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -188,12 +186,12 @@ public class RegisterFragment extends Fragment {
                             }
                         });
 
-                        Toast.makeText(getContext(), "User registered is successfully", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getContext().getString(R.string.successfull_registration), Toast.LENGTH_LONG).show();
                         navController.navigate(R.id.action_registerFragment_to_loginFragment);
                         firebaseAuth.signOut();
 
                     }else{
-                        Toast.makeText(getContext(), "Registration Error :" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getContext().getString(R.string.registration_error) + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });

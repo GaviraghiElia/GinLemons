@@ -107,9 +107,6 @@ public class RicettePreferitiFragment extends Fragment {
                 return false;
             }
 
-            // backgound swipe
-
-
             // controllo lo swipe LEFT
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
@@ -135,6 +132,7 @@ public class RicettePreferitiFragment extends Fragment {
                             @Override
                             public void onSuccess(Void unused) {
                                 Log.d("Preferito", "Rimosso " + ricetta.getName() + " dai preferiti nel real time DB");
+
                                 snackbarMake(mBinding.preferitiRecyclerView, position, ricetta);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -146,7 +144,7 @@ public class RicettePreferitiFragment extends Fragment {
 
                 preferitiRicetteRecyclerviewAdapter.notifyItemRemoved(position);
 
-                Snackbar.make(mBinding.preferitiRecyclerView, ricetta.getName() + " rimosso dai preferiti", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                Snackbar.make(mBinding.preferitiRecyclerView, ricetta.getName() + getContext().getString(R.string.favourite_removed), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ricettePreferitiList.add(position, ricetta);
@@ -177,7 +175,6 @@ public class RicettePreferitiFragment extends Fragment {
         return view;
     }
 
-
     @Override
     public void onResume() {
         setTitleToolbar();
@@ -190,8 +187,8 @@ public class RicettePreferitiFragment extends Fragment {
             if (toolbar != null) {
                 toolbar.setTitle(R.string.preferiti_toolbar_title);
             }
-        }   }
-
+        }
+    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -214,7 +211,6 @@ public class RicettePreferitiFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 preferitiRicetteRecyclerviewAdapter.getFilter().filter(newText);
-                //filter(newText);
                 return false;
             }
         });
@@ -241,7 +237,7 @@ public class RicettePreferitiFragment extends Fragment {
     }
 
     public void snackbarMake(View view, int position, Ricetta ricetta) {
-        Snackbar.make(view, ricetta.getName() +" rimossa dai preferiti ", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+        Snackbar.make(view, ricetta.getName() + getContext().getString(R.string.favourite_removed), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                     // fa undo, l'ho rimosso prima e quindi ora voglio aggiungerlo
@@ -274,5 +270,4 @@ public class RicettePreferitiFragment extends Fragment {
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
-
 }

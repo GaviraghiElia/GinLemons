@@ -1,14 +1,12 @@
 package it.unimib.ginlemons.repository;
 
 import android.app.Application;
-import android.util.Log;
+import android.content.res.Resources;
 
-import androidx.lifecycle.MutableLiveData;
-
+import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.service.RecipeApiService;
 import it.unimib.ginlemons.utils.ResponseCallback;
 import it.unimib.ginlemons.utils.Ricetta;
-import it.unimib.ginlemons.utils.RicetteList;
 import it.unimib.ginlemons.utils.ServiceLocator;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,7 +37,7 @@ public class GetRecipeRepository implements IGetRecipeRepository{
                     Ricetta recipe = response.body();
                     responseCallback.onResponse(recipe);
                 } else {
-                    responseCallback.onFailure("Caricamento Fallito");
+                    responseCallback.onFailure(Resources.getSystem().getString(R.string.load_fail));
                 }
             }
             @Override

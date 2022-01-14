@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 
-import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.FragmentRicetteAdapter;
 import it.unimib.ginlemons.databinding.FragmentRicetteBinding;
 

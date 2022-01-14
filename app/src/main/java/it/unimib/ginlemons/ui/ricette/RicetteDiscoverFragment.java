@@ -5,7 +5,6 @@ import static it.unimib.ginlemons.utils.Constants.*;
 
 import android.content.Intent;
 import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -125,12 +124,12 @@ public class RicetteDiscoverFragment extends Fragment {
                                         @Override
                                         public void onSuccess(Void unused) {
                                             Log.d("Preferito", "Aggiunto " + ricetta.getName() + " ai preferiti nel real time DB");
-                                            snackbarMake(mBinding.discoverRecyclerView, ricetta, "aggiunta ai preferiti");
+                                            snackbarMake(mBinding.discoverRecyclerView, ricetta, getString(R.string.favourite_added));
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.d("Preferito", "Erorre nel real time DB");
+                                    Log.d("Preferito", "Errore nel real time DB");
                                 }
                             });
 
@@ -142,7 +141,7 @@ public class RicetteDiscoverFragment extends Fragment {
                                         @Override
                                         public void onSuccess(Void unused) {
                                             Log.d("Preferito", "Rimosso " + ricetta.getName() + " dai preferiti nel real time DB");
-                                            snackbarMake(mBinding.discoverRecyclerView, ricetta, "rimossa dai preferiti");
+                                            snackbarMake(mBinding.discoverRecyclerView, ricetta, getString(R.string.favourite_removed));
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -196,7 +195,7 @@ public class RicetteDiscoverFragment extends Fragment {
                         Snackbar msg = Snackbar.make(requireActivity().findViewById(android.R.id.content), errorString, Snackbar.LENGTH_LONG);
 
                         // Appare anche un pulsante che permette di riprovare la chiamata
-                        msg.setAction("Riprova", new View.OnClickListener() {
+                        msg.setAction(getString(R.string.retry), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 MenuItem item = getActivity().findViewById(R.id.change_list);
@@ -233,7 +232,7 @@ public class RicetteDiscoverFragment extends Fragment {
                         Snackbar msg = Snackbar.make(requireActivity().findViewById(android.R.id.content), errorString, Snackbar.LENGTH_LONG);
 
                         // Appare anche un pulsante che permette di riprovare la chiamata
-                        msg.setAction("Riprova", new View.OnClickListener() {
+                        msg.setAction(getString(R.string.retry), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 MenuItem item = getActivity().findViewById(R.id.change_list);
@@ -281,7 +280,6 @@ public class RicetteDiscoverFragment extends Fragment {
                 item.setTitle(getString(R.string.list_alcolici));
             }
         }
-        //        discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
 
         setTitleToolbar();
         super.onResume();

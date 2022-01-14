@@ -3,25 +3,27 @@ package it.unimib.ginlemons.ui.settings;
 import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,14 +34,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Objects;
-
 import it.unimib.ginlemons.R;
-import it.unimib.ginlemons.databinding.CustomEmailDialogBinding;
 import it.unimib.ginlemons.databinding.CustomPasswordDialogBinding;
 import it.unimib.ginlemons.databinding.FragmentUserProfileBinding;
 import it.unimib.ginlemons.model.UserHelper;
-import it.unimib.ginlemons.utils.SharedPreferencesProvider;
 
 public class UserProfileFragment extends Fragment {
 
@@ -64,6 +62,7 @@ public class UserProfileFragment extends Fragment {
         navController = NavHostFragment.findNavController(this);
 
         setTitleToolbar();
+        setHasOptionsMenu(true);
 
         // Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -80,9 +79,9 @@ public class UserProfileFragment extends Fragment {
 
                         // particolare: la snapshot è il risultato di una hasMap con <Chiave, Valore>
                         // è compatibile con l'oggetto userHelper creato ad hoc per recuperarne i parametri
-                        UserHelper user = snapshot.getValue(UserHelper.class);
-                        displayName = user.getName();
-                        displayEmail = user.getEmail();
+                        UserHelper userHelper = snapshot.getValue(UserHelper.class);
+                        displayName = userHelper.getName();
+                        displayEmail = userHelper.getEmail();
                         mBinding.helloUserProfile.setText("Hello " + displayName + "!");
                         mBinding.userProfileName.setText(displayName);
                         mBinding.userProfileEmail.setText(displayEmail);
@@ -114,6 +113,15 @@ public class UserProfileFragment extends Fragment {
 
         return view;
     }
+
+    // Inserisce il pulsante per il logout nella toolbar
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.user_profile_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
 
     @Override
     public void onResume() {
@@ -252,8 +260,7 @@ public class UserProfileFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mBindingDialog.yesButtonResetEmailPassword
-                        .setEnabled(!mBindingDialog.resetInputEmailPassword.getText().toString().isEmpty());
+                mBindingDialog.yesButtonResetEmailPassword.setEnabled(!mBindingDialog.resetInputEmailPassword.getText().toString().isEmpty());
             }
             @Override
             public void afterTextChanged(Editable s) {
@@ -309,9 +316,6 @@ public class UserProfileFragment extends Fragment {
 
                                                     mAuth.signOut();
                                                     if(!checkSession()){
-                                                        SharedPreferencesProvider sharedPreferencesProvider =
-                                                                new SharedPreferencesProvider(requireActivity().getApplication());
-                                                        sharedPreferencesProvider.deleteAll();
                                                         navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
                                                         getActivity().finish();
                                                     }
@@ -337,7 +341,48 @@ public class UserProfileFragment extends Fragment {
                 }
             }
         });
+
         dialog.show();
+
+    }
+
+    public void resetPassword(){
+        AlertDialog.Builder resetPasswordMailDialog = new AlertDialog.Builder(requireActivity());
+        resetPasswordMailDialog.setTitle("Forgot Password?");
+        resetPasswordMailDialog.setCancelable(true);
+        // Preme "si"
+        resetPasswordMailDialog.setPositiveButton("Reset", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String emailReset = mAuth.getCurrentUser().getEmail();
+                mAuth.sendPasswordResetEmail(emailReset).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(getContext(), "Reset link sent to your mail", Toast.LENGTH_SHORT).show();
+                        mAuth.signOut();
+                        if(!checkSession()){
+                            navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
+                            getActivity().finish();
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Error ! Reset Link is not sent"
+                                + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+        resetPasswordMailDialog.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = resetPasswordMailDialog.create();
+        alertDialog.show();
     }
 
 
