@@ -79,4 +79,7 @@
     <string name="bad_email">Email non valida</string>
     <string name="incorrect_password">Password errata</string>
     <string name="forgot_password">Password dimenticata?</string>
+    <string name="title_descrizione">Istruzioni:</string>
+    <string name="title_ingredienti">Ingredienti:</string>
+    <string name="nota_ingredienti">Nota: 1 oz equivale a 30 ml</string>
 </resources>

@@ -98,6 +98,7 @@ public class RicetteInfoActivity extends AppCompatActivity implements ResponseCa
 
 
             mBinding.descrizioneRicettaInfo.setText(recipe.getIstruzioni());
+            mBinding.ingredientiRicetteInfo.setText(recipe.getIngredienti());
         }
     }
 

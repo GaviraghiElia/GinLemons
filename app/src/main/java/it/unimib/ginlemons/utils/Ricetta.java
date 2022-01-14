@@ -9,6 +9,7 @@ public class Ricetta {
     private String[] ingredienti;
     private String[] dosi;
     private String type;
+    private String imageURL;
 
     private String error = null;
 
@@ -22,12 +23,13 @@ public class Ricetta {
         this.istruzioni = null;
     }
 
-    public Ricetta(String id, String name, String istruzioni, String[] ingredienti, String[] dosi){
+    public Ricetta(String id, String name, String istruzioni, String[] ingredienti, String[] dosi, String imageURL){
         this.id = id;
         this.name = name;
         this.istruzioni = istruzioni;
         this.ingredienti = ingredienti;
         this.dosi = dosi;
+        this.imageURL = imageURL;
     }
 
     public String getId() {
@@ -52,6 +54,10 @@ public class Ricetta {
 
     public String getIstruzioni() {
         return istruzioni;
+    }
+
+    public String getImageURL() {
+        return imageURL;
     }
 
     // Metodi per il sort delle ricette nelle sezioni Esplora e Preferiti
@@ -79,5 +85,24 @@ public class Ricetta {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public String getIngredienti()
+    {
+        String ris = "";
+
+        for(int i = 0; i < ingredienti.length; i++)
+        {
+            if(ingredienti[i] != null)
+            {
+                ris += ingredienti[i] + ": ";
+                ris += dosi[i];
+                ris += "\n";
+            }
+            else
+                break;
+        }
+
+        return ris;
     }
 }
