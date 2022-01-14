@@ -22,8 +22,10 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +36,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 import it.unimib.ginlemons.R;
+import it.unimib.ginlemons.databinding.CustomEmailDialogBinding;
 import it.unimib.ginlemons.databinding.CustomPasswordDialogBinding;
 import it.unimib.ginlemons.databinding.FragmentUserProfileBinding;
 import it.unimib.ginlemons.model.UserHelper;
@@ -344,45 +349,6 @@ public class UserProfileFragment extends Fragment {
 
         dialog.show();
 
-    }
-
-    public void resetPassword(){
-        AlertDialog.Builder resetPasswordMailDialog = new AlertDialog.Builder(requireActivity());
-        resetPasswordMailDialog.setTitle("Forgot Password?");
-        resetPasswordMailDialog.setCancelable(true);
-        // Preme "si"
-        resetPasswordMailDialog.setPositiveButton("Reset", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String emailReset = mAuth.getCurrentUser().getEmail();
-                mAuth.sendPasswordResetEmail(emailReset).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(getContext(), "Reset link sent to your mail", Toast.LENGTH_SHORT).show();
-                        mAuth.signOut();
-                        if(!checkSession()){
-                            navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
-                            getActivity().finish();
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Error ! Reset Link is not sent"
-                                + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-                });
-            }
-        });
-        resetPasswordMailDialog.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        AlertDialog alertDialog = resetPasswordMailDialog.create();
-        alertDialog.show();
     }
 
 

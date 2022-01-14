@@ -29,6 +29,8 @@ public class RicetteDeserializer implements JsonDeserializer<Ricetta> {
             String id = ricetta.get("idDrink").getAsString();
             String nome = ricetta.get("strDrink").getAsString();
             String istruzioni;
+            String imageUrl = ricetta.get("strDrinkThumb").getAsString();
+            String glass = ricetta.get("strGlass").getAsString();
 
             // Se non sono disponibili le istruzioni in italiano prendo quelle in inglese
             if(ricetta.get("strInstructionsIT").isJsonNull())
@@ -52,7 +54,7 @@ public class RicetteDeserializer implements JsonDeserializer<Ricetta> {
                     dosi[k - 1] = ricetta.get("strMeasure" + k).getAsString();
             }
 
-            recipe = new Ricetta(id, nome, istruzioni, ingredienti, dosi);
+            recipe = new Ricetta(id, nome, istruzioni, ingredienti, dosi, imageUrl, glass);
         }
 
         return recipe;

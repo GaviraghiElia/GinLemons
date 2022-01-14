@@ -10,6 +10,8 @@ public class Ricetta {
     private String[] dosi;
     private String type;
     private String imageURL;
+    private String category;
+    private String glass;
 
     private String error = null;
 
@@ -23,13 +25,15 @@ public class Ricetta {
         this.istruzioni = null;
     }
 
-    public Ricetta(String id, String name, String istruzioni, String[] ingredienti, String[] dosi, String imageURL){
+    public Ricetta(String id, String name, String istruzioni, String[] ingredienti, String[] dosi, String imageURL, String glass){
         this.id = id;
         this.name = name;
         this.istruzioni = istruzioni;
         this.ingredienti = ingredienti;
         this.dosi = dosi;
         this.imageURL = imageURL;
+        //this.category = category;
+        this.glass = glass;
     }
 
     public String getId() {
@@ -95,8 +99,8 @@ public class Ricetta {
         {
             if(ingredienti[i] != null)
             {
-                ris += ingredienti[i] + ": ";
-                ris += dosi[i];
+                ris += dosi[i] + ": ";
+                ris += ingredienti[i] ;
                 ris += "\n";
             }
             else

@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
@@ -15,6 +16,7 @@ import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.ActivityRicetteInfoBinding;
 import it.unimib.ginlemons.repository.GetRecipeRepository;
 import it.unimib.ginlemons.repository.IGetRecipeRepository;
+import it.unimib.ginlemons.ui.MainActivity;
 import it.unimib.ginlemons.utils.Constants;
 import it.unimib.ginlemons.utils.ResponseCallback;
 import it.unimib.ginlemons.utils.Ricetta;
@@ -93,10 +95,11 @@ public class RicetteInfoActivity extends AppCompatActivity implements ResponseCa
             // Codice Toolbar -- ultima push
             mBinding.activityInfoToolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24);
             setSupportActionBar(mBinding.activityInfoToolbar);
-            mBinding.activityInfoToolbar.setTitle(recipe.getName());
             Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
-
-
+            Picasso.get()
+                    .load(recipe.getImageURL())
+                    .into(mBinding.imageView);
+            mBinding.activityInfoToolbar.setTitle(recipe.getName());
             mBinding.descrizioneRicettaInfo.setText(recipe.getIstruzioni());
             mBinding.ingredientiRicetteInfo.setText(recipe.getIngredienti());
         }
