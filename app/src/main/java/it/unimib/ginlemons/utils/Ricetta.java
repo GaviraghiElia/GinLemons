@@ -98,10 +98,25 @@ public class Ricetta {
         for(int i = 0; i < ingredienti.length; i++)
         {
             if(ingredienti[i] != null && !ingredienti[i].isEmpty()) {
-                ris += dosi[i] + " :      ";
                 ris += ingredienti[i];
                 ris += "\n";
 
+            } else
+                break;
+        }
+
+        return ris;
+    }
+
+    public String getDosi()
+    {
+        String ris = "\n";
+
+        for(int i = 0; i < ingredienti.length; i++)
+        {
+            if(ingredienti[i] != null && !ingredienti[i].isEmpty()) {
+                ris += dosi[i] + ":     ";
+                ris += "\n";
             } else
                 break;
         }
