@@ -3,6 +3,7 @@ package it.unimib.ginlemons.ui.ricette;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.RoundedCorner;
 import android.view.View;
 
@@ -24,11 +25,11 @@ import it.unimib.ginlemons.utils.ResponseCallback;
 import it.unimib.ginlemons.utils.Ricetta;
 
 public class RicetteInfoActivity extends AppCompatActivity implements ResponseCallback {
-
     private ActivityRicetteInfoBinding mBinding;
     private String fragmentProvenienza;
     private IGetRecipeRepository iGetRecipeRepository;
     private String id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,13 +93,16 @@ public class RicetteInfoActivity extends AppCompatActivity implements ResponseCa
 
         if(recipe != null)
         {
-            mBinding.nomeRicettaInfo.setText(recipe.getName());
+            //mBinding.nomeRicettaInfo.setText(recipe.getName());
             // Codice Toolbar -- ultima push
             mBinding.activityInfoToolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24);
             setSupportActionBar(mBinding.activityInfoToolbar);
             Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
             Picasso.get()
                     .load(recipe.getImageURL())
+                    .resize(metrics.widthPixels, 850)
                     .into(mBinding.imageView);
             mBinding.activityInfoToolbar.setTitle(recipe.getName());
             mBinding.descrizioneRicettaInfo.setText(recipe.getIstruzioni());

@@ -23,9 +23,10 @@
         <entry key="..\:/Scuola/Progetto/app/src/main/res/drawable/rounded_convers_transformation.xml" value="0.290625" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/drawable/row_discover_ricette.xml" value="0.3768518518518518" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/drawable/shadow.xml" value="0.24537037037037038" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/drawable/splash_theme.xml" value="0.290625" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/drawable/text_button_ripple_background.xml" value="0.30462962962962964" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_authentication.xml" value="0.2" />
-        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_entry.xml" value="0.5" />
+        <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_entry.xml" value="0.2" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_forgot_password.xml" value="0.33" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_login.xml" value="0.5" />
         <entry key="..\:/Scuola/Progetto/app/src/main/res/layout/activity_main.xml" value="0.22191011235955055" />

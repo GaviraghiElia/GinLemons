@@ -17,10 +17,8 @@ public class EntryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mAuth = FirebaseAuth.getInstance();
-
-        if(checkSession()){
+        if (checkSession()) {
             startActivity(new Intent(EntryActivity.this, MainActivity.class));
         } else {
             startActivity(new Intent(EntryActivity.this, AuthenticationActivity.class));
