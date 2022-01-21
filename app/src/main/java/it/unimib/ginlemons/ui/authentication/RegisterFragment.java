@@ -99,14 +99,23 @@ public class RegisterFragment extends Fragment {
                     mBinding.registerPassword.requestFocus();
 
                 }else{
-                    mUserViewModel.signUpWithEmail(name, email, password).observe(getViewLifecycleOwner(), authenticationResponse -> {
-                        if (authenticationResponse != null) {
-                            if (authenticationResponse.isSuccess()) {
-                                makeMessageFail("Registrazione andata a buon fine");
-                                firebaseAuth.signOut();
-                                navController.navigate(R.id.action_registerFragment_to_loginFragment);
+                    mUserViewModel.signUpWithEmail(name, email, password).observe(getViewLifecycleOwner(), firebaseResponse -> {
+                        if (firebaseResponse != null) {
+                            if (firebaseResponse.isSuccess()) {
+                                mUserViewModel.clear();
+                                mUserViewModel.signUpWithEmailRealTimeDB(email, name).observe(getViewLifecycleOwner(), firebaseResponse1 -> {
+                                    if(firebaseResponse1 != null){
+                                        if(firebaseResponse1.isSuccess()){
+                                            makeMessage("Registrazione andata a buon fine");
+                                            firebaseAuth.signOut();
+                                            navController.navigate(R.id.action_registerFragment_to_loginFragment);
+                                        } else {
+                                            makeMessage(firebaseResponse1.getMessage());
+                                        }
+                                    }
+                                });
                             } else {
-                                makeMessageFail(authenticationResponse.getMessage());
+                                makeMessage(firebaseResponse.getMessage());
                             }
                         }
                     });
@@ -144,60 +153,6 @@ public class RegisterFragment extends Fragment {
         }
     };
 
-    private void createUser() {
-        String fullName = mBinding.registerName.getText().toString();
-        String sMail = mBinding.registerEmail.getText().toString();
-        String pwd = mBinding.registerPassword.getText().toString();
-
-        if(fullName.isEmpty()){
-            mBinding.registerName.setError(getContext().getString(R.string.name_not_empty));
-            mBinding.registerName.requestFocus();
-
-        }else if(sMail.isEmpty()){
-            mBinding.registerEmail.setError(getContext().getString(R.string.email_not_empty));
-            mBinding.registerEmail.requestFocus();
-
-        }else if (pwd.isEmpty()){
-            mBinding.registerPassword.setError(getContext().getString(R.string.password_not_empty));
-            mBinding.registerPassword.requestFocus();
-
-        }else if(!isValidPassword(pwd)) {
-            mBinding.registerPassword.setError(getContext().getString(R.string.invalid_password));
-            Toast.makeText(getContext(), getContext().getString(R.string.password_requirements), Toast.LENGTH_LONG).show();
-            mBinding.registerPassword.requestFocus();
-        }else{
-            firebaseAuth.createUserWithEmailAndPassword(sMail, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful()){
-                        String userID = firebaseAuth.getCurrentUser().getUid();
-                        UserHelper user = new UserHelper(fullName, sMail);
-
-                        // set the realtime DB
-                        reference.child(userID).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Log.d("Firestore", "Successo");
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("Firestore", "Errore! DB non scritto");
-                            }
-                        });
-
-                        Toast.makeText(getContext(), getContext().getString(R.string.successfull_registration), Toast.LENGTH_LONG).show();
-                        navController.navigate(R.id.action_registerFragment_to_loginFragment);
-                        firebaseAuth.signOut();
-
-                    }else{
-                        Toast.makeText(getContext(), getContext().getString(R.string.registration_error) + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
-    }
-
     // check pattern password
     public boolean isValidPassword(String password){
         Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
@@ -205,9 +160,8 @@ public class RegisterFragment extends Fragment {
         return matcher.matches();
     }
 
-    private void makeMessageFail(String message) {
-        Snackbar.make(requireActivity().findViewById(android.R.id.content),
-                message, Snackbar.LENGTH_SHORT).show();
+    private void makeMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
         mUserViewModel.clear();
     }
 

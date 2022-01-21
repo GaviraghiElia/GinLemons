@@ -3,6 +3,7 @@ package it.unimib.ginlemons.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Autentication
         mAuth = FirebaseAuth.getInstance();
-
         // Toolbar
         myToolbar = mBinding.activityToolbar;
         setSupportActionBar(myToolbar);
@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /*
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.action_logout){
@@ -91,5 +92,5 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 }

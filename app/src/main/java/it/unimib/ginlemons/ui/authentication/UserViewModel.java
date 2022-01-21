@@ -6,12 +6,13 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import it.unimib.ginlemons.model.AuthenticationResponse;
+import it.unimib.ginlemons.model.FirebaseResponse;
+import it.unimib.ginlemons.model.UserHelper;
 import it.unimib.ginlemons.repository.user.IUserRepository;
 import it.unimib.ginlemons.repository.user.UserRepository;
 
 public class UserViewModel extends AndroidViewModel {
-    private MutableLiveData<AuthenticationResponse> mAuthenticationResponseLiveData;
+    private MutableLiveData<FirebaseResponse> mAuthenticationResponseLiveData;
     private final IUserRepository mUserRepository;
 
     public UserViewModel(@NonNull Application application) {
@@ -20,13 +21,33 @@ public class UserViewModel extends AndroidViewModel {
     }
 
 
-    public MutableLiveData<AuthenticationResponse> signInWithEmail(String email, String password) {
+    public MutableLiveData<FirebaseResponse> signInWithEmail(String email, String password) {
         mAuthenticationResponseLiveData = mUserRepository.signInWithEmail(email, password);
         return mAuthenticationResponseLiveData;
     }
 
-    public MutableLiveData<AuthenticationResponse> signUpWithEmail(String name, String email, String password) {
+    public MutableLiveData<FirebaseResponse> signUpWithEmail(String name, String email, String password) {
         mAuthenticationResponseLiveData = mUserRepository.createUserWithEmail(name, email, password);
+        return mAuthenticationResponseLiveData;
+    }
+
+    public MutableLiveData<FirebaseResponse> signUpWithEmailRealTimeDB(String email, String name){
+        mAuthenticationResponseLiveData = mUserRepository.createUserWithEmailRealTimeDB(email, name);
+        return mAuthenticationResponseLiveData;
+    }
+
+    public MutableLiveData<FirebaseResponse> reauthenticateUser(String email, String password){
+        mAuthenticationResponseLiveData = mUserRepository.reauthenticateUser(email, password);
+        return mAuthenticationResponseLiveData;
+    }
+
+    public MutableLiveData<FirebaseResponse> resetPasswordLink(String email){
+        mAuthenticationResponseLiveData = mUserRepository.resetPasswordLink(email);
+        return mAuthenticationResponseLiveData;
+    }
+
+    public MutableLiveData<FirebaseResponse> changeName(UserHelper userHelper){
+        mAuthenticationResponseLiveData = mUserRepository.changeName(userHelper);
         return mAuthenticationResponseLiveData;
     }
 

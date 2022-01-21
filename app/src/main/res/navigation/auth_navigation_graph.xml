@@ -21,9 +21,9 @@
             android:id="@+id/action_forgotPasswordFragment_to_loginFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
-            app:destination="@id/loginFragment"
             app:popUpTo="@+id/loginFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true"
+            app:destination="@id/loginFragment"/>
     </fragment>
 
     <fragment

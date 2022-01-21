@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.RoundedCorner;
 import android.view.View;
 
@@ -102,7 +103,8 @@ public class RicetteInfoActivity extends AppCompatActivity implements ResponseCa
             getWindowManager().getDefaultDisplay().getMetrics(metrics);
             Picasso.get()
                     .load(recipe.getImageURL())
-                    .resize(metrics.widthPixels, 850)
+                    .resize(metrics.widthPixels, metrics.widthPixels - 200)
+                    .centerCrop()
                     .into(mBinding.imageView);
             mBinding.activityInfoToolbar.setTitle(recipe.getName());
             mBinding.descrizioneRicettaInfo.setText(recipe.getIstruzioni());

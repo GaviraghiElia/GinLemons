@@ -3,7 +3,6 @@ package it.unimib.ginlemons.ui.settings;
 import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,14 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +44,7 @@ import it.unimib.ginlemons.databinding.CustomEmailDialogBinding;
 import it.unimib.ginlemons.databinding.CustomPasswordDialogBinding;
 import it.unimib.ginlemons.databinding.FragmentUserProfileBinding;
 import it.unimib.ginlemons.model.UserHelper;
+import it.unimib.ginlemons.ui.authentication.UserViewModel;
 
 public class UserProfileFragment extends Fragment {
 
@@ -52,10 +54,12 @@ public class UserProfileFragment extends Fragment {
     private DatabaseReference reference;
     private FragmentUserProfileBinding mBinding;
     private NavController navController;
+    private UserViewModel mUserViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUserViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
     }
 
     @Override
@@ -80,16 +84,17 @@ public class UserProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     // Vogliamo solo i dati dell'utente
-                    if(snapshot.getKey().equals(mAuth.getCurrentUser().getUid())) {
-
-                        // particolare: la snapshot è il risultato di una hasMap con <Chiave, Valore>
-                        // è compatibile con l'oggetto userHelper creato ad hoc per recuperarne i parametri
-                        UserHelper userHelper = snapshot.getValue(UserHelper.class);
-                        displayName = userHelper.getName();
-                        displayEmail = userHelper.getEmail();
-                        mBinding.helloUserProfile.setText("Hello " + displayName + "!");
-                        mBinding.userProfileName.setText(displayName);
-                        mBinding.userProfileEmail.setText(displayEmail);
+                    if(mAuth.getCurrentUser() != null) {
+                        if (Objects.equals(snapshot.getKey(), mAuth.getCurrentUser().getUid())) {
+                            // particolare: la snapshot è il risultato di una hasMap con <Chiave, Valore>
+                            // è compatibile con l'oggetto userHelper creato ad hoc per recuperarne i parametri
+                            UserHelper userHelper = snapshot.getValue(UserHelper.class);
+                            displayName = userHelper.getName();
+                            displayEmail = userHelper.getEmail();
+                            mBinding.helloUserProfile.setText("Hello " + displayName + "!");
+                            mBinding.userProfileName.setText(displayName);
+                            mBinding.userProfileEmail.setText(displayEmail);
+                        }
                     }
                 }
             }
@@ -169,29 +174,12 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
-    public void changeOnlyName(UserHelper userObj){
-        Log.d("Snapshot", "Name changed, not email");
-        // change realtime DB
-        reference.child(mAuth.getCurrentUser().getUid()).setValue(userObj).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(getContext(), "Name updated", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(), "Name not updated", Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 
     public void resetPassword(){
         CustomEmailDialogBinding mBindingDialog = CustomEmailDialogBinding.inflate(getLayoutInflater());
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(mBindingDialog.getRoot());
         dialog.setCancelable(true);
-
-
         // enable button yes if password not empty
         mBindingDialog.resetInputEmail.addTextChangedListener(new TextWatcher() {
             @Override
@@ -222,23 +210,17 @@ public class UserProfileFragment extends Fragment {
                 if(!emailInput.equals(emailReset)){
                     mBindingDialog.resetInputEmailLayout.setError("Email is not correct");
                 }else{
-                    mAuth.sendPasswordResetEmail(emailInput)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                Toast.makeText(getContext(),
-                                        "Reset link sent to your mail",
-                                        Toast.LENGTH_SHORT).show();
+                    mUserViewModel.resetPasswordLink(emailInput).observe(getViewLifecycleOwner(), firebaseResponse -> {
+                        if(firebaseResponse != null){
+                            if(firebaseResponse.isSuccess()){
+                                makeMessage(getResources().getString(R.string.password_reset_link));
                                 mAuth.signOut();
                                 if(!checkSession()){
                                     navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
-                                    getActivity().finish();
+                                    requireActivity().finish();
                                 }
                             }else{
-                                Toast.makeText(getContext(), "Error ! Reset Link is not sent"
-                                        + Objects.requireNonNull(task.getException()).getLocalizedMessage(),
-                                        Toast.LENGTH_SHORT).show();
+                                makeMessage(firebaseResponse.getMessage());
                                 dialog.dismiss();
                             }
                         }
@@ -250,8 +232,22 @@ public class UserProfileFragment extends Fragment {
     }
 
 
-    public void changeEmailName(String onClickName, String onClickMail){
+    public void changeOnlyName(UserHelper userObj){
+        Log.d("Snapshot", "Name changed, not email");
+        // change realtime DB
+        mUserViewModel.changeName(userObj).observe(getViewLifecycleOwner(), firebaseResponse -> {
+            if(firebaseResponse != null){
+                if(firebaseResponse.isSuccess()){
+                    makeMessage("Name updated");
+                }else{
+                    makeMessage(firebaseResponse.getMessage());
+                }
+            }
+        });
+    }
 
+
+    public void changeEmailName(String onClickName, String onClickMail){
         CustomPasswordDialogBinding mBindingDialog = CustomPasswordDialogBinding.inflate(getLayoutInflater());
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(mBindingDialog.getRoot());
@@ -322,7 +318,7 @@ public class UserProfileFragment extends Fragment {
                                                     mAuth.signOut();
                                                     if(!checkSession()){
                                                         navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
-                                                        getActivity().finish();
+                                                        requireActivity().finish();
                                                     }
                                                 }
                                             });
@@ -351,13 +347,29 @@ public class UserProfileFragment extends Fragment {
 
     }
 
+    private void makeMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+        mUserViewModel.clear();
+    }
+
 
     private boolean checkSession(){
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null){
-            return false;
+        if(currentUser != null){
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.action_logout){
+            mAuth.signOut();
+            navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
+            requireActivity().finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

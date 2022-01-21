@@ -19,18 +19,18 @@ public class EntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         if (checkSession()) {
-            startActivity(new Intent(EntryActivity.this, MainActivity.class));
+            startActivity(new Intent(this, MainActivity.class));
         } else {
-            startActivity(new Intent(EntryActivity.this, AuthenticationActivity.class));
+            startActivity(new Intent(this, AuthenticationActivity.class));
         }
         finish();
     }
 
     private boolean checkSession(){
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null){
-            return false;
+        if(currentUser != null){
+            return true;
         }
-        return true;
+        return false;
     }
 }

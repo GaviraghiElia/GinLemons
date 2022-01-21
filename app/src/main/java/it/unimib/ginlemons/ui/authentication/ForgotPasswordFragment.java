@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -26,10 +27,12 @@ public class ForgotPasswordFragment extends Fragment {
     private FirebaseAuth mAuth;
     private NavController navController;
     private FragmentForgotPasswordBinding mBinding;
+    private UserViewModel mUserViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUserViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
     }
 
     @Override
@@ -81,21 +84,22 @@ public class ForgotPasswordFragment extends Fragment {
         if(email.isEmpty()){
             mBinding.resetMail.setError(getContext().getString(R.string.email_not_empty));
         } else {
-
-            mAuth.sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Toast.makeText(getContext(), getContext().getString(R.string.password_reset_link), Toast.LENGTH_SHORT).show();
+            mUserViewModel.resetPasswordLink(email).observe(getViewLifecycleOwner(), firebaseResponse -> {
+                if(firebaseResponse != null){
+                    if(firebaseResponse.isSuccess()){
+                        makeMessage(getResources().getString(R.string.password_reset_link));
+                    }else{
+                        makeMessage(firebaseResponse.getMessage());
+                    }
                     navController.navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
-                }
-
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), getContext().getString(R.string.password_reset_link_error) + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
+    }
+
+    private void makeMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+        mUserViewModel.clear();
     }
 
     public void backButtonPressed(View view) {

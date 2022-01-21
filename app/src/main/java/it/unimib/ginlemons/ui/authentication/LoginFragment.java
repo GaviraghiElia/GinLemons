@@ -2,23 +2,17 @@ package it.unimib.ginlemons.ui.authentication;
 
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import it.unimib.ginlemons.R;
@@ -64,14 +58,14 @@ public class LoginFragment extends Fragment {
                     mBinding.loginPassword.setError("Passowrd cannot be empty");
                     mBinding.loginPassword.requestFocus();
                 }else {
-                    mUserViewModel.signInWithEmail(email, password).observe(getViewLifecycleOwner(), authenticationResponse -> {
-                        if (authenticationResponse != null) {
-                            if (authenticationResponse.isSuccess()) {
+                    mUserViewModel.signInWithEmail(email, password).observe(getViewLifecycleOwner(), firebaseResponse -> {
+                        if (firebaseResponse != null) {
+                            if (firebaseResponse.isSuccess()) {
                                 NavHostFragment.findNavController(LoginFragment.this).
                                         navigate(R.id.action_loginFragment_to_mainActivity);
-                                requireActivity().finish();
+                                getActivity().finish();
                             } else {
-                                makeMessageFail(authenticationResponse.getMessage());
+                                makeMessage(firebaseResponse.getMessage());
                             }
                         }
                     });
@@ -114,7 +108,7 @@ public class LoginFragment extends Fragment {
         }
     };
 
-    private void makeMessageFail(String message) {
+    private void makeMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
         mUserViewModel.clear();
     }

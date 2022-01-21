@@ -1,10 +1,10 @@
 package it.unimib.ginlemons.model;
 
-public class AuthenticationResponse {
+public class FirebaseResponse {
     private boolean success;
     private String message;
 
-    public AuthenticationResponse() {
+    public FirebaseResponse() {
     }
 
     public boolean isSuccess() {

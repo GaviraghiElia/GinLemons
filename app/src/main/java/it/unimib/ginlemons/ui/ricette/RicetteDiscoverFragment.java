@@ -117,6 +117,9 @@ public class RicetteDiscoverFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(!dataSnapshot.exists()){
+                            Log.d("ATTENZIONE ", ricetta.getId());
+                            Log.d("ATTENZIONE ", ricetta.getName());
+
                             // se non esiste, allora lo aggiungiamo ai preferiti
                             reference.child(ricetta.getId())
                                     .setValue(ricetta)
