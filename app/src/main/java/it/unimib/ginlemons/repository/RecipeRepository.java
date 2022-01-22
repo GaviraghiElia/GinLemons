@@ -59,12 +59,12 @@ public class RecipeRepository implements IRecipeRepository{
 
         if (currentTime - lastUpdate > Constants.FRESH_TIMEOUT)
         {
-            Log.d("Test", "API");
+            //Log.d("Test", "API");
             getRecipesFromAPI(type);
         }
         else
         {
-            Log.d("Test", "Room");
+            //Log.d("Test", "Room");
             getRecipesFromDatabase(type);
         }
 

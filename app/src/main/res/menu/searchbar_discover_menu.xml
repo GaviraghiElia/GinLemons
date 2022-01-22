@@ -9,7 +9,7 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
     <item
         android:id="@+id/change_list"
-        android:icon="@drawable/non_alcoholic"
+        android:icon="@null"
         app:showAsAction="ifRoom|collapseActionView"
         android:title="@string/list_alcolici" />
     <item

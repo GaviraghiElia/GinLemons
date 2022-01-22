@@ -1,6 +1,7 @@
 package it.unimib.ginlemons.ui.ricette;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -17,6 +18,8 @@ public class RicetteViewModel extends AndroidViewModel {
     private final IRecipeRepository iRecipeRepository;
     private MutableLiveData<RicetteList> alcolici;
     private MutableLiveData<RicetteList> analcolici;
+
+    private int type = -1;
 
     private final SharedPreferencesProvider mSharedPreferencesProvider;
 
@@ -40,5 +43,17 @@ public class RicetteViewModel extends AndroidViewModel {
             analcolici = iRecipeRepository.fetchRecipes("Non_Alcoholic", mSharedPreferencesProvider.getLastUpdate());
 
         return analcolici;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public void changeType() {
+        type = (type + 1) % 2;
     }
 }

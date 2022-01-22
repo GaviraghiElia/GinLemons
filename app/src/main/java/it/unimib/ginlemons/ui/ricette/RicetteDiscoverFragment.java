@@ -210,12 +210,13 @@ public class RicetteDiscoverFragment extends Fragment {
                         msg.show();
                     }
                     else
-                    {
-                        ricettaList.clear();
-                        ricettaList.addAll(ricette.getRepices());
-                        Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
-                        discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
-                    }
+                        if(rViewModel.getType() != 1)
+                        {
+                            ricettaList.clear();
+                            ricettaList.addAll(ricette.getRepices());
+                            Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
+                            discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
+                        }
                 }
             }
         };
@@ -244,12 +245,14 @@ public class RicetteDiscoverFragment extends Fragment {
                         });
 
                         msg.show();
-                    } else {
-                        ricettaList.clear();
-                        ricettaList.addAll(ricette.getRepices());
-                        Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
-                        discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
-                    }
+                    } else
+                        if(rViewModel.getType() == 1)
+                        {
+                            ricettaList.clear();
+                            ricettaList.addAll(ricette.getRepices());
+                            Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
+                            discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
+                        }
                 }
             }
         };
@@ -257,34 +260,48 @@ public class RicetteDiscoverFragment extends Fragment {
         rViewModel.getAnalcolici().observe(getViewLifecycleOwner(), observer_analcolici);
         rViewModel.getAlcolici().observe(getViewLifecycleOwner(), observer_alcolici);
 
-        rViewModel.getAlcolici();
-
-
+        if(rViewModel.getType() == -1)
+            rViewModel.setType(0);
 
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 
     @Override
     public void onResume() {
-        /*if(ricettaList.size() !=  0)
-        {
-            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
-            MenuItem item = toolbar.getMenu().findItem(R.id.change_list);
+        checkIcon(false);
 
-            if(ricettaList.get(1).getType().equalsIgnoreCase( "Alcoholic"))
+        setTitleToolbar();
+        super.onResume();
+    }
+
+    private void checkIcon(boolean check) {
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
+        MenuItem item = toolbar.getMenu().findItem(R.id.change_list);
+
+        if(ricettaList.size() !=  0)
+        {
+            if (ricettaList.get(1).getType().equalsIgnoreCase("Alcoholic"))
             {
                 item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
                 item.setTitle(getString(R.string.list_analcolici));
-            } else
+            }
+            else
             {
                 item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.alcoholic));
                 item.setTitle(getString(R.string.list_alcolici));
             }
-        }*/
-
-        setTitleToolbar();
-        super.onResume();
+        }
+        else
+            if(check)
+            {
+                item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
+                item.setTitle(getString(R.string.list_analcolici));
+            }
     }
 
 
@@ -332,7 +349,7 @@ public class RicetteDiscoverFragment extends Fragment {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("Preferito", "Erorre nel real time DB");
+                Log.d("Preferito", "Errore nel real time DB");
             }
         });
     }
@@ -362,6 +379,8 @@ public class RicetteDiscoverFragment extends Fragment {
                 return false;
             }
         });
+
+        checkIcon(true);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -399,6 +418,8 @@ public class RicetteDiscoverFragment extends Fragment {
                     item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.alcoholic));
                     item.setTitle(getString(R.string.list_alcolici));
                 }
+
+                rViewModel.changeType();
 
                 Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
                 discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
