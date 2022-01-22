@@ -59,14 +59,12 @@ public class RicetteDiscoverFragment extends Fragment {
     private NavController navController;
     private RicetteViewModel rViewModel;
 
-    List<Ricetta> ricettaList = new ArrayList<>();
+    ArrayList<Ricetta> ricettaList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        setTitleToolbar();
-
         rViewModel = new ViewModelProvider(requireActivity()).get(RicetteViewModel.class);
     }
 
@@ -75,6 +73,7 @@ public class RicetteDiscoverFragment extends Fragment {
         // Inflate the layout for this fragment (Layout fragment per il discover recipes)
         mBinding = FragmentRicetteDiscoverBinding.inflate(inflater, container, false);
         View view = mBinding.getRoot();
+        setTitleToolbar();
 
         firebaseAuth = FirebaseAuth.getInstance();
         fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
@@ -109,49 +108,20 @@ public class RicetteDiscoverFragment extends Fragment {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                Ricetta ricetta = ricettaList.get(position);
-
+                Ricetta ricetta = discoverRicetteRecyclerViewAdapter.getList().get(position);
                 // check if esiste già nel DB == è già un preferito
+                RicettaHelper ricettaHelper = new RicettaHelper(ricetta.getId(), ricetta.getName(), ricetta.getType());
                 reference.child(ricetta.getId())
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(!dataSnapshot.exists()){
-                            Log.d("ATTENZIONE ", ricetta.getId());
-                            Log.d("ATTENZIONE ", ricetta.getName());
-
                             // se non esiste, allora lo aggiungiamo ai preferiti
-                            reference.child(ricetta.getId())
-                                    .setValue(new RicettaHelper(ricetta.getId(), ricetta.getName(), ricetta.getType()))
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Log.d("Preferito", "Aggiunto " + ricetta.getName() + " ai preferiti nel real time DB");
-                                            snackbarMake(mBinding.discoverRecyclerView, ricetta, getString(R.string.favourite_added));
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d("Preferito", "Errore nel real time DB");
-                                }
-                            });
+                            addPreferitoRealTimeDB(ricettaHelper);
 
-                        }else{
+                        } else {
                             // se già esiste, allora lo rimuoviamo dai preferiti
-                            reference.child(ricetta.getId())
-                                    .removeValue()
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Log.d("Preferito", "Rimosso " + ricetta.getName() + " dai preferiti nel real time DB");
-                                            snackbarMake(mBinding.discoverRecyclerView, ricetta, getString(R.string.favourite_removed));
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d("Preferito", "Erorre nel real time DB");
-                                }
-                            });
+                            removePreferitoRealTimeDB(ricettaHelper);
                         }
                     }
 
@@ -172,10 +142,6 @@ public class RicetteDiscoverFragment extends Fragment {
             @Override
             public void onIntemClick(Ricetta ricetta) {
                 Log.d(TAG, "onItemClickListener " + ricetta.getName());
-                // non posso usare il Navigation Component!
-                // Sto navigando da un fragment verso un'altra activity: non c'è modo di recuperare
-                // i dati dall'altro parte, almeno stando ai tutorial disponibili....
-                // stack overflow consiglia ciò
                 navigateToRicettaInfo(ricetta);
             }
         });
@@ -266,10 +232,6 @@ public class RicetteDiscoverFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 
     @Override
     public void onResume() {
@@ -303,57 +265,6 @@ public class RicetteDiscoverFragment extends Fragment {
                 item.setTitle(getString(R.string.list_analcolici));
             }
     }
-
-
-    public void snackbarMake(View view, Ricetta ricetta, String snack) {
-        Snackbar.make(view, ricetta.getName() +" " + snack, Snackbar.LENGTH_SHORT).setAction(R.string.annulla, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (snack.equals("aggiunta ai preferiti")) {
-                    // fa undo, l'ho inserito prima e ora quindi voglio rimuoverlo
-                    Log.d("Preferito", "Snack - rimozione " + ricetta.getName() + " dai preferiti");
-                    removePreferitoRealTimeDB(ricetta);
-                } else {
-                    // fa undo, l'ho rimosso prima e quindi ora voglio aggiungerlo
-                    Log.d("Preferito", "Snack - riaggiunta " + ricetta.getName() + " ai preferiti");
-                    addPreferitoRealTimeDB(ricetta);
-                }
-            }
-        }).show();
-    }
-
-    public void addPreferitoRealTimeDB(Ricetta ricetta){
-        reference.child(ricetta.getId())
-                .setValue(ricetta)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("Preferito", "Snack - OnSuccess Aggiunto " + ricetta.getName() + " ai preferiti nel real time DB");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("Preferito", "Snack - Erorre nel real time DB");
-            }
-        });
-    }
-
-    public void removePreferitoRealTimeDB(Ricetta ricetta){
-        reference.child(ricetta.getId())
-                .removeValue()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("Preferito", "Rimosso " + ricetta.getName()+ " dai preferiti nel real time DB");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("Preferito", "Errore nel real time DB");
-            }
-        });
-    }
-
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -447,4 +358,42 @@ public class RicetteDiscoverFragment extends Fragment {
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
+
+    public void addPreferitoRealTimeDB(RicettaHelper ricettaHelper) {
+        rViewModel.addPreferites(ricettaHelper).observe(getViewLifecycleOwner(), addFavoritesResponse -> {
+            if(addFavoritesResponse != null) {
+                if (addFavoritesResponse.isSuccess()) {
+                    Log.d("Preferito", "Aggiunto " + ricettaHelper.getName() + " ai preferiti nel real time DB");
+                    makeMessageSnack(ricettaHelper, getString(R.string.favourite_added));
+                } else {
+                    makeMessage(addFavoritesResponse.getMessage());
+                }
+            }
+        });
+    }
+
+    public void removePreferitoRealTimeDB(RicettaHelper ricettaHelper){
+        rViewModel.removeFavorites(ricettaHelper).observe(getViewLifecycleOwner(), removeFavoritesResponse ->{
+            if(removeFavoritesResponse != null){
+                if(removeFavoritesResponse.isSuccess()){
+                    Log.d("Preferito", "Rimosso " + ricettaHelper.getName() + " dai preferiti nel real time DB");
+                    makeMessageSnack(ricettaHelper, getString(R.string.favourite_removed));
+                }else{
+                    makeMessage(removeFavoritesResponse.getMessage());
+                }
+            }
+        });
+    }
+
+    private void makeMessageSnack(RicettaHelper ricettaHelper, String snack) {
+        Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                ricettaHelper.getName() +" " + snack, Snackbar.LENGTH_SHORT).show();
+        rViewModel.clear();
+    }
+
+    private void makeMessage(String message) {
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show();
+        rViewModel.clear();
+    }
+
 }
