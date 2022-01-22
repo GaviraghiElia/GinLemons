@@ -20,6 +20,7 @@ public class DiscoverRicetteRecyclerViewAdapter extends RecyclerView.Adapter<Dis
 
     private List<Ricetta> ricettaList;
     private List<Ricetta> getRicettaListFiltered;
+
     // Interfaccia per definire la reazione al click su un elemento della RecyclerView
     private OnItemClickListener onItemClickListener;
 
@@ -33,6 +34,8 @@ public class DiscoverRicetteRecyclerViewAdapter extends RecyclerView.Adapter<Dis
         this.getRicettaListFiltered = ricettaList;
         this.onItemClickListener = onItemClickListener;
     }
+
+
 
     // Istanzio il ViewHolder
     @NonNull
@@ -54,7 +57,10 @@ public class DiscoverRicetteRecyclerViewAdapter extends RecyclerView.Adapter<Dis
         return ricettaList.size();
     }
 
-    // Metodo per filtrare la lista delle ricette
+    public List<Ricetta> getList(){
+        return ricettaList;
+    }
+
     @Override
     public Filter getFilter() {
         Filter filter = new Filter() {

@@ -55,6 +55,9 @@ public class PreferitiRicetteRecyclerviewAdapter extends RecyclerView.Adapter<Pr
         return ricettePreferitiList.size();
     }
 
+    public List<Ricetta> getList(){
+        return ricettePreferitiList;
+    }
 
     @Override
     public Filter getFilter() {
@@ -94,8 +97,6 @@ public class PreferitiRicetteRecyclerviewAdapter extends RecyclerView.Adapter<Pr
         return filter;
     }
 
-
-    // nuova classe
     class ListeViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;
@@ -115,6 +116,7 @@ public class PreferitiRicetteRecyclerviewAdapter extends RecyclerView.Adapter<Pr
                     onItemClickListener.onIntemClick(ricettePreferitiList.get(getAdapterPosition()));
                 }
             });
+
         }
     }
 
