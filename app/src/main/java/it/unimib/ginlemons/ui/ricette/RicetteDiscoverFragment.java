@@ -268,7 +268,7 @@ public class RicetteDiscoverFragment extends Fragment {
 
     @Override
     public void onResume() {
-        if(ricettaList.size() !=  0)
+        /*if(ricettaList.size() !=  0)
         {
             Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
             MenuItem item = toolbar.getMenu().findItem(R.id.change_list);
@@ -282,7 +282,7 @@ public class RicetteDiscoverFragment extends Fragment {
                 item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.alcoholic));
                 item.setTitle(getString(R.string.list_alcolici));
             }
-        }
+        }*/
 
         setTitleToolbar();
         super.onResume();

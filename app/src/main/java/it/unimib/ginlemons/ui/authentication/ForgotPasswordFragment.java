@@ -3,6 +3,7 @@ package it.unimib.ginlemons.ui.authentication;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +54,8 @@ public class ForgotPasswordFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mBinding.resetButton.setEnabled(!mBinding.resetMail.getText().toString().isEmpty());
+                String email = mBinding.resetMail.getText().toString();
+                mBinding.resetButton.setEnabled(!email.isEmpty() && isValidEmail(email));
             }
 
             @Override
@@ -80,10 +82,12 @@ public class ForgotPasswordFragment extends Fragment {
         return view;
     }
 
-    public void resetPassword(String email){
-        if(email.isEmpty()){
+    public void resetPassword(String email) {
+        if (email.isEmpty()) {
             mBinding.resetMail.setError(getContext().getString(R.string.email_not_empty));
-        } else {
+        }else if (!isValidEmail(email)){
+            mBinding.resetMail.setError("Bad format email");
+        }else {
             mUserViewModel.resetPasswordLink(email).observe(getViewLifecycleOwner(), firebaseResponse -> {
                 if(firebaseResponse != null){
                     if(firebaseResponse.isSuccess()){
@@ -95,6 +99,11 @@ public class ForgotPasswordFragment extends Fragment {
                 }
             });
         }
+    }
+
+    // check pattern email
+    public boolean isValidEmail(String email){
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private void makeMessage(String message) {
