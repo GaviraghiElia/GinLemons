@@ -79,6 +79,7 @@ public class RecipeRepository implements IRecipeRepository{
             @Override
             public void run() {
                 recipesDao.deleteAll(type);
+                //recipesDao.viatutto();
                 recipesDao.insertRecipes(recipeList);
             }
         };
@@ -94,14 +95,18 @@ public class RecipeRepository implements IRecipeRepository{
             public void onResponse(Call<RicetteList> call, Response<RicetteList> response) {
                 if (response.body() != null && response.isSuccessful())
                 {
-                    saveDataInDatabase(response.body().getRepices(), type);
+                    RicetteList appo = response.body();
+
+                    appo = setType(appo, type);
+
+                    saveDataInDatabase(appo.getRepices(), type);
 
                     mSharedPreferencesProvider.setLastUpdate(System.currentTimeMillis());
 
                     if(type.equals("Alcoholic"))
-                        alcolici.postValue(response.body());
+                        alcolici.postValue(appo);
                     else
-                        analcolici.postValue(response.body());
+                        analcolici.postValue(appo);
                 }
                 else
                 {
@@ -153,5 +158,13 @@ public class RecipeRepository implements IRecipeRepository{
             }
         };
         new Thread(runnable).start();
+    }
+
+    public RicetteList setType(RicetteList appo, String type)
+    {
+        for (Ricetta r : appo.getRepices())
+            r.setType(type);
+
+        return appo;
     }
 }

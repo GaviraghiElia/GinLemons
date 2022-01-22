@@ -21,4 +21,7 @@ public interface RecipesDao {
 
     @Query("SELECT COUNT(*) FROM Ricetta WHERE type = :type")
     int isEmpty(String type);
+
+    @Query("DELETE FROM Ricetta")
+    void viatutto();
 }

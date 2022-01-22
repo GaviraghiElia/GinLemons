@@ -84,4 +84,5 @@
     <string name="title_descrizione">Istruzioni:</string>
     <string name="title_ingredienti">Ingredienti:</string>
     <string name="nota_ingredienti">Nota: 1 oz equivale a 30 ml</string>
+    <string name="annulla">Annulla</string>
 </resources>

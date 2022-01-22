@@ -8,6 +8,8 @@ import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
 
+import it.unimib.ginlemons.ui.ricette.RicettaHelper;
+
 @Entity
 public class Ricetta {
     @NonNull
@@ -38,7 +40,6 @@ public class Ricetta {
     {
         this.id = id;
         this.name = name;
-        this.istruzioni = null;
     }
 
     public Ricetta(String id, String name, String istruzioni, String[] ingredienti, String[] dosi, String imageURL, String glass){
@@ -50,6 +51,12 @@ public class Ricetta {
         this.imageURL = imageURL;
         //this.category = category;
         this.glass = glass;
+    }
+
+    public Ricetta(RicettaHelper ricetta) {
+        this.id = ricetta.getId();
+        this.name = ricetta.getName();
+        this.type = ricetta.getType();
     }
 
     public String getId() {

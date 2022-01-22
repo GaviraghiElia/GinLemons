@@ -122,7 +122,7 @@ public class RicetteDiscoverFragment extends Fragment {
 
                             // se non esiste, allora lo aggiungiamo ai preferiti
                             reference.child(ricetta.getId())
-                                    .setValue(ricetta)
+                                    .setValue(new RicettaHelper(ricetta.getId(), ricetta.getName(), ricetta.getType()))
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
@@ -212,7 +212,6 @@ public class RicetteDiscoverFragment extends Fragment {
                     else
                     {
                         ricettaList.clear();
-                        rViewModel.setType("Alcoholic");;
                         ricettaList.addAll(ricette.getRepices());
                         Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
                         discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
@@ -247,7 +246,6 @@ public class RicetteDiscoverFragment extends Fragment {
                         msg.show();
                     } else {
                         ricettaList.clear();
-                        rViewModel.setType("Non_Alcoholic");;
                         ricettaList.addAll(ricette.getRepices());
                         Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
                         discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
@@ -260,6 +258,7 @@ public class RicetteDiscoverFragment extends Fragment {
         rViewModel.getAlcolici().observe(getViewLifecycleOwner(), observer_alcolici);
 
         rViewModel.getAlcolici();
+
 
 
         return view;
@@ -290,7 +289,7 @@ public class RicetteDiscoverFragment extends Fragment {
 
 
     public void snackbarMake(View view, Ricetta ricetta, String snack) {
-        Snackbar.make(view, ricetta.getName() +" " + snack, Snackbar.LENGTH_SHORT).setAction("Undo", new View.OnClickListener() {
+        Snackbar.make(view, ricetta.getName() +" " + snack, Snackbar.LENGTH_SHORT).setAction(R.string.annulla, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (snack.equals("aggiunta ai preferiti")) {

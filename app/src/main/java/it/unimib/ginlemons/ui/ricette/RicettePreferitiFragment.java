@@ -88,8 +88,8 @@ public class RicettePreferitiFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ricettePreferitiList.clear(); // altrimenti fa i doppioni
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    Ricetta ricetta = dataSnapshot.getValue(Ricetta.class);
-                    ricettePreferitiList.add(ricetta);
+                    RicettaHelper ricetta = dataSnapshot.getValue(RicettaHelper.class);
+                    ricettePreferitiList.add(new Ricetta(ricetta));
                 }
                 preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
             }
