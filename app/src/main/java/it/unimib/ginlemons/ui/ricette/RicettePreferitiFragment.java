@@ -131,7 +131,10 @@ public class RicettePreferitiFragment extends Fragment {
 
                 final int position = viewHolder.getAdapterPosition();
                 Ricetta ricetta = preferitiRicetteRecyclerviewAdapter.getList().get(position);
-                preferitiRicetteRecyclerviewAdapter.getList().remove(position);
+
+                if(ricettePreferitiList.size() != preferitiRicetteRecyclerviewAdapter.getList().size())
+                    preferitiRicetteRecyclerviewAdapter.getList().remove(position);
+
                 // remove on FireBase
                 ricettePreferitiList.remove(position);
                 RicettaHelper ricettaHelper = new RicettaHelper(ricetta.getId(), ricetta.getName(), ricetta.getType());
