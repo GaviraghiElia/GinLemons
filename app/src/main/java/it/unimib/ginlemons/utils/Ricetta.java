@@ -1,16 +1,36 @@
 package it.unimib.ginlemons.utils;
 
-import java.util.Arrays;
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.util.Comparator;
 
+import it.unimib.ginlemons.ui.ricette.RicettaHelper;
+
+@Entity
 public class Ricetta {
+    @NonNull
+    @PrimaryKey
     private String id;
     private String name;
-    private String istruzioni;
-    private String[] ingredienti;
-    private String[] dosi;
     private String type;
 
+    @Ignore
+    private String istruzioni;
+    @Ignore
+    private String[] ingredienti;
+    @Ignore
+    private String[] dosi;
+    @Ignore
+    private String imageURL;
+    @Ignore
+    private String category;
+    @Ignore
+    private String glass;
+    @Ignore
     private String error = null;
 
 
@@ -20,19 +40,31 @@ public class Ricetta {
     {
         this.id = id;
         this.name = name;
-        this.istruzioni = null;
     }
 
-    public Ricetta(String id, String name, String istruzioni, String[] ingredienti, String[] dosi){
+    public Ricetta(String id, String name, String istruzioni, String[] ingredienti, String[] dosi, String imageURL, String glass){
         this.id = id;
         this.name = name;
         this.istruzioni = istruzioni;
         this.ingredienti = ingredienti;
         this.dosi = dosi;
+        this.imageURL = imageURL;
+        //this.category = category;
+        this.glass = glass;
+    }
+
+    public Ricetta(RicettaHelper ricetta) {
+        this.id = ricetta.getId();
+        this.name = ricetta.getName();
+        this.type = ricetta.getType();
     }
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName(){
@@ -55,13 +87,8 @@ public class Ricetta {
         return istruzioni;
     }
 
-    @Override
-    public String toString() {
-        return "Ricetta{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", istruzioni='" + istruzioni + '\'' +
-                '}';
+    public String getImageURL() {
+        return imageURL;
     }
 
     // Metodi per il sort delle ricette nelle sezioni Esplora e Preferiti
@@ -89,5 +116,38 @@ public class Ricetta {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public String getIngredienti()
+    {
+        String ris = "\n";
+
+        for(int i = 0; i < ingredienti.length; i++)
+        {
+            if(ingredienti[i] != null && !ingredienti[i].isEmpty()) {
+                ris += ingredienti[i];
+                ris += "\n";
+
+            } else
+                break;
+        }
+
+        return ris;
+    }
+
+    public String getDosi()
+    {
+        String ris = "\n";
+
+        for(int i = 0; i < ingredienti.length; i++)
+        {
+            if(ingredienti[i] != null && !ingredienti[i].isEmpty()) {
+                ris += dosi[i] + ":     ";
+                ris += "\n";
+            } else
+                break;
+        }
+
+        return ris;
     }
 }

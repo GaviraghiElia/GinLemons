@@ -3,17 +3,16 @@ package it.unimib.ginlemons.ui.ricette;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.transition.Fade;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.MenuItem;
+import android.view.RoundedCorner;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.Objects;
 
@@ -21,18 +20,17 @@ import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.ActivityRicetteInfoBinding;
 import it.unimib.ginlemons.repository.GetRecipeRepository;
 import it.unimib.ginlemons.repository.IGetRecipeRepository;
+import it.unimib.ginlemons.ui.MainActivity;
 import it.unimib.ginlemons.utils.Constants;
 import it.unimib.ginlemons.utils.ResponseCallback;
 import it.unimib.ginlemons.utils.Ricetta;
-import it.unimib.ginlemons.utils.RicetteList;
-
 
 public class RicetteInfoActivity extends AppCompatActivity implements ResponseCallback {
-
     private ActivityRicetteInfoBinding mBinding;
     private String fragmentProvenienza;
     private IGetRecipeRepository iGetRecipeRepository;
     private String id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +49,6 @@ public class RicetteInfoActivity extends AppCompatActivity implements ResponseCa
 
         iGetRecipeRepository.getRecipeById(id);
 
-        //mBinding.nomeRicettaInfo.setText(recipe.getName());
-
         // serve almeno la versione 23, noi lavoriamo con la 21
         // non c'è un gran divario
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -69,16 +65,6 @@ public class RicetteInfoActivity extends AppCompatActivity implements ResponseCa
                 }
             });
         }
-        /*
-        // Codice Toolbar -- ultima push
-        mBinding.activityInfoToolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24);
-        setSupportActionBar(mBinding.activityInfoToolbar);
-        mBinding.activityInfoToolbar.setTitle(recipe.getName());
-        Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
-
-
-        mBinding.descrizioneRicettaInfo.setText("");
-        */
     }
 
 
@@ -108,16 +94,22 @@ public class RicetteInfoActivity extends AppCompatActivity implements ResponseCa
 
         if(recipe != null)
         {
-            mBinding.nomeRicettaInfo.setText(recipe.getName());
-
+            //mBinding.nomeRicettaInfo.setText(recipe.getName());
             // Codice Toolbar -- ultima push
             mBinding.activityInfoToolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24);
             setSupportActionBar(mBinding.activityInfoToolbar);
-            mBinding.activityInfoToolbar.setTitle(recipe.getName());
             Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
-
-
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            Picasso.get()
+                    .load(recipe.getImageURL())
+                    .resize(metrics.widthPixels, metrics.widthPixels - 200)
+                    .centerCrop()
+                    .into(mBinding.imageView);
+            mBinding.activityInfoToolbar.setTitle(recipe.getName());
             mBinding.descrizioneRicettaInfo.setText(recipe.getIstruzioni());
+            mBinding.dosiRicetteInfo.setText(recipe.getDosi());
+            mBinding.ingredientiRicetteInfo.setText(recipe.getIngredienti());
         }
     }
 
@@ -128,7 +120,7 @@ public class RicetteInfoActivity extends AppCompatActivity implements ResponseCa
         Snackbar msg = Snackbar.make(this.findViewById(android.R.id.content), errorString, Snackbar.LENGTH_LONG);
 
         // Appare anche un pulsante che permette di riprovare la chiamata
-        msg.setAction("Riprova", new View.OnClickListener() {
+        msg.setAction( getString(R.string.retry), new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {

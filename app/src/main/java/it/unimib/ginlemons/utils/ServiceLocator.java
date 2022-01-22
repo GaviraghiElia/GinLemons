@@ -1,8 +1,11 @@
 package it.unimib.ginlemons.utils;
 
+import android.app.Application;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import it.unimib.ginlemons.database.RecipeRoomDatabase;
 import it.unimib.ginlemons.service.RecipeApiService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -36,5 +39,10 @@ public class ServiceLocator {
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://www.thecocktaildb.com/api/json/v1/1/").addConverterFactory(GsonConverterFactory.create(builder)).build();
         return retrofit.create(RecipeApiService.class);
+    }
+
+    public RecipeRoomDatabase getRecipesDao(Application application)
+    {
+        return RecipeRoomDatabase.getDatabase(application);
     }
 }
