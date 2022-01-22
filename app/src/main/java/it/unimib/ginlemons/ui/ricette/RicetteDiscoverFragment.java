@@ -256,8 +256,8 @@ public class RicetteDiscoverFragment extends Fragment {
             }
         };
 
-        rViewModel.getAlcolici().observe(getViewLifecycleOwner(), observer_alcolici);
         rViewModel.getAnalcolici().observe(getViewLifecycleOwner(), observer_analcolici);
+        rViewModel.getAlcolici().observe(getViewLifecycleOwner(), observer_alcolici);
 
         rViewModel.getAlcolici();
 

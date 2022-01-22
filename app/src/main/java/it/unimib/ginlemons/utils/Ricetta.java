@@ -1,18 +1,34 @@
 package it.unimib.ginlemons.utils;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.util.Comparator;
 
+@Entity
 public class Ricetta {
+    @NonNull
+    @PrimaryKey
     private String id;
     private String name;
-    private String istruzioni;
-    private String[] ingredienti;
-    private String[] dosi;
     private String type;
-    private String imageURL;
-    private String category;
-    private String glass;
 
+    @Ignore
+    private String istruzioni;
+    @Ignore
+    private String[] ingredienti;
+    @Ignore
+    private String[] dosi;
+    @Ignore
+    private String imageURL;
+    @Ignore
+    private String category;
+    @Ignore
+    private String glass;
+    @Ignore
     private String error = null;
 
 
@@ -38,6 +54,10 @@ public class Ricetta {
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName(){

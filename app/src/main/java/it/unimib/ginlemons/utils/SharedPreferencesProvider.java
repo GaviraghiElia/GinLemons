@@ -29,4 +29,19 @@ public class SharedPreferencesProvider {
         sharedPref.edit().clear().apply();
     }
 
+    ///
+    public void setLastUpdate(long lastUpdate) {
+        SharedPreferences sharedPref = mApplication.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE_NAME,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putLong(Constants.LAST_UPDATE, lastUpdate);
+        editor.apply();
+    }
+
+    public long getLastUpdate() {
+        SharedPreferences sharedPref =
+                mApplication.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+        return sharedPref.getLong(Constants.LAST_UPDATE, 0);
+    }
+    ///
 }

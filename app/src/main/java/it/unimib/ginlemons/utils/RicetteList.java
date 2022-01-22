@@ -2,6 +2,7 @@ package it.unimib.ginlemons.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class RicetteList {
     private String error = null;
@@ -29,6 +30,16 @@ public class RicetteList {
 
     public String getError() {
         return error;
+    }
+
+    public void setRecipes(List<Ricetta> ricette)
+    {
+        HashMap<String, Ricetta> recipes = new HashMap<>();
+
+        for(Ricetta r : ricette)
+            recipes.put(r.getId(), r);
+
+        this.recipes = recipes;
     }
 
     public void setError(String error) {
