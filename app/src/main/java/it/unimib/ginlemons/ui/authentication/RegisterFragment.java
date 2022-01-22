@@ -6,25 +6,18 @@ import static it.unimib.ginlemons.utils.Constants.PASSWORD_PATTERN;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -34,7 +27,6 @@ import java.util.regex.Pattern;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.FragmentRegisterBinding;
-import it.unimib.ginlemons.model.UserHelper;
 
 public class RegisterFragment extends Fragment {
 
@@ -85,8 +77,12 @@ public class RegisterFragment extends Fragment {
                     mBinding.registerName.setError("Name cannot be empty");
                     mBinding.registerName.requestFocus();
 
-                }else if(email.isEmpty()){
+                }else if(email.isEmpty()) {
                     mBinding.registerEmail.setError("Email cannot be empty");
+                    mBinding.registerEmail.requestFocus();
+
+                }else if(!isValidEmail(email)){
+                    mBinding.registerEmail.setError("Bad format email");
                     mBinding.registerEmail.requestFocus();
 
                 }else if (password.isEmpty()){
@@ -108,14 +104,15 @@ public class RegisterFragment extends Fragment {
                                         if(firebaseResponse1.isSuccess()){
                                             makeMessage("Registrazione andata a buon fine");
                                             firebaseAuth.signOut();
-                                            navController.navigate(R.id.action_registerFragment_to_loginFragment);
                                         } else {
                                             makeMessage(firebaseResponse1.getMessage());
                                         }
+                                        navController.navigate(R.id.action_registerFragment_to_loginFragment);
                                     }
                                 });
                             } else {
                                 makeMessage(firebaseResponse.getMessage());
+                                navController.navigate(R.id.action_registerFragment_to_loginFragment);
                             }
                         }
                     });
@@ -142,9 +139,9 @@ public class RegisterFragment extends Fragment {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String nameInput = mBinding.registerName.getText().toString();
-            String usernameInput = mBinding.registerEmail.getText().toString();
+            String emailInput = mBinding.registerEmail.getText().toString();
             String passwordInput = mBinding.registerPassword.getText().toString();
-            mBinding.buttonRegister.setEnabled((!nameInput.isEmpty()) && (!usernameInput.isEmpty()) && (!passwordInput.isEmpty()));
+            mBinding.buttonRegister.setEnabled((!nameInput.isEmpty()) && (!emailInput.isEmpty()) && (!passwordInput.isEmpty()) && isValidEmail(emailInput));
         }
 
         @Override
@@ -158,6 +155,11 @@ public class RegisterFragment extends Fragment {
         Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
+    }
+
+    // check pattern email
+    public boolean isValidEmail(String email){
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private void makeMessage(String message) {

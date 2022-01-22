@@ -3,6 +3,7 @@ package it.unimib.ginlemons.ui.authentication;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,9 @@ public class LoginFragment extends Fragment {
                 if (email.isEmpty()) {
                     mBinding.loginEmail.setError("Email cannot be empty");
                     mBinding.loginEmail.requestFocus();
+                }else if(!isValidEmail(email)) {
+                    mBinding.loginEmail.setError("Bad email format");
+                    mBinding.loginEmail.requestFocus();
                 } else if (password.isEmpty()) {
                     mBinding.loginPassword.setError("Passowrd cannot be empty");
                     mBinding.loginPassword.requestFocus();
@@ -98,15 +102,19 @@ public class LoginFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String usernameInput = mBinding.loginEmail.getText().toString();
+            String emailInput = mBinding.loginEmail.getText().toString();
             String passwordInput = mBinding.loginPassword.getText().toString();
-            mBinding.buttonLogin.setEnabled(!usernameInput.isEmpty() && !passwordInput.isEmpty());
+            mBinding.buttonLogin.setEnabled(!emailInput.isEmpty() && !passwordInput.isEmpty() && isValidEmail(emailInput));
         }
 
         @Override
         public void afterTextChanged(Editable s) {
         }
     };
+
+    public boolean isValidEmail(String email){
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
 
     private void makeMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();

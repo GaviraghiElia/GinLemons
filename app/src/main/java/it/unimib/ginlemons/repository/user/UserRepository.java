@@ -4,15 +4,19 @@ import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
 
 import android.app.Application;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -140,8 +144,80 @@ public class UserRepository implements IUserRepository {
 
 
     @Override
-    public MutableLiveData<FirebaseResponse> reauthenticateUser(String email, String password) {
-        return null;
+    public MutableLiveData<FirebaseResponse> reauthenticateUser(UserHelper userHelper, String email, String password) {
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(email, password); // Current Login Credentials \\
+
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        firebaseUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                FirebaseResponse firebaseResponse = new FirebaseResponse();
+                if (task.isSuccessful()) {
+                    firebaseUser.updateEmail(userHelper.getEmail());
+                    reference.child(firebaseUser.getUid()).setValue(userHelper);
+                    firebaseResponse.setSuccess(true);
+
+                } else {
+                    firebaseResponse.setSuccess(false);
+                    if (task.getException() == null) {
+                        firebaseResponse.setMessage("Error reauthentication");
+                    } else {
+                        firebaseResponse.setMessage(task.getException().getMessage());
+                    }
+                }
+
+                mAuthenticationResponseLiveData.postValue(firebaseResponse);
+            }
+        });
+
+        return mAuthenticationResponseLiveData;
+    }
+
+    @Override
+    public MutableLiveData<FirebaseResponse> updateEmail(String email) {
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        firebaseUser.updateEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                FirebaseResponse firebaseResponse = new FirebaseResponse();
+                if(task.isSuccessful()) {
+                    firebaseResponse.setSuccess(true);
+                }else {
+                    firebaseResponse.setSuccess(false);
+                    if (task.getException() == null) {
+                        firebaseResponse.setMessage("Error update Email");
+                    } else {
+                        firebaseResponse.setMessage(task.getException().getMessage());
+                    }
+                }
+                mAuthenticationResponseLiveData.postValue(firebaseResponse);
+            }
+        });
+        return mAuthenticationResponseLiveData;
+    }
+
+    @Override
+    public MutableLiveData<FirebaseResponse> updateEmailRealTimeDB(UserHelper userHelper) {
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+            reference.child(firebaseUser.getUid()).setValue(userHelper).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    FirebaseResponse firebaseResponse = new FirebaseResponse();
+                    if(task.isSuccessful()) {
+                        firebaseResponse.setSuccess(true);
+                    }else {
+                        firebaseResponse.setSuccess(false);
+                        if (task.getException() == null) {
+                            firebaseResponse.setMessage("Error update Email");
+                        } else {
+                            firebaseResponse.setMessage(task.getException().getMessage());
+                        }
+                    }
+                    mAuthenticationResponseLiveData.postValue(firebaseResponse);
+                }
+            });
+        return mAuthenticationResponseLiveData;
     }
 
     @Override

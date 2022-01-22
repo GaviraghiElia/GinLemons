@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.firebase.auth.AuthCredential;
+
 import it.unimib.ginlemons.model.FirebaseResponse;
 import it.unimib.ginlemons.model.UserHelper;
 import it.unimib.ginlemons.repository.user.IUserRepository;
@@ -36,13 +38,23 @@ public class UserViewModel extends AndroidViewModel {
         return mAuthenticationResponseLiveData;
     }
 
-    public MutableLiveData<FirebaseResponse> reauthenticateUser(String email, String password){
-        mAuthenticationResponseLiveData = mUserRepository.reauthenticateUser(email, password);
+    public MutableLiveData<FirebaseResponse> resetPasswordLink(String email){
+        mAuthenticationResponseLiveData = mUserRepository.resetPasswordLink(email);
         return mAuthenticationResponseLiveData;
     }
 
-    public MutableLiveData<FirebaseResponse> resetPasswordLink(String email){
-        mAuthenticationResponseLiveData = mUserRepository.resetPasswordLink(email);
+    public MutableLiveData<FirebaseResponse> reauthenticateUser(UserHelper userHelper, String email, String password){
+        mAuthenticationResponseLiveData = mUserRepository.reauthenticateUser(userHelper, email, password);
+        return mAuthenticationResponseLiveData;
+    }
+
+    public MutableLiveData<FirebaseResponse> updateEmail(String email){
+        mAuthenticationResponseLiveData = mUserRepository.updateEmail(email);
+        return mAuthenticationResponseLiveData;
+    }
+
+    public MutableLiveData<FirebaseResponse> updateEmailRealTimeDB(UserHelper userHelper){
+        mAuthenticationResponseLiveData = mUserRepository.updateEmailRealTimeDB(userHelper);
         return mAuthenticationResponseLiveData;
     }
 
