@@ -90,33 +90,28 @@ public class RicettePreferitiFragment extends Fragment
         mBinding.preferitiRecyclerView.setAdapter(preferitiRicetteRecyclerviewAdapter);
 
         // Observer Alcolici
-        if(rViewModel.getType() != 1)
-        {
-            rViewModel.getPreferitiAlcolici().observe(getViewLifecycleOwner(), favoritesResponse -> {
-                if (favoritesResponse != null)
+        rViewModel.getPreferitiAlcolici().observe(getViewLifecycleOwner(), favoritesResponse -> {
+            if (favoritesResponse != null)
+            {
+                if (favoritesResponse.isSuccess() && rViewModel.getType() != 1)
                 {
-                    if (favoritesResponse.isSuccess())
-                    {
-                        ricettePreferitiList.clear();
-                        ricettePreferitiList.addAll(favoritesResponse.getRepices());
-                        Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoAZ);
-                        preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
-                    }
+                    ricettePreferitiList.clear();
+                    ricettePreferitiList.addAll(favoritesResponse.getRepices());
+                    Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoAZ);
+                    preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
                 }
-            });
-        }
-        else
-        {
-            // Observer Analcolici
-            rViewModel.getPreferitiAnalcolici().observe(getViewLifecycleOwner(), favoritesResponse -> {
-                if (favoritesResponse != null)
-                    if (favoritesResponse.isSuccess())
-                        ricettePreferitiList.clear();
-                        ricettePreferitiList.addAll(favoritesResponse.getRepices());
-                        Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoAZ);
-                        preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
-            });
-        }
+            }
+        });
+
+        // Observer Analcolici
+        rViewModel.getPreferitiAnalcolici().observe(getViewLifecycleOwner(), favoritesResponse -> {
+            if (favoritesResponse != null)
+                if (favoritesResponse.isSuccess() && rViewModel.getType() == 1)
+                    ricettePreferitiList.clear();
+                    ricettePreferitiList.addAll(favoritesResponse.getRepices());
+                    Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoAZ);
+                    preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
+        });
 
         // Swipe right do Add preferite
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -293,11 +288,8 @@ public class RicettePreferitiFragment extends Fragment
                 {
                     ricettePreferitiList.clear();
 
-                    if(rViewModel.getPreferitiAlcolici().getValue() != null)
-                    {
-                        ricettePreferitiList.addAll(rViewModel.getPreferitiAlcolici().getValue().getRepices());
-                        preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
-                    }
+                    ricettePreferitiList.addAll(rViewModel.getPreferitiAlcolici().getValue().getRepices());
+                    preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
 
                     item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
                     item.setTitle(getString(R.string.list_analcolici));
@@ -306,11 +298,9 @@ public class RicettePreferitiFragment extends Fragment
                 {
                     ricettePreferitiList.clear();
 
-                    if(rViewModel.getPreferitiAnalcolici().getValue() != null)
-                    {
-                        ricettePreferitiList.addAll(rViewModel.getPreferitiAnalcolici().getValue().getRepices());
-                        preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
-                    }
+                    ricettePreferitiList.addAll(rViewModel.getPreferitiAnalcolici().getValue().getRepices());
+                    preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
+
 
                     item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.alcoholic));
                     item.setTitle(getString(R.string.list_alcolici));
