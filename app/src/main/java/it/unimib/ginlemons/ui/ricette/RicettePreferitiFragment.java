@@ -1,21 +1,12 @@
 package it.unimib.ginlemons.ui.ricette;
 
 import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
-import static it.unimib.ginlemons.utils.Constants.*;
+import static it.unimib.ginlemons.utils.Constants.FRAGMENTFORTRANSITION;
+import static it.unimib.ginlemons.utils.Constants.ITEM_ID_PRESSED_KEY;
 
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,15 +15,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,8 +34,7 @@ import java.util.Collections;
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.PreferitiRicetteRecyclerviewAdapter;
 import it.unimib.ginlemons.databinding.FragmentRicettePreferitiBinding;
-import it.unimib.ginlemons.repository.preferiti.IFavoritesRepository;
-import it.unimib.ginlemons.utils.Ricetta;
+import it.unimib.ginlemons.model.FavoritesResponse;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class RicettePreferitiFragment extends Fragment {
@@ -55,14 +48,14 @@ public class RicettePreferitiFragment extends Fragment {
     private RicetteViewModel rViewModel;
 
     // Dati per test della RecycleView
-    ArrayList<Ricetta> ricettePreferitiList;
+    ArrayList<RicettaHelper> ricettePreferitiList;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        rViewModel = new ViewModelProvider(requireActivity()).get(RicetteViewModel.class);
+        rViewModel = RicetteDiscoverFragment.rViewModel;
     }
 
     @Override
@@ -74,6 +67,7 @@ public class RicettePreferitiFragment extends Fragment {
         // Set Toolbar
         setTitleToolbar();
 
+        // firebase
         firebaseAuth = FirebaseAuth.getInstance();
         fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         reference = fDB.getReference("favorites").child(firebaseAuth.getCurrentUser().getUid());
@@ -83,29 +77,35 @@ public class RicettePreferitiFragment extends Fragment {
 
         preferitiRicetteRecyclerviewAdapter = new PreferitiRicetteRecyclerviewAdapter(ricettePreferitiList, new PreferitiRicetteRecyclerviewAdapter.OnItemClickListener() {
             @Override
-            public void onIntemClick(Ricetta ricetta) {
+            public void onIntemClick(RicettaHelper ricetta) {
                 Log.d(TAG, "onItemClickListener " + ricetta.getName());
                 navigateToRicettaInfo(ricetta);
             }
         });
 
         mBinding.preferitiRecyclerView.setAdapter(preferitiRicetteRecyclerviewAdapter);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ricettePreferitiList.clear(); // altrimenti fa i doppioni
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    RicettaHelper ricetta = dataSnapshot.getValue(RicettaHelper.class);
-                    ricettePreferitiList.add(new Ricetta(ricetta));
+
+        Log.d("SIZEOF", "OnCreateView RicettePreferitiFragment");
+
+        // alcolici
+        if(rViewModel.getType() != 1) {
+            rViewModel.getPreferitiAlcolici().observe(getViewLifecycleOwner(), favoritesResponse -> {
+                if (favoritesResponse != null) {
+                    if (favoritesResponse.isSuccess()) {
+                        addList(favoritesResponse);
+                    }
                 }
-                preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+            });
+        }else{
+        // analcolici
+            rViewModel.getPreferitiAnalcolici().observe(getViewLifecycleOwner(), favoritesResponse -> {
+                if (favoritesResponse != null) {
+                    if (favoritesResponse.isSuccess()) {
+                        addList(favoritesResponse);
+                    }
+                }
+            });
+        }
 
         // Swipe right do Add preferite
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -130,15 +130,24 @@ public class RicettePreferitiFragment extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
                 final int position = viewHolder.getAdapterPosition();
-                Ricetta ricetta = preferitiRicetteRecyclerviewAdapter.getList().get(position);
+                RicettaHelper ricetta = preferitiRicetteRecyclerviewAdapter.getList().get(position);
+                Log.d("POSIZIONE", "POSIZIONE ATTUALE DI = " + ricetta.getName() + " = " + position);
+                Log.d("POSIZIONE", "SIZE RicettaPreferitiList = " + ricettePreferitiList.size());
+                Log.d("POSIZIONE", "SIZE Lista adapter = " + preferitiRicetteRecyclerviewAdapter.getList().size());
 
-                if(ricettePreferitiList.size() != preferitiRicetteRecyclerviewAdapter.getList().size())
+                if(ricettePreferitiList.size() != preferitiRicetteRecyclerviewAdapter.getList().size()) {
                     preferitiRicetteRecyclerviewAdapter.getList().remove(position);
+                    for(int i = 0; i < ricettePreferitiList.size(); i++){
+                        if(ricettePreferitiList.get(i).getId().equals(ricetta.getId())) {
+                            ricettePreferitiList.remove(i);
+                        }
+                    }
+                }else{
+                    ricettePreferitiList.remove(position);
+                }
 
                 // remove on FireBase
-                ricettePreferitiList.remove(position);
-                RicettaHelper ricettaHelper = new RicettaHelper(ricetta.getId(), ricetta.getName(), ricetta.getType());
-                removePreferitoRealTimeDB(ricettaHelper);
+                removePreferitoRealTimeDB(ricetta);
 
                 preferitiRicetteRecyclerviewAdapter.notifyItemRemoved(position);
 
@@ -148,12 +157,32 @@ public class RicettePreferitiFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(mBinding.preferitiRecyclerView);
 
+        if(rViewModel.getType() == 1){
+
+        }else{
+
+        }
+
         return view;
     }
+
+    private void addList(FavoritesResponse favoritesResponse){
+        ricettePreferitiList.clear();
+        ricettePreferitiList.addAll(favoritesResponse.getRepices());
+        Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoAZ);
+        preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void onResume() {
         setTitleToolbar();
+        Log.d("SIZEOF", "OnResume RicettePreferitiFragment");
+        if(rViewModel.getPreferitiAlcolici().getValue() != null){
+            Log.d("SIZEOF", "getPreferiti != Null");
+            addList(rViewModel.getPreferitiAlcolici().getValue());
+            preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
+        }
         super.onResume();
     }
 
@@ -200,11 +229,11 @@ public class RicettePreferitiFragment extends Fragment {
             case R.id.action_search_discover:
                 return true;
             case R.id.ordine_alfabetico_crescente:
-                Collections.sort(ricettePreferitiList, Ricetta.OrdinaRicetteAlfabeticoAZ);
+                Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoAZ);
                 preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
                 return true;
             case R.id.ordine_alfabetico_decrescente:
-                Collections.sort(ricettePreferitiList, Ricetta.OrdinaRicetteAlfabeticoZA);
+                Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoZA);
                 preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
                 return true;
         }
@@ -212,7 +241,7 @@ public class RicettePreferitiFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void navigateToRicettaInfo(Ricetta ricetta){
+    public void navigateToRicettaInfo(RicettaHelper ricetta){
         Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
         intent.putExtra(FRAGMENTFORTRANSITION, "RicettePreferiti");
         intent.putExtra(ITEM_ID_PRESSED_KEY, ricetta.getId());
@@ -243,4 +272,5 @@ public class RicettePreferitiFragment extends Fragment {
         Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show();
         rViewModel.clear();
     }
+
 }

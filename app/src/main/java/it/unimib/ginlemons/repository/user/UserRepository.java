@@ -56,9 +56,7 @@ public class UserRepository implements IUserRepository {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             firebaseResponse.setSuccess(true);
-                            //mSharedPreferencesProvider.
-                            //        setAuthenticationToken(user.getIdToken(false).getResult().getToken());
-                            //mSharedPreferencesProvider.setUserId(user.getUid());
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.d("TAG", "signInWithEmail:failure", task.getException());
@@ -200,23 +198,23 @@ public class UserRepository implements IUserRepository {
     @Override
     public MutableLiveData<FirebaseResponse> updateEmailRealTimeDB(UserHelper userHelper) {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
-            reference.child(firebaseUser.getUid()).setValue(userHelper).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    FirebaseResponse firebaseResponse = new FirebaseResponse();
-                    if(task.isSuccessful()) {
-                        firebaseResponse.setSuccess(true);
-                    }else {
-                        firebaseResponse.setSuccess(false);
-                        if (task.getException() == null) {
-                            firebaseResponse.setMessage("Error update Email");
-                        } else {
-                            firebaseResponse.setMessage(task.getException().getMessage());
-                        }
+        reference.child(firebaseUser.getUid()).setValue(userHelper).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                FirebaseResponse firebaseResponse = new FirebaseResponse();
+                if(task.isSuccessful()) {
+                    firebaseResponse.setSuccess(true);
+                }else {
+                    firebaseResponse.setSuccess(false);
+                    if (task.getException() == null) {
+                        firebaseResponse.setMessage("Error update Email");
+                    } else {
+                        firebaseResponse.setMessage(task.getException().getMessage());
                     }
-                    mAuthenticationResponseLiveData.postValue(firebaseResponse);
                 }
-            });
+                mAuthenticationResponseLiveData.postValue(firebaseResponse);
+            }
+        });
         return mAuthenticationResponseLiveData;
     }
 
@@ -246,4 +244,3 @@ public class UserRepository implements IUserRepository {
     }
 
 }
-

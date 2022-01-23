@@ -14,22 +14,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unimib.ginlemons.R;
+import it.unimib.ginlemons.ui.ricette.RicettaHelper;
 import it.unimib.ginlemons.utils.Ricetta;
 
 public class PreferitiRicetteRecyclerviewAdapter extends RecyclerView.Adapter<PreferitiRicetteRecyclerviewAdapter.ListeViewHolder> implements Filterable {
 
-    private ArrayList<Ricetta> ricettePreferitiList;
-    private ArrayList<Ricetta> getRicettaListFiltered;
+    private ArrayList<RicettaHelper> ricettePreferitiList;
+    private ArrayList<RicettaHelper> getRicettaListFiltered;
 
     // Interfaccia per definire la reazione al click su un elemento della RecyclerView
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener{
-        void onIntemClick(Ricetta ricetta);
+        void onIntemClick(RicettaHelper ricetta);
     }
 
+
     // costruttore
-    public PreferitiRicetteRecyclerviewAdapter(ArrayList<Ricetta> ricettePreferitiList, OnItemClickListener onItemClickListener){
+    public PreferitiRicetteRecyclerviewAdapter(ArrayList<RicettaHelper> ricettePreferitiList, OnItemClickListener onItemClickListener){
         this.ricettePreferitiList = ricettePreferitiList;
         this.getRicettaListFiltered = ricettePreferitiList;
         this.onItemClickListener = onItemClickListener;
@@ -46,7 +48,7 @@ public class PreferitiRicetteRecyclerviewAdapter extends RecyclerView.Adapter<Pr
     // Bind tra item e dati
     @Override
     public void onBindViewHolder(@NonNull ListeViewHolder holder, int position) {
-        Ricetta ricetta = ricettePreferitiList.get(position);
+        RicettaHelper ricetta = ricettePreferitiList.get(position);
         holder.bind(ricetta.getName());
     }
 
@@ -55,7 +57,7 @@ public class PreferitiRicetteRecyclerviewAdapter extends RecyclerView.Adapter<Pr
         return ricettePreferitiList.size();
     }
 
-    public List<Ricetta> getList(){
+    public List<RicettaHelper> getList(){
         return ricettePreferitiList;
     }
 
@@ -73,9 +75,9 @@ public class PreferitiRicetteRecyclerviewAdapter extends RecyclerView.Adapter<Pr
                 }else{
                     // NON è case sensitive
                     String searchChr = constraint.toString().toLowerCase();
-                    List<Ricetta> resultData = new ArrayList<>();
+                    List<RicettaHelper> resultData = new ArrayList<>();
 
-                    for(Ricetta r: getRicettaListFiltered){
+                    for(RicettaHelper r: getRicettaListFiltered){
                         if(r.getName().toLowerCase().contains(searchChr)){
                             resultData.add(r);
                         }
@@ -90,7 +92,7 @@ public class PreferitiRicetteRecyclerviewAdapter extends RecyclerView.Adapter<Pr
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                ricettePreferitiList = (ArrayList<Ricetta>) results.values;
+                ricettePreferitiList = (ArrayList<RicettaHelper>) results.values;
                 notifyDataSetChanged();
             }
         };

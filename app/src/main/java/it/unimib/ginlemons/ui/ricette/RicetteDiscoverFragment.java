@@ -27,8 +27,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -39,7 +37,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.DiscoverRicetteRecyclerViewAdapter;
@@ -57,7 +54,7 @@ public class RicetteDiscoverFragment extends Fragment {
     private DatabaseReference reference;
     private FragmentRicetteDiscoverBinding mBinding;
     private NavController navController;
-    private RicetteViewModel rViewModel;
+    public static RicetteViewModel rViewModel;
 
     ArrayList<Ricetta> ricettaList = new ArrayList<>();
 
