@@ -84,9 +84,13 @@ public class RicetteViewModel extends AndroidViewModel {
         mAuthenticationResponseLiveData = mFavoritesRepository.addFavorites(ricettaHelper);
         if(ricettaHelper.getType().equals("Alcoholic"))
         {
-            preferitiAlcolici.getValue().addFavorites(ricettaHelper);
+            if(preferitiAlcolici.getValue() != null){
+                preferitiAlcolici.getValue().addFavorites(ricettaHelper);
+            }
         }else{
-            preferitiAnalcolici.getValue().addFavorites(ricettaHelper);
+            if(preferitiAnalcolici.getValue() != null) {
+                preferitiAnalcolici.getValue().addFavorites(ricettaHelper);
+            }
         }
 
         return mAuthenticationResponseLiveData;
@@ -97,9 +101,13 @@ public class RicetteViewModel extends AndroidViewModel {
         mAuthenticationResponseLiveData = mFavoritesRepository.removeFavorites(ricettaHelper);
         if(ricettaHelper.getType().equals("Alcoholic"))
         {
-            preferitiAlcolici.getValue().removeFavorites(ricettaHelper);
+            if(preferitiAlcolici.getValue() != null) {
+                preferitiAlcolici.getValue().removeFavorites(ricettaHelper);
+            }
         }else{
-            preferitiAnalcolici.getValue().removeFavorites(ricettaHelper);
+            if(preferitiAnalcolici.getValue() != null) {
+                preferitiAnalcolici.getValue().removeFavorites(ricettaHelper);
+            }
         }
         return mAuthenticationResponseLiveData;
     }
