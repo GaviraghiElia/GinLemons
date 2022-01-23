@@ -273,12 +273,20 @@ public class RicettePreferitiFragment extends Fragment
                 return true;
 
             case R.id.ordine_alfabetico_crescente:
-                Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoAZ);
+                if(ricettePreferitiList.size() != preferitiRicetteRecyclerviewAdapter.getList().size())
+                    Collections.sort(preferitiRicetteRecyclerviewAdapter.getList(), RicettaHelper.OrdinaRicetteAlfabeticoAZ);
+                else
+                    Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoAZ);
+
                 preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
                 return true;
 
             case R.id.ordine_alfabetico_decrescente:
-                Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoZA);
+                if(ricettePreferitiList.size() != preferitiRicetteRecyclerviewAdapter.getList().size())
+                    Collections.sort(preferitiRicetteRecyclerviewAdapter.getList(), RicettaHelper.OrdinaRicetteAlfabeticoZA);
+                else
+                    Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoZA);
+
                 preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
                 return true;
 

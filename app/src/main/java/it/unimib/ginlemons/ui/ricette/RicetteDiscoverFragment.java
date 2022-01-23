@@ -349,12 +349,20 @@ public class RicetteDiscoverFragment extends Fragment
                 return true;
 
             case R.id.ordine_alfabetico_crescente:
-                Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
+                if(ricettaList.size() != discoverRicetteRecyclerViewAdapter.getList().size())
+                    Collections.sort(discoverRicetteRecyclerViewAdapter.getList(), Ricetta.OrdinaRicetteAlfabeticoAZ);
+                else
+                    Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
+
                 discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
 
             case R.id.ordine_alfabetico_decrescente:
-                Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoZA);
+                if(ricettaList.size() != discoverRicetteRecyclerViewAdapter.getList().size())
+                    Collections.sort(discoverRicetteRecyclerViewAdapter.getList(), Ricetta.OrdinaRicetteAlfabeticoZA);
+                else
+                    Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoZA);
+
                 discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
 
