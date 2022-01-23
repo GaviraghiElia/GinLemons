@@ -12,11 +12,11 @@ import java.util.HashMap;
 
 // Custom deserializer per convertire il JSON ricevuto dall'API
 // Estraggo le informazioni dettagliate dei cocktails dagli oggetti JSON ricevuti
-public class IdsDeserializer implements JsonDeserializer<RicetteList> {
-
+public class IdsDeserializer implements JsonDeserializer<RicetteList>
+{
     @Override
-    public RicetteList deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-
+    public RicetteList deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+    {
         final JsonObject jsonObject = json.getAsJsonObject();
         final JsonArray arrayricetteJSON = jsonObject.get("drinks").getAsJsonArray();
 
@@ -24,7 +24,8 @@ public class IdsDeserializer implements JsonDeserializer<RicetteList> {
         String id;
         String nome;
 
-        for (JsonElement ricettaJSON : arrayricetteJSON) {
+        for (JsonElement ricettaJSON : arrayricetteJSON)
+        {
             final JsonObject ricetta = ricettaJSON.getAsJsonObject();
 
             id = ricetta.get("idDrink").getAsString();

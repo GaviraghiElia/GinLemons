@@ -21,8 +21,8 @@ import it.unimib.ginlemons.repository.preferiti.IFavoritesRepository;
 import it.unimib.ginlemons.utils.RicetteList;
 import it.unimib.ginlemons.utils.SharedPreferencesProvider;
 
-public class RicetteViewModel extends AndroidViewModel {
-
+public class RicetteViewModel extends AndroidViewModel
+{
     private final IRecipeRepository iRecipeRepository;
     private final IFavoritesRepository mFavoritesRepository;
 
@@ -42,8 +42,10 @@ public class RicetteViewModel extends AndroidViewModel {
 
     private final SharedPreferencesProvider mSharedPreferencesProvider;
 
-    public RicetteViewModel(@NonNull Application application) {
+    public RicetteViewModel(@NonNull Application application)
+    {
         super(application);
+
         mSharedPreferencesProvider = new SharedPreferencesProvider(getApplication());
         iRecipeRepository = new RecipeRepository(application);
         this.mFavoritesRepository = new FavoritesRepository(application);
@@ -57,6 +59,7 @@ public class RicetteViewModel extends AndroidViewModel {
     {
         if(alcolici == null)
             alcolici = iRecipeRepository.fetchRecipes("Alcoholic", mSharedPreferencesProvider.getLastUpdate());
+
         return alcolici;
     }
 
@@ -64,34 +67,39 @@ public class RicetteViewModel extends AndroidViewModel {
     {
         if (analcolici == null)
             analcolici = iRecipeRepository.fetchRecipes("Non_Alcoholic", mSharedPreferencesProvider.getLastUpdate());
+
         return analcolici;
     }
 
-    public int getType() {
+    public int getType()
+    {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(int type)
+    {
         this.type = type;
     }
 
-    public void changeType() {
+    public void changeType()
+    {
         type = (type + 1) % 2;
     }
 
     public MutableLiveData<FirebaseResponse> addPreferites(RicettaHelper ricettaHelper)
     {
         mAuthenticationResponseLiveData = mFavoritesRepository.addFavorites(ricettaHelper);
+
         if(ricettaHelper.getType().equals("Alcoholic"))
         {
-            if(preferitiAlcolici.getValue() != null){
+            if(preferitiAlcolici.getValue() != null)
+            {
                 preferitiAlcolici.getValue().addFavorites(ricettaHelper);
             }
-        }else{
-            if(preferitiAnalcolici.getValue() != null) {
-                preferitiAnalcolici.getValue().addFavorites(ricettaHelper);
-            }
         }
+        else
+            if(preferitiAnalcolici.getValue() != null)
+                preferitiAnalcolici.getValue().addFavorites(ricettaHelper);
 
         return mAuthenticationResponseLiveData;
     }
@@ -99,38 +107,39 @@ public class RicetteViewModel extends AndroidViewModel {
     public MutableLiveData<FirebaseResponse> removeFavorites(RicettaHelper ricettaHelper)
     {
         mAuthenticationResponseLiveData = mFavoritesRepository.removeFavorites(ricettaHelper);
+
         if(ricettaHelper.getType().equals("Alcoholic"))
         {
-            if(preferitiAlcolici.getValue() != null) {
+            if(preferitiAlcolici.getValue() != null)
+            {
                 preferitiAlcolici.getValue().removeFavorites(ricettaHelper);
             }
-        }else{
-            if(preferitiAnalcolici.getValue() != null) {
-                preferitiAnalcolici.getValue().removeFavorites(ricettaHelper);
-            }
         }
+        else
+            if(preferitiAnalcolici.getValue() != null)
+                preferitiAnalcolici.getValue().removeFavorites(ricettaHelper);
+
         return mAuthenticationResponseLiveData;
     }
 
-
-
     public MutableLiveData<FavoritesResponse> getPreferitiAlcolici()
     {
-        if(preferitiAlcolici == null) {
+        if(preferitiAlcolici == null)
             preferitiAlcolici = mFavoritesRepository.getPreferiti("Alcoholic");
-        }
+
         return preferitiAlcolici;
     }
 
     public MutableLiveData<FavoritesResponse> getPreferitiAnalcolici()
     {
-        if(preferitiAnalcolici == null) {
+        if(preferitiAnalcolici == null)
             preferitiAnalcolici = mFavoritesRepository.getPreferiti("Non_Alcoholic");
-        }
+
         return preferitiAnalcolici;
     }
 
-    public void clear() {
+    public void clear()
+    {
         mAuthenticationResponseLiveData.postValue(null);
     }
 }

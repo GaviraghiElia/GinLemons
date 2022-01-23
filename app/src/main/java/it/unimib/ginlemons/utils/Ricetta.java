@@ -10,7 +10,8 @@ import java.util.Comparator;
 import it.unimib.ginlemons.ui.ricette.RicettaHelper;
 
 @Entity
-public class Ricetta {
+public class Ricetta
+{
     @NonNull
     @PrimaryKey
     private String id;
@@ -33,7 +34,7 @@ public class Ricetta {
     private String error = null;
 
 
-    public Ricetta(){}
+    public Ricetta() {}
 
     public Ricetta(String id, String name)
     {
@@ -41,7 +42,8 @@ public class Ricetta {
         this.name = name;
     }
 
-    public Ricetta(String id, String name, String istruzioni, String[] ingredienti, String[] dosi, String imageURL, String glass){
+    public Ricetta(String id, String name, String istruzioni, String[] ingredienti, String[] dosi, String imageURL, String glass)
+    {
         this.id = id;
         this.name = name;
         this.istruzioni = istruzioni;
@@ -52,48 +54,58 @@ public class Ricetta {
         this.glass = glass;
     }
 
-    public Ricetta(RicettaHelper ricetta) {
+    public Ricetta(RicettaHelper ricetta)
+    {
         this.id = ricetta.getId();
         this.name = ricetta.getName();
         this.type = ricetta.getType();
     }
 
-    public String getId() {
+    public String getId()
+    {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(String id)
+    {
         this.id = id;
     }
 
-    public String getName(){
+    public String getName()
+    {
         return name;
     }
 
-    public void setName(String name){
+    public void setName(String name)
+    {
         this.name = name;
     }
 
-    public String getType() {
+    public String getType()
+    {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(String type)
+    {
         this.type = type;
     }
 
-    public String getIstruzioni() {
+    public String getIstruzioni()
+    {
         return istruzioni;
     }
 
-    public String getImageURL() {
+    public String getImageURL()
+    {
         return imageURL;
     }
 
     // Metodi per il sort delle ricette nelle sezioni Esplora e Preferiti
 
     // Ordine alfabetico crescente
-    public static Comparator<Ricetta> OrdinaRicetteAlfabeticoAZ = new Comparator<Ricetta>() {
+    public static Comparator<Ricetta> OrdinaRicetteAlfabeticoAZ = new Comparator<Ricetta>()
+    {
         @Override
         public int compare(Ricetta r1, Ricetta r2) {
             return r1.getName().compareToIgnoreCase(r2.getName());
@@ -101,7 +113,8 @@ public class Ricetta {
     };
 
     // Ordine alfabetico decrescente
-    public static Comparator<Ricetta> OrdinaRicetteAlfabeticoZA = new Comparator<Ricetta>() {
+    public static Comparator<Ricetta> OrdinaRicetteAlfabeticoZA = new Comparator<Ricetta>()
+    {
         @Override
         public int compare(Ricetta r1, Ricetta r2) {
             return r2.getName().compareToIgnoreCase(r1.getName());
@@ -109,11 +122,13 @@ public class Ricetta {
     };
 
 
-    public String getError() {
+    public String getError()
+    {
         return error;
     }
 
-    public void setError(String error) {
+    public void setError(String error)
+    {
         this.error = error;
     }
 

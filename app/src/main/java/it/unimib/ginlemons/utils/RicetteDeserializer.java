@@ -11,10 +11,11 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 // Custom Deserializer per le informazioni dettagliate di un cocktail
-public class RicetteDeserializer implements JsonDeserializer<Ricetta> {
-
+public class RicetteDeserializer implements JsonDeserializer<Ricetta>
+{
     @Override
-    public Ricetta deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public Ricetta deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+    {
         Ricetta recipe = null;
 
         Gson gson = new Gson();
@@ -23,7 +24,8 @@ public class RicetteDeserializer implements JsonDeserializer<Ricetta> {
         final JsonObject jsonObject = json.getAsJsonObject();
         final JsonArray arrayricetteJSON = jsonObject.get("drinks").getAsJsonArray();
 
-        for (JsonElement ricettaJSON : arrayricetteJSON) {
+        for (JsonElement ricettaJSON : arrayricetteJSON)
+        {
             final JsonObject ricetta = ricettaJSON.getAsJsonObject();
 
             String id = ricetta.get("idDrink").getAsString();

@@ -13,8 +13,8 @@ import it.unimib.ginlemons.utils.Constants;
 import it.unimib.ginlemons.utils.Ricetta;
 
 @Database(entities = {Ricetta.class}, version = Constants.DATABASE_VERSION)
-public abstract class RecipeRoomDatabase extends RoomDatabase {
-
+public abstract class RecipeRoomDatabase extends RoomDatabase
+{
     public abstract RecipesDao recipeDao();
 
     private static volatile RecipeRoomDatabase INSTANCE;
@@ -35,5 +35,4 @@ public abstract class RecipeRoomDatabase extends RoomDatabase {
 
         return INSTANCE;
     }
-
 }

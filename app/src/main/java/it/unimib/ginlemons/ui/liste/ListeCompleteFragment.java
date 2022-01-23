@@ -11,16 +11,17 @@ import android.view.ViewGroup;
 
 import it.unimib.ginlemons.R;
 
-public class ListeCompleteFragment extends Fragment {
-
+public class ListeCompleteFragment extends Fragment
+{
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment (Layout fragment liste completate)
         View view =  inflater.inflate(R.layout.fragment_liste_complete, container, false);
         setTitleToolbar();
@@ -29,14 +30,15 @@ public class ListeCompleteFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         setTitleToolbar();
         super.onResume();
     }
 
-    public void setTitleToolbar() {
+    public void setTitleToolbar()
+    {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
         toolbar.setTitle(R.string.liste_completate_toolbar_title);
     }
-
 }

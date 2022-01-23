@@ -3,6 +3,8 @@ package it.unimib.ginlemons.repository.preferiti;
 import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -21,12 +23,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.model.FavoritesResponse;
 import it.unimib.ginlemons.model.FirebaseResponse;
 import it.unimib.ginlemons.ui.ricette.RicettaHelper;
 import it.unimib.ginlemons.utils.SharedPreferencesProvider;
 
-public class FavoritesRepository implements IFavoritesRepository{
+public class FavoritesRepository implements IFavoritesRepository
+{
     private final FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
     private final Application mApplication;
@@ -38,7 +42,8 @@ public class FavoritesRepository implements IFavoritesRepository{
     private MutableLiveData<FavoritesResponse> alcolici;
     private MutableLiveData<FavoritesResponse> analcolici;
 
-    public FavoritesRepository(Application application) {
+    public FavoritesRepository(Application application)
+    {
         mAuth = FirebaseAuth.getInstance();
         fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         firebaseUser = mAuth.getCurrentUser();
@@ -52,67 +57,82 @@ public class FavoritesRepository implements IFavoritesRepository{
     }
 
     @Override
-    public MutableLiveData<FirebaseResponse> addFavorites(RicettaHelper ricettaHelper) {
+    public MutableLiveData<FirebaseResponse> addFavorites(RicettaHelper ricettaHelper)
+    {
         reference.child(ricettaHelper.getId()).setValue(ricettaHelper)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-             FirebaseResponse firebaseResponse = new FirebaseResponse();
-                if(task.isSuccessful()){
-                    firebaseResponse.setSuccess(true);
-                }else{
-                    if(task.getException() == null){
-                        firebaseResponse.setMessage("Error to add favorites");
-                    }else{
-                        firebaseResponse.setMessage(task.getException().getMessage());
-                    }
-                }
-             mAuthenticationResponseLiveData.postValue(firebaseResponse);
-            }
-        });
-        return mAuthenticationResponseLiveData;
-    }
-
-    @Override
-    public MutableLiveData<FirebaseResponse> removeFavorites(RicettaHelper ricettaHelper) {
-        reference.child(ricettaHelper.getId()).removeValue()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
                         FirebaseResponse firebaseResponse = new FirebaseResponse();
-                        if(task.isSuccessful()){
+
+                        if(task.isSuccessful())
                             firebaseResponse.setSuccess(true);
-                        }else{
-                            if(task.getException() == null){
-                                firebaseResponse.setMessage("Error to add favorites");
-                            }else{
+                        else
+                        {
+                            if(task.getException() == null)
+                                firebaseResponse.setMessage(Resources.getSystem().getString(R.string.add_favorites));
+                            else
                                 firebaseResponse.setMessage(task.getException().getMessage());
-                            }
                         }
+
                         mAuthenticationResponseLiveData.postValue(firebaseResponse);
                     }
                 });
+
         return mAuthenticationResponseLiveData;
     }
 
+    @Override
+    public MutableLiveData<FirebaseResponse> removeFavorites(RicettaHelper ricettaHelper)
+    {
+        reference.child(ricettaHelper.getId()).removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>()
+                {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        FirebaseResponse firebaseResponse = new FirebaseResponse();
+
+                        if(task.isSuccessful())
+                            firebaseResponse.setSuccess(true);
+                        else
+                            if(task.getException() == null)
+                                firebaseResponse.setMessage("Error to add favorites");
+                            else
+                                firebaseResponse.setMessage(task.getException().getMessage());
+
+                        mAuthenticationResponseLiveData.postValue(firebaseResponse);
+                    }
+                });
+
+        return mAuthenticationResponseLiveData;
+    }
 
     @Override
-    public MutableLiveData<FavoritesResponse> getPreferiti(String type) {
+    public MutableLiveData<FavoritesResponse> getPreferiti(String type)
+    {
         List<RicettaHelper> favoritesList = new ArrayList<>();
+
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot)
+            {
                 FavoritesResponse favoritesResponse = new FavoritesResponse();
+
                 for(DataSnapshot dataSnapshot : snapshot.getChildren())
                 {
                     RicettaHelper ricetta = dataSnapshot.getValue(RicettaHelper.class);
+
                     if(ricetta.getType().equals(type))
                     {
                         Log.d("SIZEOF", "REPOSITORY - Siamo dentro all'IF con " + ricetta.getName());
                         favoritesList.add(ricetta);
                     }
                 }
+
                 Log.d("SIZEOF", "REPOSITORY - fine for con array.size = " + favoritesList.size());
+
                 favoritesResponse.setRecipes(favoritesList);
                 favoritesResponse.setSuccess(true);
 
@@ -122,24 +142,20 @@ public class FavoritesRepository implements IFavoritesRepository{
                 {
                     Log.d("SIZEOF", "REPOSITORY - Alcoholic");
                     alcolici.postValue(favoritesResponse);
-                }else{
+                }else
+                {
                     Log.d("SIZEOF", "REPOSITORY - Non_Alcoholic");
                     analcolici.postValue(favoritesResponse);
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
 
         if(type.equals("Alcoholic"))
-        {
             return alcolici;
-        }else{
+        else
             return analcolici;
-        }
-
     }
-
 }

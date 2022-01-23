@@ -45,8 +45,8 @@ import it.unimib.ginlemons.utils.Ricetta;
 import it.unimib.ginlemons.utils.RicetteList;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-public class RicetteDiscoverFragment extends Fragment {
-
+public class RicetteDiscoverFragment extends Fragment
+{
     private static final String TAG = "Discover_Recipes";
     private DiscoverRicetteRecyclerViewAdapter discoverRicetteRecyclerViewAdapter;
     private FirebaseAuth firebaseAuth;
@@ -59,14 +59,16 @@ public class RicetteDiscoverFragment extends Fragment {
     ArrayList<Ricetta> ricettaList = new ArrayList<>();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         rViewModel = new ViewModelProvider(requireActivity()).get(RicetteViewModel.class);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment (Layout fragment per il discover recipes)
         mBinding = FragmentRicetteDiscoverBinding.inflate(inflater, container, false);
         View view = mBinding.getRoot();
@@ -74,24 +76,25 @@ public class RicetteDiscoverFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
-        reference = fDB.getReference("favorites")
-                .child(firebaseAuth.getCurrentUser().getUid());
+        reference = fDB.getReference("favorites").child(firebaseAuth.getCurrentUser().getUid());
 
         navController = NavHostFragment.findNavController(this);
 
         // Swipe right per l'aggiunta al preferite
-        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT)
+        {
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target)
+            {
                 return false;
             }
 
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
                                     @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
-                                    int actionState, boolean isCurrentlyActive) {
-
-                // libreria esterna per settare colore e icona facilmente
+                                    int actionState, boolean isCurrentlyActive)
+            {
+                // Libreria esterna per settare colore e icona facilmente
                 new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                         .addSwipeRightBackgroundColor(getResources().getColor(R.color.yellow_preferits))
                         .addSwipeRightActionIcon(R.drawable.ic_baseline_star_24)
@@ -103,30 +106,38 @@ public class RicetteDiscoverFragment extends Fragment {
 
 
             @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction)
+            {
                 int position = viewHolder.getAdapterPosition();
                 Ricetta ricetta = discoverRicetteRecyclerViewAdapter.getList().get(position);
+
                 // check if esiste già nel DB == è già un preferito
                 RicettaHelper ricettaHelper = new RicettaHelper(ricetta.getId(), ricetta.getName(), ricetta.getType());
-                reference.child(ricetta.getId())
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                reference.child(ricetta.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(!dataSnapshot.exists()){
-                            // se non esiste, allora lo aggiungiamo ai preferiti
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                    {
+                        if(!dataSnapshot.exists())
+                        {
+                            // Se non esiste, allora lo aggiungiamo ai preferiti
                             addPreferitoRealTimeDB(ricettaHelper);
 
-                        } else {
-                            // se già esiste, allora lo rimuoviamo dai preferiti
+                        }
+                        else
+                        {
+                            // Se già esiste, allora lo rimuoviamo dai preferiti
                             removePreferitoRealTimeDB(ricettaHelper);
                         }
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.d("Preferito", "Errore " +databaseError.getMessage());
+                    public void onCancelled(@NonNull DatabaseError databaseError)
+                    {
+                        Log.d("Preferito", "Errore " + databaseError.getMessage());
                     }
                 });
+
                 discoverRicetteRecyclerViewAdapter.notifyItemChanged(position);
             }
         };
@@ -134,10 +145,10 @@ public class RicetteDiscoverFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(mBinding.discoverRecyclerView);
 
-
         discoverRicetteRecyclerViewAdapter = new DiscoverRicetteRecyclerViewAdapter(ricettaList, new DiscoverRicetteRecyclerViewAdapter.OnItemClickListener() {
             @Override
-            public void onIntemClick(Ricetta ricetta) {
+            public void onIntemClick(Ricetta ricetta)
+            {
                 Log.d(TAG, "onItemClickListener " + ricetta.getName());
                 navigateToRicettaInfo(ricetta);
             }
@@ -147,9 +158,11 @@ public class RicetteDiscoverFragment extends Fragment {
         mBinding.discoverRecyclerView.setAdapter(discoverRicetteRecyclerViewAdapter);
 
         // Observer per il LiveData dei cocktails alcolici
-        final Observer<RicetteList> observer_alcolici = new Observer<RicetteList>() {
+        final Observer<RicetteList> observer_alcolici = new Observer<RicetteList>()
+        {
             @Override
-            public void onChanged(RicetteList ricette) {
+            public void onChanged(RicetteList ricette)
+            {
                 if (ricette != null)
                 {
                     String errorString = ricette.getError();
@@ -163,7 +176,8 @@ public class RicetteDiscoverFragment extends Fragment {
                         // Appare anche un pulsante che permette di riprovare la chiamata
                         msg.setAction(getString(R.string.retry), new View.OnClickListener() {
                             @Override
-                            public void onClick(View v) {
+                            public void onClick(View v)
+                            {
                                 MenuItem item = getActivity().findViewById(R.id.change_list);
 
                                 rViewModel.getAlcolici();
@@ -185,14 +199,18 @@ public class RicetteDiscoverFragment extends Fragment {
         };
 
         // Observer per il LiveData dei cocktails analcolici
-        final Observer<RicetteList> observer_analcolici = new Observer<RicetteList>() {
+        final Observer<RicetteList> observer_analcolici = new Observer<RicetteList>()
+        {
             @Override
-            public void onChanged(RicetteList ricette) {
+            public void onChanged(RicetteList ricette)
+            {
                 if(ricette != null)
                 {
                     String errorString = ricette.getError();
+
                     // In caso di fallimento della chiamata avviso l'utente con un messaggio nella snackbar
-                    if (errorString != null) {
+                    if (errorString != null)
+                    {
                         ricette.setError(null);
 
                         Snackbar msg = Snackbar.make(requireActivity().findViewById(android.R.id.content), errorString, Snackbar.LENGTH_LONG);
@@ -200,7 +218,8 @@ public class RicetteDiscoverFragment extends Fragment {
                         // Appare anche un pulsante che permette di riprovare la chiamata
                         msg.setAction(getString(R.string.retry), new View.OnClickListener() {
                             @Override
-                            public void onClick(View v) {
+                            public void onClick(View v)
+                            {
                                 MenuItem item = getActivity().findViewById(R.id.change_list);
 
                                 rViewModel.getAnalcolici();
@@ -208,7 +227,8 @@ public class RicetteDiscoverFragment extends Fragment {
                         });
 
                         msg.show();
-                    } else
+                    }
+                    else
                         if(rViewModel.getType() == 1)
                         {
                             ricettaList.clear();
@@ -231,17 +251,23 @@ public class RicetteDiscoverFragment extends Fragment {
 
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         setTitleToolbar();
-        checkIcon(false);
+        checkIcon();
         super.onResume();
     }
 
-    private void checkIcon(boolean check) {
-        if (getActivity() != null) {
+    private void checkIcon()
+    {
+        if (getActivity() != null)
+        {
             Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
-            if(toolbar.getMenu().findItem(R.id.change_list) != null){
+
+            if(toolbar.getMenu().findItem(R.id.change_list) != null)
+            {
                 MenuItem item = toolbar.getMenu().findItem(R.id.change_list);
+
                 if(ricettaList.size() !=  0)
                 {
                     if (rViewModel.getType() == 0)
@@ -255,24 +281,20 @@ public class RicetteDiscoverFragment extends Fragment {
                         item.setTitle(getString(R.string.list_alcolici));
                     }
                 }
-                /*else
-                if(check)
-                {
-                    item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
-                    item.setTitle(getString(R.string.list_analcolici));
-                }*/
             }
         }
 
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater)
+    {
         // Inflate del Layout per la toolbar con la searchbar
         inflater.inflate(R.menu.searchbar_discover_menu, menu);
 
         // Recupero l'oggetto searchview dal menu
         MenuItem item = menu.findItem(R.id.action_search_discover);
+
         //SearchView searchView = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setQueryHint(getString(R.string.search_discover_title));
@@ -280,31 +302,37 @@ public class RicetteDiscoverFragment extends Fragment {
         // Cattura l'evento generato dalla scrittura del testo nella searchbar e dal submit della ricerca
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(String query)
+            {
                 return false;
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
+            public boolean onQueryTextChange(String newText)
+            {
                 discoverRicetteRecyclerViewAdapter.getFilter().filter(newText);
                 return false;
             }
         });
 
-        checkIcon(true);
+        checkIcon();
 
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
+        switch(item.getItemId())
+        {
             case R.id.action_search_discover:
                 return true;
+
             case R.id.ordine_alfabetico_crescente:
                 Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
                 discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                 return true;
+
             case R.id.ordine_alfabetico_decrescente:
                 Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoZA);
                 discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
@@ -315,18 +343,25 @@ public class RicetteDiscoverFragment extends Fragment {
                 if(ricettaList.get(1).getType().equalsIgnoreCase( "Non_Alcoholic"))
                 {
                     ricettaList.clear();
-                    if(rViewModel.getAlcolici().getValue() != null) {
+                    if(rViewModel.getAlcolici().getValue() != null)
+                    {
                         ricettaList.addAll(rViewModel.getAlcolici().getValue().getRepices());
                         discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                     }
+
                     item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
                     item.setTitle(getString(R.string.list_analcolici));
-                } else {
+                }
+                else
+                {
                     ricettaList.clear();
-                    if(rViewModel.getAnalcolici().getValue() != null) {
+
+                    if(rViewModel.getAnalcolici().getValue() != null)
+                    {
                         ricettaList.addAll(rViewModel.getAnalcolici().getValue().getRepices());
                         discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
                     }
+
                     item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.alcoholic));
                     item.setTitle(getString(R.string.list_alcolici));
                 }
@@ -343,16 +378,19 @@ public class RicetteDiscoverFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setTitleToolbar() {
-        if(getActivity() != null){
+    public void setTitleToolbar()
+    {
+        if(getActivity() != null)
+        {
             Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
-            if(toolbar != null){
+
+            if(toolbar != null)
                 toolbar.setTitle(R.string.discover_toolbar_title);
-            }
         }
     }
 
-    public void navigateToRicettaInfo(Ricetta ricetta){
+    public void navigateToRicettaInfo(Ricetta ricetta)
+    {
         Intent intent = new Intent(getActivity(), RicetteInfoActivity.class);
         intent.putExtra(FRAGMENTFORTRANSITION, "RicetteDiscover");
         intent.putExtra(ITEM_ID_PRESSED_KEY, ricetta.getId());
@@ -360,41 +398,48 @@ public class RicetteDiscoverFragment extends Fragment {
         getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
-    public void addPreferitoRealTimeDB(RicettaHelper ricettaHelper) {
+    public void addPreferitoRealTimeDB(RicettaHelper ricettaHelper)
+    {
         rViewModel.addPreferites(ricettaHelper).observe(getViewLifecycleOwner(), addFavoritesResponse -> {
-            if(addFavoritesResponse != null) {
-                if (addFavoritesResponse.isSuccess()) {
+            if(addFavoritesResponse != null)
+            {
+                if (addFavoritesResponse.isSuccess())
+                {
                     Log.d("Preferito", "Aggiunto " + ricettaHelper.getName() + " ai preferiti nel real time DB");
+
                     makeMessageSnack(ricettaHelper, getString(R.string.favourite_added));
-                } else {
-                    makeMessage(addFavoritesResponse.getMessage());
                 }
+                else
+                    makeMessage(addFavoritesResponse.getMessage());
             }
         });
     }
 
-    public void removePreferitoRealTimeDB(RicettaHelper ricettaHelper){
+    public void removePreferitoRealTimeDB(RicettaHelper ricettaHelper)
+    {
         rViewModel.removeFavorites(ricettaHelper).observe(getViewLifecycleOwner(), removeFavoritesResponse ->{
-            if(removeFavoritesResponse != null){
-                if(removeFavoritesResponse.isSuccess()){
+            if(removeFavoritesResponse != null)
+            {
+                if(removeFavoritesResponse.isSuccess())
+                {
                     Log.d("Preferito", "Rimosso " + ricettaHelper.getName() + " dai preferiti nel real time DB");
                     makeMessageSnack(ricettaHelper, getString(R.string.favourite_removed));
-                }else{
-                    makeMessage(removeFavoritesResponse.getMessage());
                 }
+                else
+                    makeMessage(removeFavoritesResponse.getMessage());
             }
         });
     }
 
-    private void makeMessageSnack(RicettaHelper ricettaHelper, String snack) {
-        Snackbar.make(requireActivity().findViewById(android.R.id.content),
-                ricettaHelper.getName() +" " + snack, Snackbar.LENGTH_SHORT).show();
+    private void makeMessageSnack(RicettaHelper ricettaHelper, String snack)
+    {
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), ricettaHelper.getName() +" " + snack, Snackbar.LENGTH_SHORT).show();
         rViewModel.clear();
     }
 
-    private void makeMessage(String message) {
+    private void makeMessage(String message)
+    {
         Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show();
         rViewModel.clear();
     }
-
 }

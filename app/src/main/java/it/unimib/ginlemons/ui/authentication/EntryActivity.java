@@ -10,27 +10,31 @@ import com.google.firebase.auth.FirebaseUser;
 
 import it.unimib.ginlemons.ui.MainActivity;
 
-public class EntryActivity extends AppCompatActivity {
-
+public class EntryActivity extends AppCompatActivity
+{
     private FirebaseAuth mAuth;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
-        if (checkSession()) {
+
+        if (checkSession())
             startActivity(new Intent(this, MainActivity.class));
-        } else {
+        else
             startActivity(new Intent(this, AuthenticationActivity.class));
-        }
+
         finish();
     }
 
-    private boolean checkSession(){
+    private boolean checkSession()
+    {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
+
+        if(currentUser != null)
             return true;
-        }
+
         return false;
     }
 }

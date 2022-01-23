@@ -23,13 +23,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,8 +40,8 @@ import it.unimib.ginlemons.databinding.FragmentUserProfileBinding;
 import it.unimib.ginlemons.model.UserHelper;
 import it.unimib.ginlemons.ui.authentication.UserViewModel;
 
-public class UserProfileFragment extends Fragment {
-
+public class UserProfileFragment extends Fragment
+{
     private String displayName, displayEmail;
     private FirebaseAuth mAuth;
     private FirebaseDatabase fDB;
@@ -58,14 +51,15 @@ public class UserProfileFragment extends Fragment {
     private UserViewModel mUserViewModel;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         mUserViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         mBinding = FragmentUserProfileBinding.inflate(inflater, container, false);
         View view = mBinding.getRoot();
@@ -82,11 +76,15 @@ public class UserProfileFragment extends Fragment {
         // Listener per dati Real Time sempre aggiornati
         reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren())
+                {
                     // Vogliamo solo i dati dell'utente
-                    if(mAuth.getCurrentUser() != null) {
-                        if (Objects.equals(snapshot.getKey(), mAuth.getCurrentUser().getUid())) {
+                    if(mAuth.getCurrentUser() != null)
+                    {
+                        if (Objects.equals(snapshot.getKey(), mAuth.getCurrentUser().getUid()))
+                        {
                             // particolare: la snapshot è il risultato di una hasMap con <Chiave, Valore>
                             // è compatibile con l'oggetto userHelper creato ad hoc per recuperarne i parametri
                             UserHelper userHelper = snapshot.getValue(UserHelper.class);
@@ -101,23 +99,28 @@ public class UserProfileFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
                 Toast.makeText(getContext(), "Fail to get data", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // recupera la password
-        mBinding.userForgetPassword.setOnClickListener(new View.OnClickListener() {
+        // Recupera la password
+        mBinding.userForgetPassword.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 resetPassword();
             }
         });
 
         // l'utente vuole fare l'update delle informazioni
-        mBinding.updateUserButton.setOnClickListener(new View.OnClickListener() {
+        mBinding.updateUserButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 changeClickButton();
             }
         });
@@ -127,63 +130,72 @@ public class UserProfileFragment extends Fragment {
 
     // Inserisce il pulsante per il logout nella toolbar
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //MenuInflater inflater = getActivity().getMenuInflater();
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
         inflater.inflate(R.menu.user_profile_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         setTitleToolbar();
         super.onResume();
     }
 
-    public void setTitleToolbar() {
-        /*
-        ActivityMainBinding mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
-        mainBinding.activityToolbar.setTitle(R.string.user_profile_toolbar_title);
-        */
+    public void setTitleToolbar()
+    {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
         toolbar.setTitle(R.string.user_profile_toolbar_title);
     }
 
-    public void changeClickButton(){
+    public void changeClickButton()
+    {
         // Stringhe al momento dell'Onclick
         String onClickName = mBinding.userProfileName.getText().toString();
         String onClickMail = mBinding.userProfileEmail.getText().toString().toLowerCase();
 
-        if(onClickName.isEmpty()){
-            mBinding.userProfileName.setError("Name cannot be empty");
+        if(onClickName.isEmpty())
+        {
+            mBinding.userProfileName.setError(getString(R.string.name_not_empty));
             mBinding.userProfileName.requestFocus();
-
-        }else if(onClickMail.isEmpty()) {
-            mBinding.userProfileEmail.setError(getContext().getString(R.string.email_not_empty));
-            mBinding.userProfileEmail.requestFocus();
-        }else if(!isValidEmail(onClickMail)){
-            mBinding.userProfileEmail.setError(getContext().getString(R.string.bad_email));
-            mBinding.userProfileEmail.requestFocus();
-
-        } else if(!displayName.equals(onClickName) && displayEmail.equals(onClickMail)){
-            // NON ha cambiato la mail, più easy
-            changeOnlyName(new UserHelper(onClickName, displayEmail));
-
-        } else if(!displayEmail.equals(onClickMail)){
-            // vuole cambiare mail? Allora si deve riautenticare sto infame
-            changeEmailName(onClickName, onClickMail);
-
-        }else {
-            Toast.makeText(getContext(), "No changes", Toast.LENGTH_LONG).show();
         }
+        else
+            if(onClickMail.isEmpty())
+            {
+                mBinding.userProfileEmail.setError(getContext().getString(R.string.email_not_empty));
+                mBinding.userProfileEmail.requestFocus();
+            }
+            else
+                if(!isValidEmail(onClickMail))
+                {
+                    mBinding.userProfileEmail.setError(getContext().getString(R.string.bad_email));
+                    mBinding.userProfileEmail.requestFocus();
+                }
+                else
+                    if(!displayName.equals(onClickName) && displayEmail.equals(onClickMail))
+                    {
+                        // NON ha cambiato la mail, più easy
+                        changeOnlyName(new UserHelper(onClickName, displayEmail));
+                    }
+                    else
+                        if(!displayEmail.equals(onClickMail))
+                        {
+                            // vuole cambiare mail? Allora si deve riautenticare
+                            changeEmailName(onClickName, onClickMail);
+                        }
+                        else
+                            Toast.makeText(getContext(), getString(R.string.no_changes), Toast.LENGTH_LONG).show();
     }
 
     // check pattern email
-    public boolean isValidEmail(String email){
+    public boolean isValidEmail(String email)
+    {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public void resetPassword(){
+    public void resetPassword()
+    {
         CustomEmailDialogBinding mBindingDialog = CustomEmailDialogBinding.inflate(getLayoutInflater());
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(mBindingDialog.getRoot());
@@ -191,45 +203,54 @@ public class UserProfileFragment extends Fragment {
         // enable button yes if password not empty
         mBindingDialog.resetInputEmail.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
                 String email = mBindingDialog.resetInputEmail.getText().toString();
                 mBindingDialog.yesButtonResetEmail.setEnabled(!email.isEmpty() && isValidEmail(email));
             }
+
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         mBindingDialog.noButtonResetEmail.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 dialog.dismiss();
             }
         });
 
         mBindingDialog.yesButtonResetEmail.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 String emailReset = mAuth.getCurrentUser().getEmail();
                 String emailInput = mBindingDialog.resetInputEmail.getText().toString();
-                if(!emailInput.equals(emailReset)){
+
+                if(!emailInput.equals(emailReset))
                     mBindingDialog.resetInputEmailLayout.setError("Email is not correct");
-                }else{
+                else
+                {
                     mUserViewModel.resetPasswordLink(emailInput).observe(getViewLifecycleOwner(), firebaseResponse -> {
-                        if(firebaseResponse != null){
-                            if(firebaseResponse.isSuccess()){
+                        if(firebaseResponse != null)
+                        {
+                            if(firebaseResponse.isSuccess())
+                            {
                                 makeMessage(getResources().getString(R.string.password_reset_link));
                                 mAuth.signOut();
-                                if(!checkSession()){
+                                if(!checkSession())
+                                {
                                     dialog.dismiss();
                                     navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
                                     getActivity().finish();
                                 }
-                            }else{
+                            }
+                            else
+                            {
                                 makeMessage(firebaseResponse.getMessage());
                                 dialog.dismiss();
                             }
@@ -238,48 +259,52 @@ public class UserProfileFragment extends Fragment {
                 }
             }
         });
+
         dialog.show();
     }
 
-
-    public void changeOnlyName(UserHelper userObj){
+    public void changeOnlyName(UserHelper userObj)
+    {
         Log.d("Snapshot", "Name changed, not email");
+
         // change realtime DB
         mUserViewModel.changeName(userObj).observe(getViewLifecycleOwner(), firebaseResponse -> {
-            if(firebaseResponse != null){
-                if(firebaseResponse.isSuccess()){
+            if(firebaseResponse != null)
+            {
+                if(firebaseResponse.isSuccess())
                     makeMessage("Information updated");
-                }else{
+                else
                     makeMessage(firebaseResponse.getMessage());
-                }
             }
         });
     }
 
-
-    public void changeEmailName(String onClickName, String onClickMail){
+    public void changeEmailName(String onClickName, String onClickMail)
+    {
         CustomPasswordDialogBinding mBindingDialog = CustomPasswordDialogBinding.inflate(getLayoutInflater());
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(mBindingDialog.getRoot());
         dialog.setCancelable(true);
 
         // enable button yes if password not empty
-        mBindingDialog.resetInputEmailPassword.addTextChangedListener(new TextWatcher() {
+        mBindingDialog.resetInputEmailPassword.addTextChangedListener(new TextWatcher()
+        {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                mBindingDialog.yesButtonResetEmailPassword.setEnabled(!mBindingDialog.resetInputEmailPassword.getText().toString().isEmpty());
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mBindingDialog.yesButtonResetEmailPassword.setEnabled(!mBindingDialog.resetInputEmailPassword.getText().toString().isEmpty());
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         // preme no
-        mBindingDialog.noButtonResetEmailPassword.setOnClickListener(new View.OnClickListener() {
+        mBindingDialog.noButtonResetEmailPassword.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -289,62 +314,72 @@ public class UserProfileFragment extends Fragment {
         // preme si
         mBindingDialog.yesButtonResetEmailPassword.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if(mBindingDialog.resetInputEmailPassword.getText().toString().isEmpty()){
-                    mBindingDialog.resetInputEmailPasswordLayout.setError("Passowrd cannot be empty");
+            public void onClick(View v)
+            {
+                if(mBindingDialog.resetInputEmailPassword.getText().toString().isEmpty())
+                {
+                    mBindingDialog.resetInputEmailPasswordLayout.setError(getString(R.string.email_not_empty));
                     mBindingDialog.resetInputEmailPassword.requestFocus();
-                } else {
+                }
+                else
+                {
                     UserHelper userObj = new UserHelper(onClickName, onClickMail);
                     String passwordInsert = mBindingDialog.resetInputEmailPassword.getText().toString();
 
                     //reauthentication
                     mUserViewModel.reauthenticateUser(userObj, displayEmail, passwordInsert).observe(getViewLifecycleOwner(), firebaseResponse -> {
-                        if(firebaseResponse != null){
-                            if(firebaseResponse.isSuccess()){
+                        if(firebaseResponse != null)
+                        {
+                            if(firebaseResponse.isSuccess())
+                            {
                                 mAuth.signOut();
                                 dialog.dismiss();
                                 navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
                                 getActivity().finish();
-                            } else {
+                            }
+                            else
+                            {
                                 // fail reauth
                                 mUserViewModel.clear();
                                 mBindingDialog.resetInputEmailPassword.setError("Password is not correct");
                             }
                         }
                     });
-
                 }
             }
         });
 
         dialog.show();
-
     }
 
-
-    private void makeMessage(String message) {
+    private void makeMessage(String message)
+    {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         mUserViewModel.clear();
     }
 
-
-    private boolean checkSession(){
+    private boolean checkSession()
+    {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
+
+        if(currentUser != null)
             return true;
-        }
+
         return false;
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.action_logout){
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
+        if(item.getItemId() == R.id.action_logout)
+        {
             mAuth.signOut();
             navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
             getActivity().finish();
+
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
-
 }

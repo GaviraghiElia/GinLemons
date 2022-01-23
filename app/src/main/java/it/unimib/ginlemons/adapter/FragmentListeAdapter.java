@@ -9,16 +9,18 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import it.unimib.ginlemons.ui.liste.ListeCompleteFragment;
 import it.unimib.ginlemons.ui.liste.ListeHomeFragment;
 
-public class FragmentListeAdapter extends FragmentStateAdapter {
-
-    public FragmentListeAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+public class FragmentListeAdapter extends FragmentStateAdapter
+{
+    public FragmentListeAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle)
+    {
         super(fragmentManager, lifecycle);
     }
 
     // Associa il fragment da inserire nel viewholder in base alla sezione selezionata nella tab (Mie Liste - Completate)
     @NonNull
     @Override
-    public Fragment createFragment(int position) {
+    public Fragment createFragment(int position)
+    {
         if (position == 1)
             return new ListeCompleteFragment();
 
@@ -26,7 +28,8 @@ public class FragmentListeAdapter extends FragmentStateAdapter {
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemCount()
+    {
         return 2;
     }
 }

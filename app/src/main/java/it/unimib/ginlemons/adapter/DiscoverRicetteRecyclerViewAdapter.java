@@ -24,63 +24,71 @@ public class DiscoverRicetteRecyclerViewAdapter extends RecyclerView.Adapter<Dis
     // Interfaccia per definire la reazione al click su un elemento della RecyclerView
     private OnItemClickListener onItemClickListener;
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener
+    {
         void onIntemClick(Ricetta ricetta);
     }
 
     // Costruttore
-    public DiscoverRicetteRecyclerViewAdapter(List<Ricetta> ricettaList, OnItemClickListener onItemClickListener){
+    public DiscoverRicetteRecyclerViewAdapter(List<Ricetta> ricettaList, OnItemClickListener onItemClickListener)
+    {
         this.ricettaList = ricettaList;
         this.getRicettaListFiltered = ricettaList;
         this.onItemClickListener = onItemClickListener;
     }
 
-
-
     // Istanzio il ViewHolder
     @NonNull
     @Override
-    public ListeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ListeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ricetta_item_recyclerview, parent, false);
         return new ListeViewHolder(view);
     }
 
     // Bind tra item e dati
     @Override
-    public void onBindViewHolder(@NonNull ListeViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ListeViewHolder holder, int position)
+    {
         Ricetta ricetta = ricettaList.get(position);
         holder.bind(ricetta.getName());
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemCount()
+    {
         return ricettaList.size();
     }
 
-    public List<Ricetta> getList(){
+    public List<Ricetta> getList()
+    {
         return ricettaList;
     }
 
     @Override
-    public Filter getFilter() {
+    public Filter getFilter()
+    {
         Filter filter = new Filter() {
             @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
+            protected FilterResults performFiltering(CharSequence constraint)
+            {
                 FilterResults filterResults = new FilterResults();
 
-                if(constraint == null | constraint.length() == 0){
+                if(constraint == null | constraint.length() == 0)
+                {
                     filterResults.count = getRicettaListFiltered.size();
                     filterResults.values = getRicettaListFiltered;
-
-                }else{
+                }
+                else
+                {
                     // NON è case sensitive
                     String searchChr = constraint.toString().toLowerCase();
                     List<Ricetta> resultData = new ArrayList<>();
 
-                    for(Ricetta r: getRicettaListFiltered){
-                        if(r.getName().toLowerCase().contains(searchChr)){
+                    for(Ricetta r: getRicettaListFiltered)
+                    {
+                        if(r.getName().toLowerCase().contains(searchChr))
                             resultData.add(r);
-                        }
                     }
 
                     filterResults.count = resultData.size();
@@ -92,34 +100,39 @@ public class DiscoverRicetteRecyclerViewAdapter extends RecyclerView.Adapter<Dis
 
             // Metodo che sostituisce la lista delle ricette con quella filtrata
             @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
+            protected void publishResults(CharSequence constraint, FilterResults results)
+            {
                 ricettaList = (List<Ricetta>) results.values;
                 notifyDataSetChanged();
             }
         };
+
         return filter;
     }
 
-    class ListeViewHolder extends RecyclerView.ViewHolder {
-
+    class ListeViewHolder extends RecyclerView.ViewHolder
+    {
         TextView name;
 
-        public ListeViewHolder(@NonNull View itemView) {
+        public ListeViewHolder(@NonNull View itemView)
+        {
             super(itemView);
             name = itemView.findViewById(R.id.nomeRicetta);
         }
 
-        // set item RecyclerView
-        public void bind(String n){
+        // Set item RecyclerView
+        public void bind(String n)
+        {
             name.setText(n);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v)
+                {
                     onItemClickListener.onIntemClick(ricettaList.get(getAdapterPosition()));
                 }
             });
         }
     }
-
 }

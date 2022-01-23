@@ -28,8 +28,8 @@ import java.util.regex.Pattern;
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.FragmentRegisterBinding;
 
-public class RegisterFragment extends Fragment {
-
+public class RegisterFragment extends Fragment
+{
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase fDB;
     private DatabaseReference reference;
@@ -37,19 +37,18 @@ public class RegisterFragment extends Fragment {
     private FragmentRegisterBinding mBinding;
     private UserViewModel mUserViewModel;
 
-    public RegisterFragment(){
-    }
+    public RegisterFragment() {}
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         mUserViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         mBinding = FragmentRegisterBinding.inflate(inflater, container, false);
         View view = mBinding.getRoot();
@@ -67,77 +66,100 @@ public class RegisterFragment extends Fragment {
 
         mBinding.buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //createUser();
+            public void onClick(View v)
+            {
                 String name = mBinding.registerName.getText().toString();
                 String email = mBinding.registerEmail.getText().toString();
                 String password = mBinding.registerPassword.getText().toString();
 
-                if(name.isEmpty()){
-                    mBinding.registerName.setError("Name cannot be empty");
+                if(name.isEmpty())
+                {
+                    mBinding.registerName.setError(getString(R.string.name_not_empty));
                     mBinding.registerName.requestFocus();
-
-                }else if(email.isEmpty()) {
-                    mBinding.registerEmail.setError("Email cannot be empty");
-                    mBinding.registerEmail.requestFocus();
-
-                }else if(!isValidEmail(email)){
-                    mBinding.registerEmail.setError("Bad format email");
-                    mBinding.registerEmail.requestFocus();
-
-                }else if (password.isEmpty()){
-                    mBinding.registerPassword.setError("Passowrd cannot be empty");
-                    mBinding.registerPassword.requestFocus();
-
-                }else if(!isValidPassword(password)) {
-                    mBinding.registerPassword.setError("Passowrd not valid");
-                    Toast.makeText(getContext(), "Password must contain 6 to 15 characters, 1 special character and 1 number", Toast.LENGTH_LONG).show();
-                    mBinding.registerPassword.requestFocus();
-
-                }else{
-                    mUserViewModel.signUpWithEmail(name, email, password).observe(getViewLifecycleOwner(), firebaseResponse -> {
-                        if (firebaseResponse != null) {
-                            if (firebaseResponse.isSuccess()) {
-                                mUserViewModel.clear();
-                                mUserViewModel.signUpWithEmailRealTimeDB(email, name).observe(getViewLifecycleOwner(), firebaseResponse1 -> {
-                                    if(firebaseResponse1 != null){
-                                        if(firebaseResponse1.isSuccess()){
-                                            makeMessage("Registrazione andata a buon fine");
-                                            firebaseAuth.signOut();
-                                        } else {
-                                            makeMessage(firebaseResponse1.getMessage());
-                                        }
-                                        navController.navigate(R.id.action_registerFragment_to_loginFragment);
-                                    }
-                                });
-                            } else {
-                                makeMessage(firebaseResponse.getMessage());
-                                navController.navigate(R.id.action_registerFragment_to_loginFragment);
-                            }
-                        }
-                    });
                 }
+                else
+                    if(email.isEmpty())
+                    {
+                        mBinding.registerEmail.setError(getString(R.string.email_not_empty));
+                        mBinding.registerEmail.requestFocus();
+
+                    }
+                    else
+                        if(!isValidEmail(email))
+                        {
+                            mBinding.registerEmail.setError(getString(R.string.bad_email));
+                            mBinding.registerEmail.requestFocus();
+
+                        }
+                        else
+                            if(password.isEmpty())
+                            {
+                                mBinding.registerPassword.setError(getString(R.string.password_not_empty));
+                                mBinding.registerPassword.requestFocus();
+                            }
+                            else
+                                if(!isValidPassword(password))
+                                {
+                                    mBinding.registerPassword.setError(getString(R.string.incorrect_password));
+                                    Toast.makeText(getContext(), getString(R.string.password_requirements), Toast.LENGTH_LONG).show();
+                                    mBinding.registerPassword.requestFocus();
+
+                                }
+                                else
+                                {
+                                    mUserViewModel.signUpWithEmail(name, email, password).observe(getViewLifecycleOwner(), firebaseResponse -> {
+                                        if (firebaseResponse != null)
+                                        {
+                                            if (firebaseResponse.isSuccess())
+                                            {
+                                                mUserViewModel.clear();
+                                                mUserViewModel.signUpWithEmailRealTimeDB(email, name).observe(getViewLifecycleOwner(), firebaseResponse1 -> {
+                                                    if(firebaseResponse1 != null)
+                                                    {
+                                                        if(firebaseResponse1.isSuccess())
+                                                        {
+                                                            makeMessage(getString(R.string.successfull_registration));
+                                                            firebaseAuth.signOut();
+                                                        }
+                                                        else
+                                                            makeMessage(firebaseResponse1.getMessage());
+
+                                                        navController.navigate(R.id.action_registerFragment_to_loginFragment);
+                                                    }
+                                                });
+                                            }
+                                            else
+                                            {
+                                                makeMessage(firebaseResponse.getMessage());
+                                                navController.navigate(R.id.action_registerFragment_to_loginFragment);
+                                            }
+                                        }
+                                    });
+                                }
             }
         });
 
-        mBinding.buttonSignIn.setOnClickListener(new View.OnClickListener() {
+        mBinding.buttonSignIn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 navController.navigate(R.id.action_registerFragment_to_loginFragment);
             }
         });
+
         return view;
     }
 
-    // watcher of text change
-    private TextWatcher loginTextWatcher = new TextWatcher() {
+    // Watcher of text change
+    private TextWatcher loginTextWatcher = new TextWatcher()
+    {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        public void onTextChanged(CharSequence s, int start, int before, int count)
+        {
             String nameInput = mBinding.registerName.getText().toString();
             String emailInput = mBinding.registerEmail.getText().toString();
             String passwordInput = mBinding.registerPassword.getText().toString();
@@ -145,41 +167,48 @@ public class RegisterFragment extends Fragment {
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-
-        }
+        public void afterTextChanged(Editable s) {}
     };
 
-    // check pattern password
-    public boolean isValidPassword(String password){
+    // Check pattern password
+    public boolean isValidPassword(String password)
+    {
         Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
         Matcher matcher = pattern.matcher(password);
+
         return matcher.matches();
     }
 
-    // check pattern email
-    public boolean isValidEmail(String email){
+    // Check pattern email
+    public boolean isValidEmail(String email)
+    {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    private void makeMessage(String message) {
+    private void makeMessage(String message)
+    {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
         mUserViewModel.clear();
     }
 
-    public void backButtonPressed(View view) {
+    public void backButtonPressed(View view)
+    {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
-        view.setOnKeyListener(new View.OnKeyListener() {
+        view.setOnKeyListener(new View.OnKeyListener()
+        {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
+            public boolean onKey(View v, int keyCode, KeyEvent event)
+            {
+                if (keyCode == KeyEvent.KEYCODE_BACK)
+                {
                     navController.navigate(R.id.action_registerFragment_to_loginFragment);
+
                     return true;
                 }
+
                 return false;
             }
         });
     }
-
 }

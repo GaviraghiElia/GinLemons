@@ -2,7 +2,6 @@ package it.unimib.ginlemons.repository;
 
 import android.app.Application;
 import android.content.res.Resources;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -22,12 +21,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 // Classe che si occupa dell'interazione con l'API
-public class RecipeRepository implements IRecipeRepository{
-
+public class RecipeRepository implements IRecipeRepository
+{
     private static final String TAG = "NewsRepository";
 
     private final RecipesDao recipesDao;
-
 
     private final RecipeApiService fetchApiService;
     private MutableLiveData<RicetteList> alcolici;
@@ -35,7 +33,8 @@ public class RecipeRepository implements IRecipeRepository{
 
     private final SharedPreferencesProvider mSharedPreferencesProvider;
 
-    public RecipeRepository(Application application) {
+    public RecipeRepository(Application application)
+    {
         // Endpoint per richiedere i cocktail Alcolici o Analcolici
         this.fetchApiService = ServiceLocator.getInstance().fetchRecipesApiService();
 
@@ -51,22 +50,14 @@ public class RecipeRepository implements IRecipeRepository{
     // Metodo che ottiene gli Id dei cocktail Alcolici o Analcolici a seconda del parametro Type
     // Il parametro clear indica se la lista delle ricette va cancellata o no prima di inserire i nuovi drink
     @Override
-    public MutableLiveData<RicetteList> fetchRecipes(String type, long lastUpdate) {
-
-        //if(recipesDao.isEmpty(type) == 0)
+    public MutableLiveData<RicetteList> fetchRecipes(String type, long lastUpdate)
+    {
         long currentTime = System.currentTimeMillis();
 
-
         if (currentTime - lastUpdate > Constants.FRESH_TIMEOUT)
-        {
-            //Log.d("Test", "API");
             getRecipesFromAPI(type);
-        }
         else
-        {
-            //Log.d("Test", "Room");
             getRecipesFromDatabase(type);
-        }
 
         if(type.equals("Alcoholic"))
             return alcolici;
@@ -74,15 +65,18 @@ public class RecipeRepository implements IRecipeRepository{
             return analcolici;
     }
 
-    private void saveDataInDatabase(List<Ricetta> recipeList, String type) {
+    private void saveDataInDatabase(List<Ricetta> recipeList, String type)
+    {
         Runnable runnable = new Runnable() {
             @Override
-            public void run() {
+            public void run()
+            {
                 recipesDao.deleteAll(type);
                 //recipesDao.viatutto();
                 recipesDao.insertRecipes(recipeList);
             }
         };
+
         new Thread(runnable).start();
     }
 
@@ -92,7 +86,8 @@ public class RecipeRepository implements IRecipeRepository{
 
         getRecipeCall.enqueue(new Callback<RicetteList>() {
             @Override
-            public void onResponse(Call<RicetteList> call, Response<RicetteList> response) {
+            public void onResponse(Call<RicetteList> call, Response<RicetteList> response)
+            {
                 if (response.body() != null && response.isSuccessful())
                 {
                     RicetteList appo = response.body();
@@ -118,7 +113,8 @@ public class RecipeRepository implements IRecipeRepository{
             }
 
             @Override
-            public void onFailure(Call<RicetteList> call, Throwable t) {
+            public void onFailure(Call<RicetteList> call, Throwable t)
+            {
                 if(type.equals("Alcoholic"))
                     alcolici.getValue().setError(t.getMessage());
                 else
@@ -127,11 +123,12 @@ public class RecipeRepository implements IRecipeRepository{
         });
     }
 
-    private void getRecipesFromDatabase(String type) {
-        Runnable runnable = new Runnable()
-        {
+    private void getRecipesFromDatabase(String type)
+    {
+        Runnable runnable = new Runnable() {
             @Override
-            public void run() {
+            public void run()
+            {
                 RicetteList recipes = null;
 
                 if(type.equals("Alcoholic"))
@@ -144,19 +141,13 @@ public class RecipeRepository implements IRecipeRepository{
 
                 recipes.setRecipes(recipesDao.getRicette(type));
 
-                /*
-                if (errorMessage != null) {
-                    recipes.setStatus(errorMessage);
-                    recipes.setError(true);
-                }
-                */
-
                 if(type.equals("Alcoholic"))
                     alcolici.postValue(recipes);
                 else
                     analcolici.postValue(recipes);
             }
         };
+
         new Thread(runnable).start();
     }
 

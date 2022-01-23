@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class RicetteList {
+public class RicetteList
+{
     private String error = null;
     private HashMap<String, Ricetta> recipes;
 
@@ -28,7 +29,8 @@ public class RicetteList {
         return recipes.get(id);
     }
 
-    public String getError() {
+    public String getError()
+    {
         return error;
     }
 
@@ -42,7 +44,8 @@ public class RicetteList {
         this.recipes = recipes;
     }
 
-    public void setError(String error) {
+    public void setError(String error)
+    {
         this.error = error;
     }
 }

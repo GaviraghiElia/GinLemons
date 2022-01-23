@@ -4,15 +4,12 @@ import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
 
 import android.app.Application;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -36,7 +33,8 @@ public class UserRepository implements IUserRepository {
     private FirebaseDatabase fDB;
     private DatabaseReference reference;
 
-    public UserRepository(Application application) {
+    public UserRepository(Application application)
+    {
         mAuth = FirebaseAuth.getInstance();
         fDB = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         reference = fDB.getReference("users");
@@ -45,124 +43,152 @@ public class UserRepository implements IUserRepository {
         mSharedPreferencesProvider = new SharedPreferencesProvider(application);
     }
 
-
     @Override
-    public MutableLiveData<FirebaseResponse> signInWithEmail(String email, String password) {
+    public MutableLiveData<FirebaseResponse> signInWithEmail(String email, String password)
+    {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(ContextCompat.getMainExecutor(mApplication), new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(@NonNull Task<AuthResult> task)
+                    {
                         FirebaseResponse firebaseResponse = new FirebaseResponse();
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful())
+                        {
                             FirebaseUser user = mAuth.getCurrentUser();
                             firebaseResponse.setSuccess(true);
-
-                        } else {
+                        }
+                        else
+                        {
                             // If sign in fails, display a message to the user.
                             Log.d("TAG", "signInWithEmail:failure", task.getException());
+
                             firebaseResponse.setSuccess(false);
                             firebaseResponse.setMessage(task.getException().getMessage());
                         }
+
                         mAuthenticationResponseLiveData.postValue(firebaseResponse);
                     }
                 });
+
         return mAuthenticationResponseLiveData;
     }
 
     @Override
-    public MutableLiveData<FirebaseResponse> createUserWithEmail(String name, String email, String password) {
+    public MutableLiveData<FirebaseResponse> createUserWithEmail(String name, String email, String password)
+    {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(ContextCompat.getMainExecutor(mApplication), new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(@NonNull Task<AuthResult> task)
+                    {
                         FirebaseResponse firebaseResponse = new FirebaseResponse();
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful())
                             firebaseResponse.setSuccess(true);
-                        } else {
+                        else
+                        {
                             firebaseResponse.setSuccess(false);
-                            if (task.getException() != null) {
+
+                            if (task.getException() != null)
                                 firebaseResponse.setMessage(task.getException().getMessage());
-                            } else {
+                            else
                                 firebaseResponse.setMessage(mApplication.getString(R.string.registration_failure));
-                            }
                         }
+
                         mAuthenticationResponseLiveData.postValue(firebaseResponse);
                     }
                 });
+
         return mAuthenticationResponseLiveData;
     }
 
     @Override
-    public MutableLiveData<FirebaseResponse> createUserWithEmailRealTimeDB(String email, String name) {
+    public MutableLiveData<FirebaseResponse> createUserWithEmailRealTimeDB(String email, String name)
+    {
         UserHelper userHelper = new UserHelper(name, email);
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
         reference.child(firebaseUser.getUid()).setValue(userHelper).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void onComplete(@NonNull Task<Void> task)
+            {
                 FirebaseResponse firebaseResponse = new FirebaseResponse();
-                if (task.isSuccessful()) {
+                if (task.isSuccessful())
+                {
                     Log.d("Real Time DB", "Successo");
                     firebaseResponse.setSuccess(true);
-                } else {
+                }
+                else
+                {
                     Log.d("Firestore", "Errore! DB non scritto");
+
                     firebaseResponse.setSuccess(false);
-                    if (task.getException() != null) {
+
+                    if (task.getException() != null)
                         firebaseResponse.setMessage(task.getException().getLocalizedMessage());
-                    } else {
+                    else
                         firebaseResponse.setMessage(mApplication.getString(R.string.registration_failure));
-                    }
                 }
                 mAuthenticationResponseLiveData.postValue(firebaseResponse);
             }
         });
+
         return mAuthenticationResponseLiveData;
     }
 
     @Override
-    public MutableLiveData<FirebaseResponse> resetPasswordLink(String email) {
+    public MutableLiveData<FirebaseResponse> resetPasswordLink(String email)
+    {
         mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void onComplete(@NonNull Task<Void> task)
+            {
                 FirebaseResponse firebaseResponse = new FirebaseResponse();
-                if(task.isSuccessful()){
+
+                if(task.isSuccessful())
                     firebaseResponse.setSuccess(true);
-                }else{
+                else
+                {
                     firebaseResponse.setSuccess(false);
-                    if(task.getException() == null){
+
+                    if(task.getException() == null)
                         firebaseResponse.setMessage(mApplication.getString(R.string.password_reset_link));
-                    }else{
+                    else
                         firebaseResponse.setMessage(task.getException().getMessage());
-                    }
                 }
                 mAuthenticationResponseLiveData.postValue(firebaseResponse);
             }
         });
+
         return mAuthenticationResponseLiveData;
     }
 
 
     @Override
-    public MutableLiveData<FirebaseResponse> reauthenticateUser(UserHelper userHelper, String email, String password) {
-        AuthCredential credential = EmailAuthProvider
-                .getCredential(email, password); // Current Login Credentials \\
+    public MutableLiveData<FirebaseResponse> reauthenticateUser(UserHelper userHelper, String email, String password)
+    {
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password); // Current Login Credentials \\
 
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         firebaseUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void onComplete(@NonNull Task<Void> task)
+            {
                 FirebaseResponse firebaseResponse = new FirebaseResponse();
-                if (task.isSuccessful()) {
+
+                if (task.isSuccessful())
+                {
                     firebaseUser.updateEmail(userHelper.getEmail());
                     reference.child(firebaseUser.getUid()).setValue(userHelper);
                     firebaseResponse.setSuccess(true);
-
-                } else {
+                }
+                else
+                {
                     firebaseResponse.setSuccess(false);
-                    if (task.getException() == null) {
+
+                    if (task.getException() == null)
                         firebaseResponse.setMessage("Error reauthentication");
-                    } else {
+                    else
                         firebaseResponse.setMessage(task.getException().getMessage());
-                    }
                 }
 
                 mAuthenticationResponseLiveData.postValue(firebaseResponse);
@@ -173,74 +199,91 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public MutableLiveData<FirebaseResponse> updateEmail(String email) {
+    public MutableLiveData<FirebaseResponse> updateEmail(String email)
+    {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         firebaseUser.updateEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void onComplete(@NonNull Task<Void> task)
+            {
                 FirebaseResponse firebaseResponse = new FirebaseResponse();
-                if(task.isSuccessful()) {
+
+                if(task.isSuccessful())
                     firebaseResponse.setSuccess(true);
-                }else {
+                else
+                {
                     firebaseResponse.setSuccess(false);
-                    if (task.getException() == null) {
+
+                    if (task.getException() == null)
                         firebaseResponse.setMessage("Error update Email");
-                    } else {
+                    else
                         firebaseResponse.setMessage(task.getException().getMessage());
-                    }
                 }
+
                 mAuthenticationResponseLiveData.postValue(firebaseResponse);
             }
         });
+
         return mAuthenticationResponseLiveData;
     }
 
     @Override
-    public MutableLiveData<FirebaseResponse> updateEmailRealTimeDB(UserHelper userHelper) {
+    public MutableLiveData<FirebaseResponse> updateEmailRealTimeDB(UserHelper userHelper)
+    {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         reference.child(firebaseUser.getUid()).setValue(userHelper).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void onComplete(@NonNull Task<Void> task)
+            {
                 FirebaseResponse firebaseResponse = new FirebaseResponse();
-                if(task.isSuccessful()) {
+
+                if(task.isSuccessful())
                     firebaseResponse.setSuccess(true);
-                }else {
+                else
+                {
                     firebaseResponse.setSuccess(false);
-                    if (task.getException() == null) {
+
+                    if (task.getException() == null)
                         firebaseResponse.setMessage("Error update Email");
-                    } else {
+                    else
                         firebaseResponse.setMessage(task.getException().getMessage());
-                    }
                 }
+
                 mAuthenticationResponseLiveData.postValue(firebaseResponse);
             }
         });
+
         return mAuthenticationResponseLiveData;
     }
 
     @Override
-    public MutableLiveData<FirebaseResponse> changeName(UserHelper userHelper) {
+    public MutableLiveData<FirebaseResponse> changeName(UserHelper userHelper)
+    {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
         reference.child(firebaseUser.getUid())
                 .setValue(userHelper)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
                         FirebaseResponse firebaseResponse = new FirebaseResponse();
-                        if(task.isSuccessful()){
+                        if(task.isSuccessful())
                             firebaseResponse.setSuccess(true);
-                        }else{
+                        else
+                        {
                             firebaseResponse.setSuccess(false);
-                            if(task.getException() == null){
+
+                            if(task.getException() == null)
                                 firebaseResponse.setMessage(mApplication.getString(R.string.name_not_updated));
-                            }else{
+                            else
                                 firebaseResponse.setMessage(task.getException().getMessage());
-                            }
                         }
+
                         mAuthenticationResponseLiveData.postValue(firebaseResponse);
                     }
                 });
+
         return mAuthenticationResponseLiveData;
     }
-
 }

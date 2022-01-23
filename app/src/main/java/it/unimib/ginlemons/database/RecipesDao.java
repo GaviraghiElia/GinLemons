@@ -9,7 +9,8 @@ import java.util.List;
 import it.unimib.ginlemons.utils.Ricetta;
 
 @Dao
-public interface RecipesDao {
+public interface RecipesDao
+{
     @Query("SELECT * FROM Ricetta WHERE type = :type")
     List<Ricetta> getRicette(String type);
 
