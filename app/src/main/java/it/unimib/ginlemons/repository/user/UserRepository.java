@@ -74,26 +74,24 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public MutableLiveData<FirebaseResponse> createUserWithEmail(String name, String email, String password)
+    public MutableLiveData<FirebaseResponse> createUserWithEmail(String email, String password)
     {
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(ContextCompat.getMainExecutor(mApplication), new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task)
-                    {
+                    public void onComplete(@NonNull Task<AuthResult> task) {
                         FirebaseResponse firebaseResponse = new FirebaseResponse();
-                        if (task.isSuccessful())
-                            firebaseResponse.setSuccess(true);
-                        else
-                        {
-                            firebaseResponse.setSuccess(false);
-
-                            if (task.getException() != null)
-                                firebaseResponse.setMessage(task.getException().getMessage());
-                            else
-                                firebaseResponse.setMessage(mApplication.getString(R.string.registration_failure));
+                        if (task.isComplete()) {
+                            if (task.isSuccessful())
+                                firebaseResponse.setSuccess(true);
+                            else {
+                                firebaseResponse.setSuccess(false);
+                                if (task.getException() != null)
+                                    firebaseResponse.setMessage(task.getException().getLocalizedMessage());
+                                else
+                                    firebaseResponse.setMessage(mApplication.getString(R.string.registration_failure));
+                            }
                         }
-
                         mAuthenticationResponseLiveData.postValue(firebaseResponse);
                     }
                 });
@@ -106,31 +104,28 @@ public class UserRepository implements IUserRepository {
     {
         UserHelper userHelper = new UserHelper(name, email);
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if(firebaseUser != null) {
+            reference.child(firebaseUser.getUid()).setValue(userHelper).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    FirebaseResponse firebaseResponse = new FirebaseResponse();
+                    if (task.isSuccessful()) {
+                        Log.d("Real Time DB", "Successo");
+                        firebaseResponse.setSuccess(true);
+                    } else {
+                        Log.d("Firestore", "Errore! DB non scritto");
 
-        reference.child(firebaseUser.getUid()).setValue(userHelper).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task)
-            {
-                FirebaseResponse firebaseResponse = new FirebaseResponse();
-                if (task.isSuccessful())
-                {
-                    Log.d("Real Time DB", "Successo");
-                    firebaseResponse.setSuccess(true);
+                        firebaseResponse.setSuccess(false);
+
+                        if (task.getException() != null)
+                            firebaseResponse.setMessage(task.getException().getLocalizedMessage());
+                        else
+                            firebaseResponse.setMessage(mApplication.getString(R.string.registration_failure));
+                    }
+                    mAuthenticationResponseLiveData.postValue(firebaseResponse);
                 }
-                else
-                {
-                    Log.d("Firestore", "Errore! DB non scritto");
-
-                    firebaseResponse.setSuccess(false);
-
-                    if (task.getException() != null)
-                        firebaseResponse.setMessage(task.getException().getLocalizedMessage());
-                    else
-                        firebaseResponse.setMessage(mApplication.getString(R.string.registration_failure));
-                }
-                mAuthenticationResponseLiveData.postValue(firebaseResponse);
-            }
-        });
+            });
+        }
 
         return mAuthenticationResponseLiveData;
     }

@@ -36,6 +36,7 @@ import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.PreferitiRicetteRecyclerviewAdapter;
 import it.unimib.ginlemons.databinding.FragmentRicettePreferitiBinding;
 import it.unimib.ginlemons.model.FavoritesResponse;
+import it.unimib.ginlemons.utils.Ricetta;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class RicettePreferitiFragment extends Fragment
@@ -93,8 +94,15 @@ public class RicettePreferitiFragment extends Fragment
         {
             rViewModel.getPreferitiAlcolici().observe(getViewLifecycleOwner(), favoritesResponse -> {
                 if (favoritesResponse != null)
+                {
                     if (favoritesResponse.isSuccess())
-                        addList(favoritesResponse);
+                    {
+                        ricettePreferitiList.clear();
+                        ricettePreferitiList.addAll(favoritesResponse.getRepices());
+                        Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoAZ);
+                        preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
+                    }
+                }
             });
         }
         else
@@ -103,7 +111,10 @@ public class RicettePreferitiFragment extends Fragment
             rViewModel.getPreferitiAnalcolici().observe(getViewLifecycleOwner(), favoritesResponse -> {
                 if (favoritesResponse != null)
                     if (favoritesResponse.isSuccess())
-                        addList(favoritesResponse);
+                        ricettePreferitiList.clear();
+                        ricettePreferitiList.addAll(favoritesResponse.getRepices());
+                        Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoAZ);
+                        preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
             });
         }
 
@@ -177,15 +188,22 @@ public class RicettePreferitiFragment extends Fragment
         Log.d("SIZEOF", "OnResume RicettePreferitiFragment");
         Log.d("SIZEOF", "getPreferiti != Null");
 
-        if(rViewModel.getType() == 0)
-            if(rViewModel.getPreferitiAlcolici().getValue() != null)
-            {
-                addList(rViewModel.getPreferitiAlcolici().getValue());
+        if(rViewModel.getType() != 1) {
+            if (rViewModel.getPreferitiAlcolici().getValue() != null){
+                ricettePreferitiList.clear();
+                ricettePreferitiList.addAll(rViewModel.getPreferitiAlcolici().getValue().getRepices());
+                Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoAZ);
+                preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
             }
-        else
-            if (rViewModel.getPreferitiAnalcolici().getValue() != null)
-                addList(rViewModel.getPreferitiAnalcolici().getValue());
-
+        }
+        else{
+            if (rViewModel.getPreferitiAnalcolici().getValue() != null){
+                ricettePreferitiList.clear();
+                ricettePreferitiList.addAll(rViewModel.getPreferitiAnalcolici().getValue().getRepices());
+                Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoAZ);
+                preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
+            }
+        }
         super.onResume();
     }
 

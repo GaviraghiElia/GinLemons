@@ -37,6 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.DiscoverRicetteRecyclerViewAdapter;
@@ -187,13 +188,13 @@ public class RicetteDiscoverFragment extends Fragment
                         msg.show();
                     }
                     else
-                        if(rViewModel.getType() != 1)
-                        {
-                            ricettaList.clear();
-                            ricettaList.addAll(ricette.getRepices());
-                            Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
-                            discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
-                        }
+                    if(rViewModel.getType() != 1)
+                    {
+                        ricettaList.clear();
+                        ricettaList.addAll(ricette.getRepices());
+                        Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
+                        discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
+                    }
                 }
             }
         };
@@ -229,13 +230,13 @@ public class RicetteDiscoverFragment extends Fragment
                         msg.show();
                     }
                     else
-                        if(rViewModel.getType() == 1)
-                        {
-                            ricettaList.clear();
-                            ricettaList.addAll(ricette.getRepices());
-                            Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
-                            discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
-                        }
+                    if(rViewModel.getType() == 1)
+                    {
+                        ricettaList.clear();
+                        ricettaList.addAll(ricette.getRepices());
+                        Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
+                        discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
+                    }
                 }
             }
         };
@@ -255,6 +256,22 @@ public class RicetteDiscoverFragment extends Fragment
     {
         setTitleToolbar();
         checkIcon();
+        if(rViewModel.getType() != 1) {
+            if (rViewModel.getAlcolici().getValue() != null){
+                ricettaList.clear();
+                ricettaList.addAll(rViewModel.getAlcolici().getValue().getRepices());
+                Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
+                discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
+            }
+        }
+        else{
+            if (rViewModel.getAnalcolici().getValue() != null){
+                ricettaList.clear();
+                ricettaList.addAll(rViewModel.getAnalcolici().getValue().getRepices());
+                Collections.sort(ricettaList, Ricetta.OrdinaRicetteAlfabeticoAZ);
+                discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
+            }
+        }
         super.onResume();
     }
 

@@ -246,7 +246,7 @@ public class UserProfileFragment extends Fragment
                                 {
                                     dialog.dismiss();
                                     navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
-                                    getActivity().finish();
+                                    requireActivity().finish();
                                 }
                             }
                             else

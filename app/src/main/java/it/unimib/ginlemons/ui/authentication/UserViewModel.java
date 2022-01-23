@@ -29,9 +29,9 @@ public class UserViewModel extends AndroidViewModel
         return mAuthenticationResponseLiveData;
     }
 
-    public MutableLiveData<FirebaseResponse> signUpWithEmail(String name, String email, String password)
+    public MutableLiveData<FirebaseResponse> signUpWithEmail(String email, String password)
     {
-        mAuthenticationResponseLiveData = mUserRepository.createUserWithEmail(name, email, password);
+        mAuthenticationResponseLiveData = mUserRepository.createUserWithEmail(email, password);
 
         return mAuthenticationResponseLiveData;
     }

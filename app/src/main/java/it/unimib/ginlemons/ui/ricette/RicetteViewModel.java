@@ -37,7 +37,6 @@ public class RicetteViewModel extends AndroidViewModel
     private FirebaseAuth mAuth;
     private FirebaseDatabase fDB;
     private DatabaseReference reference;
-
     private int type = -1;
 
     private final SharedPreferencesProvider mSharedPreferencesProvider;

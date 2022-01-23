@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -27,6 +28,7 @@ import java.util.regex.Pattern;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.FragmentRegisterBinding;
+import it.unimib.ginlemons.model.FirebaseResponse;
 
 public class RegisterFragment extends Fragment
 {
@@ -107,7 +109,7 @@ public class RegisterFragment extends Fragment
                                 }
                                 else
                                 {
-                                    mUserViewModel.signUpWithEmail(name, email, password).observe(getViewLifecycleOwner(), firebaseResponse -> {
+                                    mUserViewModel.signUpWithEmail(email, password).observe(getViewLifecycleOwner(), firebaseResponse -> {
                                         if (firebaseResponse != null)
                                         {
                                             if (firebaseResponse.isSuccess())
@@ -118,7 +120,9 @@ public class RegisterFragment extends Fragment
                                                     {
                                                         if(firebaseResponse1.isSuccess())
                                                         {
+                                                            mUserViewModel.clear();
                                                             makeMessage(getString(R.string.successfull_registration));
+                                                            firebaseAuth = FirebaseAuth.getInstance();
                                                             firebaseAuth.signOut();
                                                         }
                                                         else

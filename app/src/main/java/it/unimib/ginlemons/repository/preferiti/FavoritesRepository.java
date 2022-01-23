@@ -3,7 +3,6 @@ package it.unimib.ginlemons.repository.preferiti;
 import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 
