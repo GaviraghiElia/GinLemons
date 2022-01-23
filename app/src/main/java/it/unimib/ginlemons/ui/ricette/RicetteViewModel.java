@@ -3,7 +3,6 @@ package it.unimib.ginlemons.ui.ricette;
 import static it.unimib.ginlemons.utils.Constants.FIREBASE_DATABASE_URL;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -20,7 +19,6 @@ import it.unimib.ginlemons.repository.RecipeRepository;
 import it.unimib.ginlemons.repository.preferiti.FavoritesRepository;
 import it.unimib.ginlemons.repository.preferiti.IFavoritesRepository;
 import it.unimib.ginlemons.utils.RicetteList;
-import it.unimib.ginlemons.utils.SharedPreferencesProvider;
 
 public class RicetteViewModel extends AndroidViewModel
 {
@@ -40,13 +38,10 @@ public class RicetteViewModel extends AndroidViewModel
     private DatabaseReference reference;
     private int type = -1;
 
-    private final SharedPreferencesProvider mSharedPreferencesProvider;
-
     public RicetteViewModel(@NonNull Application application)
     {
         super(application);
 
-        mSharedPreferencesProvider = new SharedPreferencesProvider(getApplication());
         iRecipeRepository = new RecipeRepository(application);
         this.mFavoritesRepository = new FavoritesRepository(application);
 
@@ -58,7 +53,7 @@ public class RicetteViewModel extends AndroidViewModel
     public MutableLiveData<RicetteList> getAlcolici()
     {
         if(alcolici == null)
-            alcolici = iRecipeRepository.fetchRecipes("Alcoholic", mSharedPreferencesProvider.getLastUpdate());
+            alcolici = iRecipeRepository.fetchRecipes("Alcoholic");
 
         return alcolici;
     }
@@ -66,7 +61,7 @@ public class RicetteViewModel extends AndroidViewModel
     public MutableLiveData<RicetteList> getAnalcolici()
     {
         if (analcolici == null)
-            analcolici = iRecipeRepository.fetchRecipes("Non_Alcoholic", mSharedPreferencesProvider.getLastUpdate());
+            analcolici = iRecipeRepository.fetchRecipes("Non_Alcoholic");
 
         return analcolici;
     }

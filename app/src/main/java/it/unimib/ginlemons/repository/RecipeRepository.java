@@ -2,10 +2,16 @@ package it.unimib.ginlemons.repository;
 
 import android.app.Application;
 import android.content.res.Resources;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.database.RecipeRoomDatabase;
@@ -50,19 +56,39 @@ public class RecipeRepository implements IRecipeRepository
     // Metodo che ottiene gli Id dei cocktail Alcolici o Analcolici a seconda del parametro Type
     // Il parametro clear indica se la lista delle ricette va cancellata o no prima di inserire i nuovi drink
     @Override
-    public MutableLiveData<RicetteList> fetchRecipes(String type, long lastUpdate)
+    public MutableLiveData<RicetteList> fetchRecipes(String type)
     {
-        long currentTime = System.currentTimeMillis();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-        if (currentTime - lastUpdate > Constants.FRESH_TIMEOUT)
-            getRecipesFromAPI(type);
-        else
-            getRecipesFromDatabase(type);
+        Future<Integer> result = executor.submit(new Callable<Integer>() {
+            public Integer call()
+            {
+                return recipesDao.isEmpty(type);
+            }
+        });
 
-        if(type.equals("Alcoholic"))
-            return alcolici;
-        else
-            return analcolici;
+        try {
+            if (result.get() == 0)
+                getRecipesFromAPI(type);
+            else
+                getRecipesFromDatabase(type);
+
+        }
+        catch (ExecutionException e)
+        {
+            e.printStackTrace();
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            if (type.equals("Alcoholic"))
+                return alcolici;
+            else
+                return analcolici;
+        }
     }
 
     private void saveDataInDatabase(List<Ricetta> recipeList, String type)
@@ -72,7 +98,7 @@ public class RecipeRepository implements IRecipeRepository
             public void run()
             {
                 recipesDao.deleteAll(type);
-                //recipesDao.viatutto();
+
                 recipesDao.insertRecipes(recipeList);
             }
         };
