@@ -247,6 +247,9 @@ public class RicetteDiscoverFragment extends Fragment
         if(rViewModel.getType() == -1)
             rViewModel.setType(0);
 
+        rViewModel.getPreferitiAlcolici();
+        rViewModel.getPreferitiAnalcolici();
+
         return view;
     }
 

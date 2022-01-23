@@ -124,10 +124,8 @@ public class RicetteViewModel extends AndroidViewModel
 
     public MutableLiveData<FavoritesResponse> getPreferitiAlcolici()
     {
-        if(preferitiAlcolici == null) {
+        if(preferitiAlcolici == null)
             preferitiAlcolici = mFavoritesRepository.getPreferiti("Alcoholic");
-            Log.d("Test", "Get Alcolici");
-        }
 
         return preferitiAlcolici;
     }
@@ -135,10 +133,8 @@ public class RicetteViewModel extends AndroidViewModel
     public MutableLiveData<FavoritesResponse> getPreferitiAnalcolici()
     {
         if(preferitiAnalcolici == null)
-        {
             preferitiAnalcolici = mFavoritesRepository.getPreferiti("Non_Alcoholic");
-            Log.d("Test", "Get Analcolici");
-        }
+
         return preferitiAnalcolici;
     }
 
