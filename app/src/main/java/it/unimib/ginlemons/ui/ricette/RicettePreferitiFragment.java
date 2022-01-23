@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +36,7 @@ import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.adapter.PreferitiRicetteRecyclerviewAdapter;
 import it.unimib.ginlemons.databinding.FragmentRicettePreferitiBinding;
 import it.unimib.ginlemons.model.FavoritesResponse;
+import it.unimib.ginlemons.utils.Ricetta;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class RicettePreferitiFragment extends Fragment {
@@ -177,13 +179,44 @@ public class RicettePreferitiFragment extends Fragment {
     @Override
     public void onResume() {
         setTitleToolbar();
+        checkIcon(false);
         Log.d("SIZEOF", "OnResume RicettePreferitiFragment");
-        if(rViewModel.getPreferitiAlcolici().getValue() != null){
             Log.d("SIZEOF", "getPreferiti != Null");
-            addList(rViewModel.getPreferitiAlcolici().getValue());
-            preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
-        }
+            if(rViewModel.getType() == 0)
+            {
+                if(rViewModel.getPreferitiAlcolici().getValue() != null)
+                {
+                    addList(rViewModel.getPreferitiAlcolici().getValue());
+                }
+            }else {
+                if (rViewModel.getPreferitiAnalcolici().getValue() != null) {
+                    addList(rViewModel.getPreferitiAnalcolici().getValue());
+                }
+            }
+
         super.onResume();
+    }
+
+    private void checkIcon(boolean check) {
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
+        MenuItem item = toolbar.getMenu().findItem(R.id.change_list);
+
+            if (rViewModel.getType() == 0)
+            {
+                item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
+                item.setTitle(getString(R.string.list_analcolici));
+            }
+            else
+            {
+                item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.alcoholic));
+                item.setTitle(getString(R.string.list_alcolici));
+            }
+        /*else
+        if(check)
+        {
+            item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
+            item.setTitle(getString(R.string.list_analcolici));
+        }*/
     }
 
     public void setTitleToolbar() {
@@ -219,7 +252,7 @@ public class RicettePreferitiFragment extends Fragment {
                 return false;
             }
         });
-
+        checkIcon(true);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -236,6 +269,39 @@ public class RicettePreferitiFragment extends Fragment {
                 Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoZA);
                 preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
                 return true;
+            case R.id.change_list: {
+                if (rViewModel.getType() == 1) {
+                    ricettePreferitiList.clear();
+                    if(rViewModel.getPreferitiAlcolici().getValue() != null) {
+                        ricettePreferitiList.addAll(rViewModel.getPreferitiAlcolici().getValue().getRepices());
+                        preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
+                    }
+                    item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
+                    item.setTitle(getString(R.string.list_analcolici));
+
+                } else {
+                    ricettePreferitiList.clear();
+                    if(rViewModel.getPreferitiAnalcolici().getValue() != null){
+                        ricettePreferitiList.addAll(rViewModel.getPreferitiAnalcolici().getValue().getRepices());
+                        preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
+                    }
+
+                    item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.alcoholic));
+                    item.setTitle(getString(R.string.list_alcolici));
+                }
+
+                Log.d("TYPEICON" ,"Local  View Model Type = " + rViewModel.getType());
+                Log.d("TYPEICON" ,"Static View Model Type = " + RicetteDiscoverFragment.rViewModel.getType());
+                //rViewModel.changeType();
+                RicetteDiscoverFragment.rViewModel.changeType();
+                Log.d("TYPEICON" ,"POST Local  View Model Type = " + rViewModel.getType());
+                Log.d("TYPEICON" ,"POST Static View Model Type = " + RicetteDiscoverFragment.rViewModel.getType());
+
+                Collections.sort(ricettePreferitiList, RicettaHelper.OrdinaRicetteAlfabeticoAZ);
+                preferitiRicetteRecyclerviewAdapter.notifyDataSetChanged();
+
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);

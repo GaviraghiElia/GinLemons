@@ -232,35 +232,38 @@ public class RicetteDiscoverFragment extends Fragment {
 
     @Override
     public void onResume() {
-        checkIcon(false);
-
         setTitleToolbar();
+        checkIcon(false);
         super.onResume();
     }
 
     private void checkIcon(boolean check) {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
-        MenuItem item = toolbar.getMenu().findItem(R.id.change_list);
-
-        if(ricettaList.size() !=  0)
-        {
-            if (ricettaList.get(1).getType().equalsIgnoreCase("Alcoholic"))
-            {
-                item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
-                item.setTitle(getString(R.string.list_analcolici));
-            }
-            else
-            {
-                item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.alcoholic));
-                item.setTitle(getString(R.string.list_alcolici));
+        if (getActivity() != null) {
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
+            if(toolbar.getMenu().findItem(R.id.change_list) != null){
+                MenuItem item = toolbar.getMenu().findItem(R.id.change_list);
+                if(ricettaList.size() !=  0)
+                {
+                    if (rViewModel.getType() == 0)
+                    {
+                        item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
+                        item.setTitle(getString(R.string.list_analcolici));
+                    }
+                    else
+                    {
+                        item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.alcoholic));
+                        item.setTitle(getString(R.string.list_alcolici));
+                    }
+                }
+                /*else
+                if(check)
+                {
+                    item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
+                    item.setTitle(getString(R.string.list_analcolici));
+                }*/
             }
         }
-        else
-            if(check)
-            {
-                item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
-                item.setTitle(getString(R.string.list_analcolici));
-            }
+
     }
 
     @Override
@@ -311,18 +314,19 @@ public class RicetteDiscoverFragment extends Fragment {
             {
                 if(ricettaList.get(1).getType().equalsIgnoreCase( "Non_Alcoholic"))
                 {
-
                     ricettaList.clear();
-                    ricettaList.addAll(rViewModel.getAlcolici().getValue().getRepices());
-                    discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
-
+                    if(rViewModel.getAlcolici().getValue() != null) {
+                        ricettaList.addAll(rViewModel.getAlcolici().getValue().getRepices());
+                        discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
+                    }
                     item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.non_alcoholic));
                     item.setTitle(getString(R.string.list_analcolici));
                 } else {
                     ricettaList.clear();
-                    ricettaList.addAll(rViewModel.getAnalcolici().getValue().getRepices());
-                    discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
-
+                    if(rViewModel.getAnalcolici().getValue() != null) {
+                        ricettaList.addAll(rViewModel.getAnalcolici().getValue().getRepices());
+                        discoverRicetteRecyclerViewAdapter.notifyDataSetChanged();
+                    }
                     item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.alcoholic));
                     item.setTitle(getString(R.string.list_alcolici));
                 }
