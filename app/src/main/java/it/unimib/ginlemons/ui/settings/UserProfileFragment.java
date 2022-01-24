@@ -239,7 +239,7 @@ public class UserProfileFragment extends Fragment
                 String emailInput = mBindingDialog.resetInputEmail.getText().toString();
 
                 if(!emailInput.equals(emailReset))
-                    mBindingDialog.resetInputEmailLayout.setError("Email is not correct");
+                    mBindingDialog.resetInputEmailLayout.setError(getString(R.string.incorrect_email));
                 else
                 {
                     mUserViewModel.resetPasswordLink(emailInput).observe(getViewLifecycleOwner(), firebaseResponse -> {
@@ -279,7 +279,7 @@ public class UserProfileFragment extends Fragment
             if(firebaseResponse != null)
             {
                 if(firebaseResponse.isSuccess())
-                    makeMessage("Information updated");
+                    makeMessage(getString(R.string.informations_updated));
                 else
                     makeMessage(firebaseResponse.getMessage());
             }
@@ -370,8 +370,8 @@ public class UserProfileFragment extends Fragment
                             }
                             else
                             {
-                                makeMessage(firebaseResponse.getMessage());
-                                mBindingDialog.resetInputEmailPassword.setError("Password is not correct");
+                                //makeMessage(firebaseResponse.getMessage());
+                                mBindingDialog.resetInputEmailPassword.setError(getString(R.string.incorrect_password));
                             }
                         }
                     });

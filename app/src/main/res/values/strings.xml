@@ -87,4 +87,5 @@
     <string name="annulla">Annulla</string>
     <string name="badEmail">Formato stringa  non valido</string>
     <string name="add_favorites">Errore nell\'aggiungere il preferito</string>
+    <string name="incorrect_email">Email non corretta</string>
 </resources>
