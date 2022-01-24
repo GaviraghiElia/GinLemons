@@ -16,8 +16,8 @@
     <string name="mieListe">Mie Liste</string>
     <string name="completati">Completati</string>
     <string name="search">Search</string>
-    <string name="ordine_alfabetico_crescente_title"><![CDATA[A -> Z]]></string>
-    <string name="ordine_alfabetico_decrescente_title"><![CDATA[Z -> A]]></string>
+    <string name="ordine_alfabetico_crescente_title"><![CDATA[A ⇒ Z]]></string>
+    <string name="ordine_alfabetico_decrescente_title"><![CDATA[Z ⇒ A]]></string>
     <string name="ordine_alcool_decrescente_title">Decrescente</string>
     <string name="ordine_alcool_crescente_title">Crescente</string>
     <string name="title_activity_ricette_info">RicetteInfoActivity</string>
