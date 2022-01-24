@@ -144,8 +144,8 @@ public class UserRepository implements IUserRepository {
 
                     if (task.isSuccessful())
                     {
-                        //firebaseUser.updateEmail(userHelper.getEmail());
-                        //reference.child(firebaseUser.getUid()).setValue(userHelper);
+                        firebaseUser.updateEmail(userHelper.getEmail());
+                        reference.child(firebaseUser.getUid()).setValue(userHelper);
                         firebaseResponse.setSuccess(true);
                     }
                     else

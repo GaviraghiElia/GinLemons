@@ -313,8 +313,10 @@ public class UserProfileFragment extends Fragment
         mBindingDialog.noButtonResetEmailPassword.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 dialog.dismiss();
+                mUserViewModel.clear();
             }
         });
 
@@ -340,37 +342,16 @@ public class UserProfileFragment extends Fragment
                         {
                             if(firebaseResponse.isSuccess())
                             {
-                                mUserViewModel.updateEmail(userObj.getEmail()).observe(getViewLifecycleOwner(), updateMailResponse -> {
-                                    if(updateMailResponse != null){
-                                        if(updateMailResponse.isSuccess()){
-                                            mUserViewModel.updateEmailRealTimeDB(userObj).observe(getViewLifecycleOwner(), realTimeDBResponse -> {
-                                                if(realTimeDBResponse != null){
-                                                    if(firebaseResponse.isSuccess()){
-                                                        dialog.dismiss();
-                                                        mAuth.signOut();
-                                                        navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
-                                                        getActivity().finish();
-                                                    }
-                                                    else
-                                                    {
-                                                        makeMessage(realTimeDBResponse.getMessage());
-                                                        dialog.dismiss();
-                                                    }
-                                                }
-                                            });
-                                        }
-                                        else
-                                        {
-                                            makeMessage(updateMailResponse.getMessage());
-                                        }
-                                    }
-
-                                });
-
+                                dialog.dismiss();
+                                mAuth.signOut();
+                                navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
+                                requireActivity().finish();
                             }
                             else
                             {
                                 //makeMessage(firebaseResponse.getMessage());
+                                //dialog.dismiss();
+                                mUserViewModel.clear();
                                 mBindingDialog.resetInputEmailPassword.setError(getString(R.string.incorrect_password));
                             }
                         }
