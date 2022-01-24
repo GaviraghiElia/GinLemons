@@ -8,18 +8,22 @@ import androidx.lifecycle.MutableLiveData;
 
 import it.unimib.ginlemons.model.FirebaseResponse;
 import it.unimib.ginlemons.model.UserHelper;
+import it.unimib.ginlemons.repository.user.IUserDBRepository;
 import it.unimib.ginlemons.repository.user.IUserRepository;
+import it.unimib.ginlemons.repository.user.UserDBRepository;
 import it.unimib.ginlemons.repository.user.UserRepository;
 
 public class UserViewModel extends AndroidViewModel
 {
     private MutableLiveData<FirebaseResponse> mAuthenticationResponseLiveData;
     private final IUserRepository mUserRepository;
+    private final IUserDBRepository mUserDBRepository;
 
     public UserViewModel(@NonNull Application application)
     {
         super(application);
         this.mUserRepository = new UserRepository(application);
+        this.mUserDBRepository = new UserDBRepository(application);
     }
 
     public MutableLiveData<FirebaseResponse> signInWithEmail(String email, String password)
@@ -38,7 +42,7 @@ public class UserViewModel extends AndroidViewModel
 
     public MutableLiveData<FirebaseResponse> signUpWithEmailRealTimeDB(String email, String name)
     {
-        mAuthenticationResponseLiveData = mUserRepository.createUserWithEmailRealTimeDB(email, name);
+        mAuthenticationResponseLiveData = mUserDBRepository.createUserWithEmailRealTimeDB(email, name);
 
         return mAuthenticationResponseLiveData;
     }
@@ -66,20 +70,23 @@ public class UserViewModel extends AndroidViewModel
 
     public MutableLiveData<FirebaseResponse> updateEmailRealTimeDB(UserHelper userHelper)
     {
-        mAuthenticationResponseLiveData = mUserRepository.updateEmailRealTimeDB(userHelper);
+        mAuthenticationResponseLiveData = mUserDBRepository.updateEmailRealTimeDB(userHelper);
 
         return mAuthenticationResponseLiveData;
     }
 
     public MutableLiveData<FirebaseResponse> changeName(UserHelper userHelper)
     {
-        mAuthenticationResponseLiveData = mUserRepository.changeName(userHelper);
+        mAuthenticationResponseLiveData = mUserDBRepository.changeName(userHelper);
 
         return mAuthenticationResponseLiveData;
     }
 
     public void clear()
     {
-        mAuthenticationResponseLiveData.postValue(null);
+        if(mAuthenticationResponseLiveData != null)
+        {
+            mAuthenticationResponseLiveData.postValue(null);
+        }
     }
 }

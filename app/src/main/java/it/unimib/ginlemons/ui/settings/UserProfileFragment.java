@@ -58,7 +58,7 @@ public class UserProfileFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
         mBinding = FragmentUserProfileBinding.inflate(inflater, container, false);
@@ -88,11 +88,13 @@ public class UserProfileFragment extends Fragment
                             // particolare: la snapshot è il risultato di una hasMap con <Chiave, Valore>
                             // è compatibile con l'oggetto userHelper creato ad hoc per recuperarne i parametri
                             UserHelper userHelper = snapshot.getValue(UserHelper.class);
-                            displayName = userHelper.getName();
-                            displayEmail = userHelper.getEmail();
-                            mBinding.helloUserProfile.setText("Hello " + displayName + "!");
-                            mBinding.userProfileName.setText(displayName);
-                            mBinding.userProfileEmail.setText(displayEmail);
+                            if(userHelper != null) {
+                                displayName = userHelper.getName();
+                                displayEmail = userHelper.getEmail();
+                                mBinding.helloUserProfile.setText("Hello " + displayName + "!");
+                                mBinding.userProfileName.setText(displayName);
+                                mBinding.userProfileEmail.setText(displayEmail);
+                            }
                         }
                     }
                 }
@@ -130,7 +132,7 @@ public class UserProfileFragment extends Fragment
 
     // Inserisce il pulsante per il logout nella toolbar
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater)
     {
         inflater.inflate(R.menu.user_profile_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
@@ -145,8 +147,13 @@ public class UserProfileFragment extends Fragment
 
     public void setTitleToolbar()
     {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
-        toolbar.setTitle(R.string.user_profile_toolbar_title);
+        if(getActivity() != null) {
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_toolbar);
+            if(toolbar != null)
+            {
+                toolbar.setTitle(R.string.user_profile_toolbar_title);
+            }
+        }
     }
 
     public void changeClickButton()
@@ -327,20 +334,43 @@ public class UserProfileFragment extends Fragment
                     String passwordInsert = mBindingDialog.resetInputEmailPassword.getText().toString();
 
                     //reauthentication
+                    mUserViewModel.clear();
                     mUserViewModel.reauthenticateUser(userObj, displayEmail, passwordInsert).observe(getViewLifecycleOwner(), firebaseResponse -> {
                         if(firebaseResponse != null)
                         {
                             if(firebaseResponse.isSuccess())
                             {
-                                mAuth.signOut();
-                                dialog.dismiss();
-                                navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
-                                getActivity().finish();
+                                mUserViewModel.updateEmail(userObj.getEmail()).observe(getViewLifecycleOwner(), updateMailResponse -> {
+                                    if(updateMailResponse != null){
+                                        if(updateMailResponse.isSuccess()){
+                                            mUserViewModel.updateEmailRealTimeDB(userObj).observe(getViewLifecycleOwner(), realTimeDBResponse -> {
+                                                if(realTimeDBResponse != null){
+                                                    if(firebaseResponse.isSuccess()){
+                                                        dialog.dismiss();
+                                                        mAuth.signOut();
+                                                        navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
+                                                        getActivity().finish();
+                                                    }
+                                                    else
+                                                    {
+                                                        makeMessage(realTimeDBResponse.getMessage());
+                                                        dialog.dismiss();
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        else
+                                        {
+                                            makeMessage(updateMailResponse.getMessage());
+                                        }
+                                    }
+
+                                });
+
                             }
                             else
                             {
-                                // fail reauth
-                                mUserViewModel.clear();
+                                makeMessage(firebaseResponse.getMessage());
                                 mBindingDialog.resetInputEmailPassword.setError("Password is not correct");
                             }
                         }
@@ -375,7 +405,7 @@ public class UserProfileFragment extends Fragment
         {
             mAuth.signOut();
             navController.navigate(R.id.action_userProfileFragment_to_authenticationActivity);
-            getActivity().finish();
+            requireActivity().finish();
 
             return true;
         }

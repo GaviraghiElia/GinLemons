@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 
 import it.unimib.ginlemons.R;
 import it.unimib.ginlemons.databinding.FragmentRegisterBinding;
-import it.unimib.ginlemons.model.FirebaseResponse;
 
 public class RegisterFragment extends Fragment
 {
@@ -109,24 +108,24 @@ public class RegisterFragment extends Fragment
                                 }
                                 else
                                 {
+
+                                    mUserViewModel.clear();
                                     mUserViewModel.signUpWithEmail(email, password).observe(getViewLifecycleOwner(), firebaseResponse -> {
                                         if (firebaseResponse != null)
                                         {
                                             if (firebaseResponse.isSuccess())
                                             {
-                                                mUserViewModel.clear();
-                                                mUserViewModel.signUpWithEmailRealTimeDB(email, name).observe(getViewLifecycleOwner(), firebaseResponse1 -> {
-                                                    if(firebaseResponse1 != null)
+                                                mUserViewModel.signUpWithEmailRealTimeDB(email, name).observe(getViewLifecycleOwner(), realTimeDBResponse -> {
+                                                    if(realTimeDBResponse != null)
                                                     {
-                                                        if(firebaseResponse1.isSuccess())
+                                                        if(realTimeDBResponse.isSuccess())
                                                         {
-                                                            mUserViewModel.clear();
                                                             makeMessage(getString(R.string.successfull_registration));
                                                             firebaseAuth = FirebaseAuth.getInstance();
                                                             firebaseAuth.signOut();
                                                         }
                                                         else
-                                                            makeMessage(firebaseResponse1.getMessage());
+                                                            makeMessage(realTimeDBResponse.getMessage());
 
                                                         navController.navigate(R.id.action_registerFragment_to_loginFragment);
                                                     }
